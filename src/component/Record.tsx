@@ -9,7 +9,7 @@ const Record: React.FC<RecordProps> = ({setPendingAudio}) => {
 
     if (isRecording) {
         // setPendingAudio([])
-        return <></>
+        return null
     } else {
         return <button
             type="button"
