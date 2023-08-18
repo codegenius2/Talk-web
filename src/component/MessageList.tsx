@@ -1,18 +1,13 @@
 import React from "react";
 import Bubble from "./Bubble.tsx";
-import {Message} from "./Interface.tsx";
+import {useConvStore} from "../state/ConversationStore.tsx";
+import {QueAns} from "../ds/Conversation.tsx";
 
-interface MessageListProps{
-    messages : Message[]
-}
-
-const MessageList: React.FC<MessageListProps> = ({messages}) => {
-
+const MessageList: React.FC = () => {
+    const qaSlice: QueAns[] = useConvStore((state) => state.qaSlice)
     return (
         <div className="flex flex-col overflow-y-auto justify-end h-full">
-            {
-                messages.map((message) => <Bubble key={message.id} message={message}/>)
-            }
+            {qaSlice.map((queAns) => <Bubble key={queAns.id} queAns={queAns}/>)}
         </div>
     );
 };

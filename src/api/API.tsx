@@ -28,13 +28,13 @@ export const inEventTypeTranscription = "transcription";
 export interface InMeta {
     type: string;
     id: string; // unique ID for every event
-    replyToId: string;
     err: string;
     eof: boolean;
 }
 
+// rename to InAnswer
 export interface InMessage extends InMeta {
-    message: Message;
+    content: string;
 }
 
 export interface InAudio extends InMeta {

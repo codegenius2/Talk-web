@@ -1,39 +1,38 @@
-import React, {Dispatch, KeyboardEventHandler, SetStateAction, useState} from "react";
+import {KeyboardEventHandler, useCallback} from "react";
+import {useInputStore, useSendStore} from "../state/Input.tsx";
 
-interface DialogProps {
-    setPendingText: Dispatch<SetStateAction<string[]>>;
-}
 
-const TextArea: React.FC<DialogProps> = ({setPendingText: setPendingText}) => {
-    const [text, setText] = useState("");
+const TextArea = () => {
 
-    const sendText = () => {
-        if (text) {
-            setPendingText(prev => [...prev, text])
-            setText("")
+    const inputText = useInputStore((state) => state.inputText)
+
+    const sendAndClearText = () => {
+        if (inputText) {
+            useSendStore.setState({sendingText: inputText})
         }
+        useInputStore.setState({inputText: ""})
     }
 
-    const handleKeyDown:KeyboardEventHandler<HTMLTextAreaElement> = (event) => {
-        if (event.ctrlKey && event.key === 'Enter') {
-            event.preventDefault(); // prevent default action of starting a new line
-            sendText()
+    const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault(); // prevent new line action
+            sendAndClearText();
         }
-    };
+    }, []);
 
     return (<div className="relative">
 
         <textarea
             placeholder="What would you like to say?"
             className="textarea textarea-bordered textarea-lg w-full px-0 py-0"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={inputText}
+            onChange={(e) => useInputStore.setState({inputText: e.target.value})}
             onKeyDown={handleKeyDown}
         />
             <button
                 type="submit"
                 className="btn btn-sm absolute bottom-2 right-0.5 capitalize"
-                onClick={sendText}
+                onClick={sendAndClearText}
             >
                 Send
             </button>
