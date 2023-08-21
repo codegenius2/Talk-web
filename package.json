@@ -21,6 +21,7 @@
     "react-use": "^17.4.0",
     "reconnecting-websocket": "^4.4.0",
     "uuid": "^9.0.0",
+    "wavesurfer.js": "^7.1.5",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
@@ -29,6 +30,7 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.2",
+    "@types/wavesurfer.js": "^6.0.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",

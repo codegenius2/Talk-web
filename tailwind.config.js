@@ -10,6 +10,9 @@ export default {
                 'none': 'none',
                 'blur': 'blur(px)',
             },
+            colors: {
+                'blue-grey': 'rgb(85,121,235)', // 使用你喜欢的颜色值
+            },
         },
     },
     variants: {
@@ -19,6 +22,6 @@ export default {
     },
     plugins: [
         require('@tailwindcss/typography'),
-],
+    ],
 }
 

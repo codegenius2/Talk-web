@@ -1,5 +1,7 @@
 import './App.css'
 import {useLayoutEffect, useRef, useState} from "react";
+import myAudio from './assets/hello_en_gb_1.mp3';
+import AudioUI from "./AudioUI.tsx";
 
 export default function NewUI() {
     const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
@@ -17,15 +19,23 @@ export default function NewUI() {
             {/*crucial; don't merge the following 2 divs*/}
             <div className="overflow-auto w-full max-w-2xl " ref={scrollRef}>
                 <div className="flex flex-col gap-3 rounded-lg w-full justify-end max-w-2xl">
-                    {[1, 2, 3, 4, 5, 6, 9, 10].map(() =>
-                        <div className="flex flex-col gap-1 mr-2" id="message-list">
+                    {[1, 2].map((i) =>
+                        <div className="flex flex-col gap-1 mr-2" id="message-list" key={i}>
                             <div
                                 className="rounded-full self-end w-auto text-sm text-violet-100 bg-blue-600 px-2 py-1.5">
                                 <p>Hello Hello Hello</p>
                             </div>
                             <div
+                                className="rounded-lg self-end text-sm text-neutral-900 w-1/2">
+                                <AudioUI url={myAudio} audioIndex={100+i} self={true}/>
+                            </div>
+                            <div
                                 className="rounded-lg mr-20 text-sm text-neutral-900 bg-slate-200 px-2 py-0.5">
                                 Hello<br/>How can I help you today?
+                            </div>
+                            <div
+                                className="rounded-lg text-sm text-neutral-900 w-1/2">
+                                <AudioUI url={myAudio} audioIndex={i} self={false}/>
                             </div>
                         </div>
                     )}
@@ -44,7 +54,7 @@ export default function NewUI() {
                 </button>
                 <div className="flex w-full">
                         <textarea
-                            className="w-full outline-0 rounded-lg resize-none bg-slate-200 px-0 py-0 pl-1 mt-auto"
+                            className="w-full outline-0 rounded-lg resize-none bg-slate-200 pl-2 py-1 mt-auto"
                             rows={inputAreaIsLarge ? 8 : 2}
                             placeholder="Message"/>
                     <button className="-ml-10 self-end bottom-1.5 right-1.5 capitalize text-slate-700">
