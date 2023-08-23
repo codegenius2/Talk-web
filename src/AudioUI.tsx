@@ -37,10 +37,10 @@ const selfColor: Color = {
 const assistantColor: Color = {
     boxBg: 'bg-slate-200',
     playBg: 'bg-white',
-    play: 'text-neutral-900',
-    pause: 'text-neutral-900',
-    wave: '#9ca3af',
-    progress: '#030712',
+    play: '#5e5e5e',
+    pause: 'text-gray-500',
+    wave: '#8c8c8c',
+    progress: '#2f2f2f',
     hoverLine: 'black',
     labelBg: '#d1d5db',
     label: 'black',
@@ -65,7 +65,6 @@ const AudioUI: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
             barWidth: 4,
             barGap: 2,
             barRadius: 10,
-            barHeight: 0.8,
             height: 'auto',
             url: url,
             plugins: [
