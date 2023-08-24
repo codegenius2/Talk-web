@@ -75,9 +75,9 @@ export class MyRecorder {
 
     toggleRecord(c: (e: unknown) => void): void {
         if (this.r.isRecording()) {
-            this.start().catch(c)
-        } else {
             this.done()
+        } else {
+            this.start().catch(c)
         }
     }
 }

@@ -164,10 +164,8 @@ export default function NewUI() {
                         </svg>
                     </button>
                 </div>
-                <div className="flex justify-center items-center w-full">
-                    <div className="flex justify-center items-center rounded-2xl p-1 gap-2 w-full h-10 shrink-0">
-                        <Recorder/>
-                    </div>
+                <div className="flex justify-center items-center w-full mt-1">
+                    <Recorder/>
                 </div>
             </div>
         </div>
