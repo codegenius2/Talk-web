@@ -2,20 +2,20 @@ import {create} from 'zustand';
 
 
 interface Playing {
-    playingAudioIndex?: number
-    forceLock: (audioIndex: number) => void
-    unLock: (audioIndex: number) => void
+    playingAudioIndex?: string
+    forceLock: (audioIndex: string) => void
+    unLock: (audioIndex: string) => void
 }
 
 export const usePlayingStore = create<Playing>(
     (set, get) => (
         {
             playingAudioIndex: undefined,
-            forceLock: (audioIndex: number) => set((state) => ({
+            forceLock: (audioIndex: string) => set((state) => ({
                 ...state,
                 playingAudioIndex: audioIndex
             })),
-            unLock: (audioIndex: number) => {
+            unLock: (audioIndex: string) => {
                 if (get().playingAudioIndex === audioIndex) {
                     set((state) => ({...state, playingAudioIndex: undefined}))
                 } else {

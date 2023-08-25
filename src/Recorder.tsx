@@ -1,6 +1,8 @@
 import {useEffect} from 'react';
 import {useRecorderStore} from "./state/Recording.tsx";
 import {MyRecorder} from "./MyRecorder.tsx";
+import {useSendingAudioStore} from "./state/Input.tsx";
+
 
 const Recorder = () => {
     const isRecording = useRecorderStore((state) => state.isRecording)
@@ -10,10 +12,7 @@ const Recorder = () => {
     useEffect(() => {
         recorder.onDone((blob: Blob) => {
             setIsRecording(false)
-
-            const recordedUrl = URL.createObjectURL(blob);
-            console.debug("recordedUrl", recordedUrl)
-            // store blob and return id
+            useSendingAudioStore.setState({sendingAudio: blob})
             // stop mic on safari to remove the red mic icon
             // recorder.stopMic()
         });
@@ -61,7 +60,7 @@ const Recorder = () => {
                       d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
             </svg>
             <div className="prose text-slate-500">
-                Hold <kbd className="border rounded-md bg-white px-1.5 py-0.5">Spacebar</kbd> to talk
+                Hold <kbd className="border rounded-md bg-white px-1.5 py-0.5">Spacebar</kbd> to speak
             </div>
         </div>
         <div hidden={!isRecording}>

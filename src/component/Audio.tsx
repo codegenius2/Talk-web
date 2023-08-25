@@ -1,12 +1,15 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import Hover from 'wavesurfer.js/plugins/hover'
-import {usePlayingStore} from "./state/Playing.tsx";
+import {Audio as _Audio} from "../ds/Audio.tsx"
+import {getBlob} from "../store/BlobDB.tsx";
+import {Spin} from "./Spin.tsx";
+import {usePlayingStore} from "../state/Playing.tsx";
 
 
 interface WaveSurferProps {
     url: string;
-    audioIndex: number;
+    audioIndex: string;
     self: boolean;
 }
 
@@ -46,8 +49,55 @@ const assistantColor: Color = {
     label: 'black',
 }
 
+interface AudioProps {
+    audio?: _Audio
+    self: boolean
+}
 
-const AudioUI: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
+export const Audio: React.FC<AudioProps> = ({audio, self}) => {
+    const [audioUrl, setAudioUrl] = useState<string>("")
+
+    useEffect(() => {
+        if (!audio) {
+            return
+        }
+        if (audioUrl) {
+            return;
+        }
+        if (audio.status === 'done') {
+            getBlob(audio.audioBlobKey!).then(r => {
+                if (r) {
+                    const url = URL.createObjectURL(r.blob)
+                    setAudioUrl(url)
+                } else {
+                    console.error("audio blob not found")
+                }
+            }).catch(e => {
+                console.error("failed to get audio blob", audio.audioBlobKey, e)
+            })
+        }
+    }, [audio]);
+
+    if (!audio) {
+        return <></>
+    }
+
+    switch (audio.status) {
+        case 'pending':
+            return <div className="w-auto px-2 py-1.5">
+                <Spin/>
+            </div>
+        case 'done':
+            return <Wave url={audioUrl} audioIndex={audio.audioBlobKey!} self={self}></Wave>
+        case 'error':
+            return <div> {audio.errorMessage}</div>
+        default:
+            console.log('impossible case', audio.status)
+            break;
+    }
+}
+
+const Wave: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
     const waveformRef = useRef(null);
     const wavesurfer = useRef<WaveSurfer>();
     const playingAudioIndex = usePlayingStore((state) => state.playingAudioIndex)
@@ -112,7 +162,7 @@ const AudioUI: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
         if (playingAudioIndex !== audioIndex && wavesurfer.current?.isPlaying()) {
             wavesurfer.current!.pause()
         }
-    }, [playingAudioIndex,audioIndex]);
+    }, [playingAudioIndex, audioIndex]);
 
     return <div className={"flex rounded-2xl items-center p-1 gap-2 " + color.boxBg}>
         <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + color.playBg}
@@ -134,6 +184,3 @@ const AudioUI: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
         <div ref={waveformRef} className="w-full h-10"/>
     </div>
 };
-
-export default AudioUI;
-

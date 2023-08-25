@@ -11,7 +11,7 @@ export const newAudio = (): Audio => {
     return {status: 'pending'}
 }
 
-export const onNewAudioBlogId = (a: Audio, audioBlobKey: string): Audio => {
+export const onNewAudioBlobId = (a: Audio, audioBlobKey: string): Audio => {
     switch (a.status) {
         case "pending":
             if (!audioBlobKey) {

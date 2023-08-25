@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/*How to fix Tailwind CSS’s h-screen on iOS Safari
+/*How to fix Tailwind CSS's h-screen on iOS Safari
 https://benborgers.com/posts/tailwind-h-screen
 */
 @supports (-webkit-touch-callout: none) {

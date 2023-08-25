@@ -29,16 +29,16 @@ type Ans = {
     audio: Audio
 }
 
-export const newQueAns = (id: string, questionHasAudio: boolean): QueAns => {
+export const newQueAns = (id: string, questionHasAudio: boolean,queText?: string): QueAns => {
 
     return {
         id: id,
         que: {
-            text: newMyText(),
+            text: newMyText(queText),
             audio: questionHasAudio ? newAudio() : undefined
         },
         ans: {
-            text: newMyText(),
+            text: newMyText(queText),
             audio: newAudio()
         },
         createdAt: formatISO(new Date())
