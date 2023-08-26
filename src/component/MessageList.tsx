@@ -23,11 +23,11 @@ const MessageList: React.FC = () => {
                     <div className="flex flex-col gap-2 mr-2" id="message-list" key={qa.id}>
                         <SelfText text={qa.que.text}/>
                         <div
-                            className="rounded-lg self-end text-sm text-neutral-900 w-1/2">
+                            className="rounded-lg self-end text-neutral-900 w-1/2">
                             <Audio audio={qa.que.audio} self={true}/>
                         </div>
                         <AssistantText text={qa.ans.text}/>
-                        <div className="rounded-lg text-sm text-neutral-900 w-1/2">
+                        <div className="rounded-lg text-neutral-900 w-1/2">
                             <Audio audio={qa.ans.audio} self={false}/>
                         </div>
                     </div>

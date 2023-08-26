@@ -9,7 +9,7 @@ export const sendMessage = (socket: ReconnectingWebSocket, event: unknown) => {
 };
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
-    console.debug("decoding base64", base64String)
+    console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0,100))
     const byteCharacters = atob(base64String);
     const byteNumbers: number[] = [];
 
@@ -57,4 +57,18 @@ export const historyMessages = (qaSlice: QueAns[], maxHistoryMessage: number): M
         .forEach(t => messages.push({role: "assistant", content: t.content}))
     messages = messages.slice(-maxHistoryMessage)
     return messages
+}
+
+export function currentProtocolHostPort(): string {
+    const protocol = window.location.protocol
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    return `${protocol}//${hostname}:${port}`;
+}
+
+export function currentSocketProtocolHostPort(): string {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    return `${protocol}//${hostname}:${port}`;
 }

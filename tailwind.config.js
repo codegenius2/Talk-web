@@ -13,7 +13,13 @@ export default {
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
             },
+            maxWidth: {
+                '1/4': '25%',
+                '1/2': '300px',
+                '3/4': '75%',
+            }
         },
+
     },
     variants: {
         extend: {

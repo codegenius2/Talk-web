@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useRef, useState} from "react";
-import Recorder from "./Recorder.tsx";
+import Recorder from "./component/Recorder.tsx";
 import {useRecorderStore} from "./state/Recording.tsx";
 import {MyRecorder} from "./MyRecorder.tsx";
 import MessageList from "./component/MessageList.tsx";
@@ -71,7 +71,7 @@ export default function App() {
 
 
     return (
-        <div className="flex flex-col items-center justify-between h-screen gap-1 p-1 overflow-hidden" id="container">
+        <div className="flex flex-col items-center justify-between h-screen w-screen gap-1 p-1 overflow-hidden" id="container">
             <MessageList/>
             <div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-2xl backdrop-blur bg-opacity-75">
                 <TextArea/>

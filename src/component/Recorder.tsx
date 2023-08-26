@@ -1,7 +1,7 @@
 import {useEffect} from 'react';
-import {useRecorderStore} from "./state/Recording.tsx";
-import {MyRecorder} from "./MyRecorder.tsx";
-import {useSendingAudioStore} from "./state/Input.tsx";
+import {useRecorderStore} from "../state/Recording.tsx";
+import {MyRecorder} from "../MyRecorder.tsx";
+import {useSendingAudioStore} from "../state/Input.tsx";
 
 
 const Recorder = () => {
@@ -32,7 +32,7 @@ const Recorder = () => {
 
     const handleTouchStart = () => {
         console.log('handleTouchStart');
-        recorder?.start().catch(
+        recorder.start().catch(
             (e) => {
                 console.error("failed to start recorder", e)
             }
@@ -40,18 +40,18 @@ const Recorder = () => {
     };
     const handleTouchEnd = () => {
         console.log('handleTouchEnd');
-        recorder?.done()
+        recorder.done()
     };
     const handleTouchCancel = () => {
         console.log('handleTouchCancel');
-        recorder?.cancel()
+        recorder.cancel()
     };
 
     return <div onClick={handleClick}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={handleTouchEnd}
                 onTouchCancel={handleTouchCancel}
-                className="flex justify-center items-center rounded-lg p-1 gap-2 w-full h-10 shrink-0 bg-slate-100"
+                className="flex justify-center items-center rounded-lg p-1 gap-2 w-full h-10 shrink-0 bg-slate-100 select-none"
     >
         <div className={"flex gap-3 justify-center items-center " + (isRecording ? "hidden" : "")}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"

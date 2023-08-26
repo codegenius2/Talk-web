@@ -16,7 +16,7 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
         case 'receiving' :
         case  'done':
             return <div
-                className="rounded-lg mr-40 text-sm text-neutral-900 bg-slate-200 px-2 py-0.5">
+                className="rounded-lg max-w-3/4 whitespace-pre-wrap text-neutral-900 bg-slate-200 px-2 py-0.5">
                 <p>{text.content}</p>
             </div>
         case 'error':
@@ -35,7 +35,7 @@ export const SelfText: React.FC<TextProps> = ({text}) => {
             </div>
         case 'done':
             return <div
-                className="rounded-lg self-end ml-40 text-sm text-violet-100 bg-blue-600 px-2 py-1.5">
+                className="rounded-lg self-end max-w-3/4 whitespace-pre-wrap text-violet-100 bg-blue-600 px-2 py-1.5">
                 <p>{text.content}</p>
             </div>
         case 'error':

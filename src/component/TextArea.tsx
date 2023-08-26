@@ -57,7 +57,7 @@ const TextArea: React.FC = () => {
             </button>
             <div className="flex w-full max-w-2xl">
                     <textarea
-                        className={"w-full text-sm outline-0 rounded-lg resize-none bg-slate-200 pl-2 py-1 mt-auto "
+                        className={"w-full outline-0 rounded-lg resize-none bg-slate-200 pl-2 py-1 mt-auto "
                             + (isRecording ? 'hidden' : '')}
                         rows={inputAreaIsLarge ? 8 : 2}
                         onKeyUp={stopPropagation}
@@ -76,14 +76,14 @@ const TextArea: React.FC = () => {
                     <div className="flex justify-between items-center w-full">
                         <div className="w-1/2">
                             <div className="flex justify-end mr-10">
-                                <div className="prose text-sm text-slate-500 bg-white rounded-full px-2">
+                                <div className="prose text-slate-500 bg-white rounded-full px-2">
                                     Release to <div className="inline text-blue-500">send</div>
                                 </div>
                             </div>
                         </div>
                         <div className="w-1/2">
                             <div className="flex ml-10">
-                                <div className="prose text-sm text-slate-500 bg-white rounded-full px-2">
+                                <div className="prose text-slate-500 bg-white rounded-full px-2">
                                     Press any key to <div className="inline text-red-400">cancel</div>
                                 </div>
                             </div>
