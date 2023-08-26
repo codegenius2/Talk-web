@@ -13,8 +13,8 @@ type TextState = {
 
 export type MyText = TextState & { content: string }
 
-export const newMyText = (): MyText => {
-    return {content: "", status: 'pending'}
+export const newMyText = (queText?: string): MyText => {
+    return {content: queText ?? "", status: 'pending'}
 }
 
 export const onNewContent = (t: MyText, newContent: string, eof: boolean): MyText => {

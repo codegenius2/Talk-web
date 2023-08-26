@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*How to fix Tailwind CSS's h-screen on iOS Safari
+https://benborgers.com/posts/tailwind-h-screen
+*/
+@supports (-webkit-touch-callout: none) {
+  .h-screen {
+      /*noinspection CssInvalidPropertyValue*/
+      height: -webkit-fill-available;
+  }
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b9b9b9;
+}

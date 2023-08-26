@@ -47,7 +47,3 @@ export const useSocketEvensStore = create<SocketEvents>()((set, get) => ({
         return first
     },
 }))
-
-// export const useInMessageStore = create<InMessage[]>(() => ([]))
-// export const useInTranscriptionStore = create<InTranscription[]>(() => ([]))
-// export const useInAudioStore = create<InAudio[]>(() => ([]))

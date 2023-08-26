@@ -26,7 +26,7 @@ export const SubscribeInTranscription: React.FC = () => {
             }
             const qa = qasMatched[0]
             const text = qa.que.text
-            const newText = inTan.err ? onError(text, inTan.err) : onNewContent(text,inTan.text,inTan.eof)
+            const newText = inTan.err ? onError(text, inTan.err) : onNewContent(text, inTan.text, inTan.eof)
             const newQa: QueAns = {
                 ...qa,
                 que: {

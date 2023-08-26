@@ -5,10 +5,10 @@ import {useSettingStore} from "../state/Setting.tsx";
 import {useSocketStore} from "../state/Socket.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
-import {useSendStore} from "../state/Input.tsx";
-import {sendMessage} from "../Util.tsx";
+import {useSendingTextStore} from "../state/Input.tsx";
+import {historyMessages, sendMessage} from "../Util.tsx";
 
-export const systemMessage: Message = {
+const systemMessage: Message = {
     role: "system",
     content: "You are a helpful assistant!"
 }
@@ -19,31 +19,24 @@ export const TextSubscriber: React.FC = () => {
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const maxHistoryMessage = useSettingStore((state) => state.maxHistoryMessage)
     const socket = useSocketStore.getState().socket
-    const sendingText = useSendStore((state)=>state.sendingText)
+    const sendingText = useSendingTextStore((state) => state.sendingText)
 
     useEffect(() => {
-        if (!sendingText){
+        if (!sendingText) {
             return
         }
-        let messages: Message[] = []
-        qaSlice.map(qa => qa.que.text)
-            .filter(t => t.status == "done")
-            .forEach(t => messages.push({role: "user", content: t.content}))
-        qaSlice.map(qa => qa.ans.text)
-            .filter(t => t.status == "done")
-            .forEach(t => messages.push({role: "assistant", content: t.content}))
-        messages = messages.slice(-maxHistoryMessage)
-
+        let messages = historyMessages(qaSlice, maxHistoryMessage)
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
         const id = uuidv4()
-
         const event: OutConversation = {
             type: outEventTypeConversation,
             id: id,
             conversation: messages
         }
         sendMessage(socket, event)
-        const qa = newQueAns(id,false)
+        const qa = newQueAns(id, false)
+        qa.que.text.content = sendingText
+        qa.que.text.status = 'done'
         pushQueAns(qa)
     }, [sendingText]);
     return null

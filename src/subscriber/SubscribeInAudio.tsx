@@ -1,7 +1,7 @@
 import {QueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSocketEvensStore} from "../state/SocketEvents.tsx";
-import {onError, onNewAudioBlogId} from "../ds/Audio.tsx";
+import {onError, onNewAudioBlobId} from "../ds/Audio.tsx";
 import {useConvStore} from "../state/ConversationStore.tsx";
 import {addBlob} from "../store/BlobDB.tsx";
 import {v4 as uuidv4} from 'uuid';
@@ -29,22 +29,34 @@ export const SubscribeInAudio: React.FC = () => {
             }
             const qa = qasMatched[0]
             const audio = qa.ans.audio
-            const blob = base64ToBlob(inAudio.audio, 'audio/mp3');
-            const id = uuidv4()
-            addBlob({id:id, blob:blob}).then(() => {
-                console.debug("saved audio blob", id)
-            }).catch((e) => {
-                console.error("failed to save audio blob", id, e)
-            })
-            const newAudio = inAudio.err ? onError(audio, inAudio.err) : onNewAudioBlogId(audio, id)
-            const newQa: QueAns = {
-                ...qa,
-                ans: {
-                    ...qa.ans,
-                    audio: newAudio
+            if (inAudio.err === '') {
+                const blob = base64ToBlob(inAudio.audio, inAudio.format);
+                const id = uuidv4()
+                addBlob({id: id, blob: blob}).then(() => {
+                    console.debug("saved audio blob", id)
+                    const newAudio = onNewAudioBlobId(audio, id)
+                    const newQa: QueAns = {
+                        ...qa,
+                        ans: {
+                            ...qa.ans,
+                            audio: newAudio
+                        }
+                    }
+                    replaceQueAns(newQa)
+                }).catch((e) => {
+                    console.error("failed to save audio blob", id, e)
+                })
+            } else {
+                const newAudio = onError(audio, inAudio.err)
+                const newQa: QueAns = {
+                    ...qa,
+                    ans: {
+                        ...qa.ans,
+                        audio: newAudio
+                    }
                 }
+                replaceQueAns(newQa)
             }
-            replaceQueAns(newQa)
         }, [pendingInAudio]
     )
     return null

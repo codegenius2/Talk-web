@@ -10,16 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.16",
-    "@heroicons/react": "^2.0.18",
     "date-fns": "^2.30.0",
     "idb": "^7.1.1",
     "idb-keyval": "^6.2.1",
-    "localforage": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-use": "^17.4.0",
     "reconnecting-websocket": "^4.4.0",
     "uuid": "^9.0.0",
+    "wavesurfer.js": "^7.1.5",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
@@ -28,11 +27,11 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.2",
+    "@types/wavesurfer.js": "^6.0.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.15",
-    "daisyui": "^3.5.1",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
