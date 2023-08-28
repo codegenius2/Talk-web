@@ -4,7 +4,7 @@ import {useSettingStore} from "../state/Setting.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingTextStore} from "../state/Input.tsx";
-import {historyMessages} from "../Util.tsx";
+import {historyMessages} from "../util/Util.tsx";
 import {Message} from "../api/Interface.tsx";
 import {error, newMyText, sent} from "../ds/Text.tsx";
 import {postConv} from "../instance.ts";

@@ -4,7 +4,7 @@ import {useSettingStore} from "../state/Setting.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingAudioStore} from "../state/Input.tsx";
-import {historyMessages} from "../Util.tsx";
+import {historyMessages} from "../util/Util.tsx";
 import {useRecorderStore} from "../state/Recording.tsx";
 import {addBlob} from "../store/BlobDB.tsx";
 import {newMyText} from "../ds/Text.tsx";

@@ -1,4 +1,4 @@
-import {currentProtocolHostPortPath, joinUrl} from "./Util.tsx";
+import {currentProtocolHostPortPath, joinUrl} from "./util/Util.tsx";
 import {useSSEStore} from "./state/SSE.tsx";
 import {ConversationReq} from "./api/Interface.tsx";
 import axios from "axios";

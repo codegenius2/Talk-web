@@ -1,5 +1,5 @@
 import React, {KeyboardEventHandler, useCallback, useState} from "react";
-import {timeElapsedMMSS} from "../Util.tsx";
+import {timeElapsedMMSS} from "../util/Util.tsx";
 import {useRecorderStore} from "../state/Recording.tsx";
 import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/Input.tsx";
 
