@@ -8,7 +8,15 @@ export type Conversation = {
     qaSlice: QueAns[]
     pushQueAns: (queAns: QueAns) => void
     removeQueAns: (queAns: QueAns) => void
-    replaceQueAns: (queAns: QueAns) => void
+    updateQueAns: (queAns: QueAns) => void
+    updateQueText: (id: string, myText: MyText) => void
+    updateQueAudio: (id: string, audio: Audio) => void
+    updateAnsText: (id: string, myText: MyText) => void
+    updateAnsAudio: (id: string, audio: Audio) => void
+    getQueText: (id: string) => MyText
+    getQueAudio: (id: string) => Audio| undefined
+    getAnsText: (id: string) => MyText
+    getAnsAudio: (id: string) => Audio
 }
 
 // exactly one pair of Q&A
@@ -29,17 +37,17 @@ type Ans = {
     audio: Audio
 }
 
-export const newQueAns = (id: string, questionHasAudio: boolean,queText?: string): QueAns => {
+export const newQueAns = (id: string, queText: MyText, audio?: Audio): QueAns => {
 
     return {
         id: id,
         que: {
-            text: newMyText(queText),
-            audio: questionHasAudio ? newAudio() : undefined
+            text: queText,
+            audio: audio
         },
         ans: {
-            text: newMyText(queText),
-            audio: newAudio()
+            text: newMyText("receiving", ""),
+            audio: newAudio("receiving")
         },
         createdAt: formatISO(new Date())
     }

@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {MyRecorder} from "../MyRecorder.tsx";
+import {MyRecorder} from "../MyRecorder.ts";
 
 interface Recorder {
     isRecording: boolean

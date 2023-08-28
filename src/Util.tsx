@@ -1,6 +1,6 @@
 import ReconnectingWebSocket from "reconnecting-websocket";
 import {QueAns} from "./ds/Conversation.tsx";
-import {Message} from "./api/API.tsx";
+import {Message} from "./api/Interface.tsx";
 
 export const sendMessage = (socket: ReconnectingWebSocket, event: unknown) => {
     const jsonString = JSON.stringify(event);
@@ -8,8 +8,8 @@ export const sendMessage = (socket: ReconnectingWebSocket, event: unknown) => {
     socket.send(jsonString)
 };
 
-export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
-    console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0,100))
+export const base64ToBlob = (base64String: string): Blob => {
+    console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
     const byteCharacters = atob(base64String);
     const byteNumbers: number[] = [];
 
@@ -18,7 +18,7 @@ export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     }
 
     const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], {type: mimeType});
+    return new Blob([byteArray], {type: "application/octet-stream"});
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {
@@ -48,27 +48,40 @@ const padZero = (num: number): string => {
 };
 
 export const historyMessages = (qaSlice: QueAns[], maxHistoryMessage: number): Message[] => {
+    if (maxHistoryMessage <= 0) {
+        return []
+    }
     let messages: Message[] = []
     qaSlice.map(qa => qa.que.text)
-        .filter(t => t.status == "done")
-        .forEach(t => messages.push({role: "user", content: t.content}))
+        .filter(t => t.status == "received")
+        .forEach(t => messages.push({role: "user", content: t.text}))
     qaSlice.map(qa => qa.ans.text)
-        .filter(t => t.status == "done")
-        .forEach(t => messages.push({role: "assistant", content: t.content}))
+        .filter(t => t.status == "received")
+        .forEach(t => messages.push({role: "assistant", content: t.text}))
     messages = messages.slice(-maxHistoryMessage)
     return messages
 }
 
-export function currentProtocolHostPort(): string {
+export function currentProtocolHostPortPath(): string {
     const protocol = window.location.protocol
     const hostname = window.location.hostname;
     const port = window.location.port;
-    return `${protocol}//${hostname}:${port}`;
+    const path = window.location.pathname;
+    return `${protocol}//${hostname}:${port}/${path}`;
 }
 
-export function currentSocketProtocolHostPort(): string {
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const hostname = window.location.hostname;
-    const port = window.location.port;
-    return `${protocol}//${hostname}:${port}`;
+export function joinUrl(...parts: string[]): string {
+  return parts.map(part => part.replace(/^\/+|\/+$/g, '')).join('/');
+}
+
+export function randomHash(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let hash = '';
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        hash += characters.charAt(randomIndex);
+    }
+
+    return hash;
 }

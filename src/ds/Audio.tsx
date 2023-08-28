@@ -1,45 +1,76 @@
 // do not change these types by modifying fields, using the defined functions instead
 
-type AudioState = {
-    status: 'pending' | 'done' | 'error'
+export type AudioStatus = 'sending' | 'sent' | 'receiving' | 'received' | 'error'
+
+export type Audio = {
+    status: AudioStatus
     errorMessage?: string
+    audioId?: string
 }
 
-export type Audio = AudioState & { audioBlobKey?: string }
-
-export const newAudio = (): Audio => {
-    return {status: 'pending'}
-}
-
-export const onNewAudioBlobId = (a: Audio, audioBlobKey: string): Audio => {
-    switch (a.status) {
-        case "pending":
-            if (!audioBlobKey) {
-                throw new Error("empty audioBlobKey")
-            }
-            return {
-                ...a,
-                audioBlobKey: audioBlobKey,
-                status: 'done'
-            }
-        case "done":
-            throw new Error("invalid state")
-        case "error":
-            throw new Error("invalid state")
+export const newAudio = (status: AudioStatus, audioId?: string): Audio => {
+    return {
+        status: status,
+        audioId: audioId
     }
 }
 
-export const onError = (a: Audio, errMsg: string): Audio => {
-    switch (a.status) {
-        case "pending":
+export const sent = (prev: Audio): Audio => {
+    switch (prev.status) {
+        case "sending":
             return {
-                ...a,
+                ...prev,
+                status: 'sent'
+            }
+        case "sent":
+        case "receiving":
+        case "received":
+        case "error":
+            return {...prev}
+    }
+}
+
+export const newAudioId = (prev: Audio, audioId: string): Audio => {
+    switch (prev.status) {
+        case "sending":
+        case "sent":
+            return {
+                ...prev,
+                audioId: audioId,
+                // do not update status because audio may have not been sent to server
+            }
+        case "receiving":
+            return {
+                ...prev,
+                audioId: audioId,
+                status: 'received'
+            }
+        case "received":
+            console.error("invalid state:" + prev.status)
+            return {...prev,}
+        case "error":
+            console.error("invalid state:" + prev.status)
+            return {...prev,}
+    }
+}
+
+export const error = (prev: Audio, errMsg: string): Audio => {
+    switch (prev.status) {
+        case "sending":
+        case "receiving":
+            return {
+                ...prev,
                 errorMessage: errMsg,
                 status: 'error'
             }
-        case "done":
-            throw new Error("invalid state")
+        case "sent":
+        case "received":
+            console.error("invalid state:" + prev.status)
+            return {...prev,}
         case "error":
-            throw new Error("invalid state")
+            console.error("invalid state:" + prev.status)
+            return {...prev,}
     }
 }
+
+

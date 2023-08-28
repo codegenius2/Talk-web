@@ -64,8 +64,8 @@ export const Audio: React.FC<AudioProps> = ({audio, self}) => {
         if (audioUrl) {
             return;
         }
-        if (audio.status === 'done') {
-            getBlob(audio.audioBlobKey!).then(r => {
+        if (['sent', 'received'].includes(audio.status)) {
+            getBlob(audio.audioId!).then(r => {
                 if (r) {
                     const url = URL.createObjectURL(r.blob)
                     setAudioUrl(url)
@@ -73,7 +73,7 @@ export const Audio: React.FC<AudioProps> = ({audio, self}) => {
                     console.error("audio blob not found")
                 }
             }).catch(e => {
-                console.error("failed to get audio blob", audio.audioBlobKey, e)
+                console.error("failed to get audio blob", audio.audioId, e)
             })
         }
     }, [audio]);
@@ -83,16 +83,18 @@ export const Audio: React.FC<AudioProps> = ({audio, self}) => {
     }
 
     switch (audio.status) {
-        case 'pending':
+        case 'sending':
+        case 'receiving':
             return <div className="w-auto px-2 py-1.5">
                 <Spin/>
             </div>
-        case 'done':
-            return <Wave url={audioUrl} audioIndex={audio.audioBlobKey!} self={self}></Wave>
+        case 'sent':
+        case 'received':
+            return <Wave url={audioUrl} audioIndex={audio.audioId!} self={self}></Wave>
         case 'error':
             return <div> {audio.errorMessage}</div>
         default:
-            console.log('impossible case', audio.status)
+            console.log('impossible audio status', audio.status)
             break;
     }
 }

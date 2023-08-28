@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^4.33.0",
+    "axios": "^1.5.0",
     "date-fns": "^2.30.0",
     "idb": "^7.1.1",
     "idb-keyval": "^6.2.1",
