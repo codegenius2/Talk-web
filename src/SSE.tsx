@@ -7,6 +7,7 @@ import {SSEEndpoint} from "./instance.ts";
 import {error, MyText, newText} from "./ds/Text.tsx";
 import {error as errorAudio, newAudioId,} from "./ds/Audio.tsx";
 import {base64ToBlob} from "./util/Util.tsx";
+import {audioPlayerMimeType} from './config.ts';
 
 export const SSE = () => {
     const getQueText = useConvStore((state) => state.getQueText)
@@ -32,27 +33,27 @@ export const SSE = () => {
         eventSource.addEventListener(EventAnswer, (event: MessageEvent<string>) => {
             const answer: Answer = JSON.parse(event.data)
             const prev: MyText = getAnsText(answer.convId);
-            const now: MyText = answer.eMsg ? error(prev,answer.eMsg) : newText(prev,answer.text, answer.eof)
+            const now: MyText = answer.eMsg ? error(prev, answer.eMsg) : newText(prev, answer.text, answer.eof)
             updateAnsText(answer.convId, now)
         })
         eventSource.addEventListener(EventTrans, (event: MessageEvent<string>) => {
             const trans: Trans = JSON.parse(event.data)
             const prev = getQueText(trans.convId);
-            const now = trans.eMsg ? error(prev,trans.eMsg) : newText(prev,trans.text, true)
+            const now = trans.eMsg ? error(prev, trans.eMsg) : newText(prev, trans.text, true)
             updateQueText(trans.convId, now)
         })
         eventSource.addEventListener(EventAudio, (event: MessageEvent<string>) => {
             const audio: Audio = JSON.parse(event.data)
             if (audio.eMsg) {
-                updateAnsAudio(audio.convId, errorAudio(getAnsAudio(audio.convId),audio.eMsg))
+                updateAnsAudio(audio.convId, errorAudio(getAnsAudio(audio.convId), audio.eMsg))
             } else {
-                const blob = base64ToBlob(audio.audio);
+                const blob = base64ToBlob(audio.audio, audioPlayerMimeType);
                 const blobId = uuidv4()
                 addBlob({id: blobId, blob: blob}).then(() => {
                     console.debug("saved audio, blobId:", blobId)
-                    updateAnsAudio(audio.convId, newAudioId(getAnsAudio(audio.convId),blobId))
+                    updateAnsAudio(audio.convId, newAudioId(getAnsAudio(audio.convId), blobId))
                 }).catch((e) => {
-                    updateAnsAudio(audio.convId, errorAudio(getAnsAudio(audio.convId),e))
+                    updateAnsAudio(audio.convId, errorAudio(getAnsAudio(audio.convId), e))
                     console.error("failed to save audio blobId", blobId, e)
                 })
             }

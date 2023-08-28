@@ -1,9 +1,11 @@
 import {create} from 'zustand';
 import {MyRecorder} from "../util/MyRecorder.ts";
+import {chooseAudioMimeType, RecordingMimeType} from "../util/Util.tsx";
 
 interface Recorder {
     isRecording: boolean
     duration: number, // in ms
+    recordingMimeType?: RecordingMimeType
     recorder: MyRecorder
     setIsRecording: (isRecording: boolean) => void
     setDuration: (duration: number) => void
@@ -15,7 +17,8 @@ export const useRecorderStore = create<Recorder>(
         {
             isRecording: false,
             duration: 0,
-            recorder: new MyRecorder(),
+            recordingMimeType: chooseAudioMimeType(),
+            recorder: new MyRecorder(chooseAudioMimeType()),
             setIsRecording: (isRecording: boolean) => set((state) => ({
                 ...state,
                 isRecording: isRecording

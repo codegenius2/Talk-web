@@ -65,16 +65,18 @@ export const Audio: React.FC<AudioProps> = ({audio, self}) => {
             return;
         }
         if (['sent', 'received'].includes(audio.status)) {
-            getBlob(audio.audioId!).then(r => {
-                if (r) {
-                    const url = URL.createObjectURL(r.blob)
-                    setAudioUrl(url)
-                } else {
-                    console.error("audio blob not found")
-                }
-            }).catch(e => {
-                console.error("failed to get audio blob", audio.audioId, e)
-            })
+            if (audio.audioId) {
+                getBlob(audio.audioId).then(r => {
+                    if (r) {
+                        const url = URL.createObjectURL(r.blob)
+                        setAudioUrl(url)
+                    } else {
+                        console.error("audio blob not found")
+                    }
+                }).catch(e => {
+                    console.error("failed to get audio blob", audio.audioId, e)
+                })
+            }
         }
     }, [audio]);
 

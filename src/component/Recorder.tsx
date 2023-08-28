@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {useRecorderStore} from "../state/Recording.tsx";
-import {MyRecorder} from "../MyRecorder.ts";
+import {MyRecorder} from "../util/MyRecorder.ts";
 import {useSendingAudioStore} from "../state/Input.tsx";
 
 

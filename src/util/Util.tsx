@@ -1,7 +1,7 @@
-import {QueAns} from "./ds/Conversation.tsx";
-import {Message} from "./api/Interface.tsx";
+import {QueAns} from "../ds/Conversation.tsx";
+import {Message} from "../api/Interface.tsx";
 
-export const base64ToBlob = (base64String: string): Blob => {
+export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
     const byteCharacters = atob(base64String);
     const byteNumbers: number[] = [];
@@ -11,7 +11,7 @@ export const base64ToBlob = (base64String: string): Blob => {
     }
 
     const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], {type: "application/octet-stream"});
+    return new Blob([byteArray], {type: mimeType});
 }
 
 export function blobToBase64(blob: Blob): Promise<string> {
@@ -64,7 +64,7 @@ export function currentProtocolHostPortPath(): string {
 }
 
 export function joinUrl(...parts: string[]): string {
-  return parts.map(part => part.replace(/^\/+|\/+$/g, '')).join('/');
+    return parts.map(part => part.replace(/^\/+|\/+$/g, '')).join('/');
 }
 
 export function randomHash(length: number): string {
@@ -77,4 +77,22 @@ export function randomHash(length: number): string {
     }
 
     return hash;
+}
+
+export type RecordingMimeType = {
+    mimeType: string
+    fileName: string
+}
+
+const popularMimeTypes: RecordingMimeType[] = [
+    {mimeType: 'audio/webm; codecs=vp9', fileName: "audio.webm"},
+    {mimeType: 'audio/webm; codecs=opus', fileName: "audio.webm"},
+    {mimeType: 'audio/webm', fileName: "audio.webm"},
+    {mimeType: 'audio/mp4', fileName: "audio.mp4"},
+]
+
+export function chooseAudioMimeType(): RecordingMimeType | undefined {
+    const find = popularMimeTypes.find(m => MediaRecorder.isTypeSupported(m.mimeType));
+    console.debug("found mimeType: ", find)
+    return find
 }

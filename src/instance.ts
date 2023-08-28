@@ -33,9 +33,9 @@ export const postConv = async (conv: ConversationReq) => {
     return axiosInstance.post("conversation", conv);
 };
 
-export const postAudioConv = async (audio: Blob, conv: ConversationReq) => {
+export const postAudioConv = async (audio: Blob, fileName: string, conv: ConversationReq) => {
     const formData = new FormData();
-    formData.append('audio', audio, "audio.wav");
+    formData.append('audio', audio, fileName);
     formData.append('conversation', JSON.stringify(conv));
 
     return axiosInstance.postForm("audio-conversation", formData);

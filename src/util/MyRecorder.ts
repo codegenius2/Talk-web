@@ -1,4 +1,5 @@
 import RecordPlugin from "wavesurfer.js/plugins/record";
+import {RecordingMimeType} from "./Util.tsx";
 
 export type RecordingStatus = 'init-idle' | 'recording' | 'done' | 'canceled'
 
@@ -10,8 +11,11 @@ export class MyRecorder {
     private onDoneF?: (blob: Blob) => void
     private onCancelF?: (blob: Blob) => void
 
-    constructor() {
-        this.r = RecordPlugin.create()
+    constructor(recordingMimeType?: RecordingMimeType) {
+        this.r = RecordPlugin.create({
+            mimeType: recordingMimeType?.mimeType,
+            audioBitsPerSecond: 100000
+        })
         this.recodingStatus = 'init-idle'
         this.onStartF = () => {
         }

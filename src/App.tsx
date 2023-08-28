@@ -1,11 +1,11 @@
 import {useEffect, useRef, useState} from "react";
 import Recorder from "./component/Recorder.tsx";
 import {useRecorderStore} from "./state/Recording.tsx";
-import {MyRecorder} from "./MyRecorder.ts";
 import MessageList from "./component/MessageList.tsx";
 import TextArea from "./component/TextArea.tsx";
 import {Subscribers} from "./subscriber/Subscribers.tsx";
 import {SSE} from "./SSE.tsx";
+import {MyRecorder} from "./util/MyRecorder.ts";
 
 export default function App() {
     const isRecording = useRecorderStore((state) => state.isRecording)

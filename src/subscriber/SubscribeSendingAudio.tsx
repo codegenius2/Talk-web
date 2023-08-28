@@ -4,7 +4,7 @@ import {useSettingStore} from "../state/Setting.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingAudioStore} from "../state/Input.tsx";
-import {historyMessages} from "../util/Util.tsx";
+import {historyMessages, RecordingMimeType} from "../util/Util.tsx";
 import {useRecorderStore} from "../state/Recording.tsx";
 import {addBlob} from "../store/BlobDB.tsx";
 import {newMyText} from "../ds/Text.tsx";
@@ -27,7 +27,7 @@ export const SubscribeSendingAudio: React.FC = () => {
     const sendingAudio = useSendingAudioStore((state) => state.sendingAudio)
     const recordDuration = useRecorderStore((state) => state.duration)
     const minSpeakTimeToSend = useSettingStore((state) => state.minSpeakTimeToSend)
-
+    const recordingMimeType: RecordingMimeType | undefined = useRecorderStore((state) => state.recordingMimeType)
     useEffect(() => {
         if (sendingAudio.length === 0) {
             console.warn("audio blob is empty")
@@ -45,7 +45,7 @@ export const SubscribeSendingAudio: React.FC = () => {
 
         const qa = newQueAns(id, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)
-        postAudioConv(sendingAudio, {id: id, ms: messages}).then((r) => {
+        postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
                     updateQueAudio(id, sent(getQueAudio(id)!))
                 } else {
