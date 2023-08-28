@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^4.33.0",
     "axios": "^1.5.0",
     "date-fns": "^2.30.0",
     "idb": "^7.1.1",
@@ -18,7 +17,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
-    "reconnecting-websocket": "^4.4.0",
     "uuid": "^9.0.0",
     "wavesurfer.js": "^7.1.5",
     "zustand": "^4.4.1"

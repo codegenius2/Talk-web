@@ -1,12 +1,5 @@
-import ReconnectingWebSocket from "reconnecting-websocket";
 import {QueAns} from "./ds/Conversation.tsx";
 import {Message} from "./api/Interface.tsx";
-
-export const sendMessage = (socket: ReconnectingWebSocket, event: unknown) => {
-    const jsonString = JSON.stringify(event);
-    console.debug("sending message to server(truncated to 100 chars)", jsonString.slice(0, 100))
-    socket.send(jsonString)
-};
 
 export const base64ToBlob = (base64String: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
