@@ -1,6 +1,7 @@
 import React from 'react';
 import {Spin} from "./Spin.tsx";
 import {MyText} from "../ds/Text.tsx";
+import {RichOpText} from "./RichOpText.tsx";
 
 
 interface TextProps {
@@ -41,10 +42,7 @@ export const SelfText: React.FC<TextProps> = ({text}) => {
         case 'received':
         case 'half-received':
         case 'typing' :
-            return <div
-                className="rounded-lg self-end max-w-3/4 whitespace-pre-wrap text-violet-100 bg-blue-600 px-2 py-1.5">
-                <p>{text.text}</p>
-            </div>
+            return <RichOpText text={text}/>
         case 'error':
             return <div> {text.errorMessage}</div>
         default:

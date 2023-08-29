@@ -16,7 +16,7 @@ export const MessageList: React.FC = () => {
         }
     }, [qaSlice]);
 
-    return (<div className="overflow-auto w-full" ref={scrollRef}>
+    return (<div className="overflow-y-auto  overflow-x-hidden w-full" ref={scrollRef}>
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
                 {qaSlice.map((qa) =>

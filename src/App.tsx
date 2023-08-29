@@ -6,7 +6,6 @@ import TextArea from "./component/TextArea.tsx";
 import {Workers} from "./worker/Workers.tsx";
 import {SSE} from "./SSE.tsx";
 import {MyRecorder} from "./util/MyRecorder.ts";
-import Head from "./component/Head.tsx";
 import Setting from "./component/setting/Setting.tsx";
 import {useMouseStore} from "./state/Mouse.tsx";
 
@@ -80,9 +79,6 @@ export default function App() {
         <div className="flex items-center justify-center h-screen w-screen overflow-hidden divide-x bg-equal-800">
             <div
                 className="flex flex-col items-center max-w-4xl w-full h-full rounded-l-lg justify-between gap-1 p-2 bg-white">
-                <div className="flex flex-col items-center w-full mt-auto top-0 backdrop-blur bg-opacity-75">
-                    <Head/>
-                </div>
                 <MessageList/>
                 <div
                     className="flex flex-col items-center w-full mt-auto bottom-0 backdrop-blur bg-opacity-75">

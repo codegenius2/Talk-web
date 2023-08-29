@@ -3,8 +3,8 @@ import {create} from 'zustand';
 interface Setting {
     historyEnabled: boolean
     setHistoryEnabled: (historyEnabled: boolean) => void
-    maxHistory?: number
-    setMaxHistory: (maxHistory?: number) => void
+    maxHistory: number
+    setMaxHistory: (maxHistory: number) => void
 }
 
 export const useSettingStore = create<Setting>(
@@ -16,7 +16,7 @@ export const useSettingStore = create<Setting>(
                 historyEnabled: historyEnabled
             })),
             maxHistory: 4,
-            setMaxHistory: (maxHistory?: number) => set((state) => ({
+            setMaxHistory: (maxHistory: number) => set((state) => ({
                 ...state,
                 maxHistory: maxHistory
             })),

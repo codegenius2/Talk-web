@@ -3,11 +3,11 @@ import {useState} from "react";
 import {Box, Slider, SliderFilledTrack, SliderMark, SliderThumb, SliderTrack} from "@chakra-ui/react";
 
 
-const labelStyles = {
-    mt: '2',
-    ml: '-2.5',
-    fontSize: 'sm',
-}
+// const labelStyles = {
+//     mt: '2',
+//     ml: '-2.5',
+//     fontSize: 'sm',
+// }
 export default function XSlider() {
     const [sliderValue, setSliderValue] = useState(50)
     return (

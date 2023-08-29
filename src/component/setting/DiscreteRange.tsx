@@ -8,8 +8,8 @@ type Opt = {
 
 type  Props = {
     options: Opt[]
-    value?: number
-    setValue: (value?: number) => void
+    value: number
+    setValue: (value: number) => void
     // use this color as bg if not in range
     bgColor: string
 }
@@ -39,7 +39,7 @@ export const DiscreteRange: React.FC<Props> = ({options, value, setValue, bgColo
         return () => {
             setOpColors([])
         }
-    }, [options, bgColor, value,setValue])
+    }, [options, bgColor, value, setValue])
 
     const handleMouseLeaveFirstElement = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (useMouseStore.getState().isMouseDown) {
@@ -47,7 +47,7 @@ export const DiscreteRange: React.FC<Props> = ({options, value, setValue, bgColo
             const {right} = event.currentTarget.getBoundingClientRect();
             // if mouse doesn't leave from right side
             if (clientY < right) {
-                setValue(undefined)
+                setValue(0)
             }
         }
     }

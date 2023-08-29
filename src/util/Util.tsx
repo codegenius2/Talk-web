@@ -30,9 +30,9 @@ export function blobToBase64(blob: Blob): Promise<string> {
 
 // MM:SS
 export const timeElapsedMMSS = (duration: number): string => {
-    const seconds = Math.floor(duration / 1000);
+    let seconds = Math.floor(duration / 1000);
     const minutes = Math.floor((seconds % 3600) / 60);
-
+    seconds = seconds % 60
     return `${padZero(minutes)}:${padZero(seconds)}`;
 };
 
@@ -98,9 +98,9 @@ export function chooseAudioMimeType(): RecordingMimeType | undefined {
 }
 
 export function timeDiffSecond(isoTime: string): number {
-  const isoDate = new Date(isoTime);
-  const currentDate = new Date();
-  const difference = currentDate.getTime() - isoDate.getTime();
+    const isoDate = new Date(isoTime);
+    const currentDate = new Date();
+    const difference = currentDate.getTime() - isoDate.getTime();
     return Math.floor(difference / 1000);
 }
 

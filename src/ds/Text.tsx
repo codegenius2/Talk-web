@@ -55,7 +55,8 @@ export const newText = (prev: MyText, newText: string, eof: boolean): MyText => 
             return {...prev,}
         case "received":
         case "error":
-            throw new Error("invalid state");
+            console.error("invalid text state ", prev.status, newText);
+            return {...prev,}
     }
 }
 
