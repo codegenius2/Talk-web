@@ -11,7 +11,7 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
     switch (text.status) {
         case 'sending':
         case 'receiving':
-            return <div className="w-auto px-2 py-1.5">
+            return <div className="w-auto p-2">
                 <Spin/>
             </div>
         case 'sent':
@@ -19,7 +19,7 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
         case 'half-received':
         case 'typing' :
             return <div
-                className="rounded-lg max-w-3/4 mr-auto whitespace-pre-wrap text-neutral-900 bg-slate-200 px-2 py-0.5">
+                className="rounded-lg max-w-3/4 mr-auto whitespace-pre-wrap text-neutral-900 bg-equal-200 p-2">
                 <p>{text.text}</p>
             </div>
         case 'error':

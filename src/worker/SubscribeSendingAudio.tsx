@@ -11,6 +11,7 @@ import {newMyText} from "../ds/Text.tsx";
 import {error, newAudio, newAudioId, sent} from "../ds/Audio.tsx";
 import {Message} from "../api/Interface.tsx";
 import {postAudioConv} from "../instance.ts";
+import {minSpeakTimeMillis} from "../config.ts";
 
 const systemMessage: Message = {
     role: "system",
@@ -20,13 +21,12 @@ const systemMessage: Message = {
 export const SubscribeSendingAudio: React.FC = () => {
 
     const qaSlice = useConvStore((state) => state.qaSlice)
-    const maxHistoryMessage = useSettingStore((state) => state.maxHistoryMessage)
+    const maxHistory = useSettingStore((state) => state.maxHistory)
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const updateQueAudio = useConvStore((state) => (state.updateQueAudio))
     const getQueAudio = useConvStore((state) => (state.getQueAudio))
     const sendingAudio = useSendingAudioStore((state) => state.sendingAudio)
     const recordDuration = useRecorderStore((state) => state.duration)
-    const minSpeakTimeToSend = useSettingStore((state) => state.minSpeakTimeToSend)
     const recordingMimeType: RecordingMimeType | undefined = useRecorderStore((state) => state.recordingMimeType)
     useEffect(() => {
         if (sendingAudio.length === 0) {
@@ -34,16 +34,16 @@ export const SubscribeSendingAudio: React.FC = () => {
             return
         }
 
-        if (recordDuration < minSpeakTimeToSend) {
-            console.info("audio is less than ms", minSpeakTimeToSend)
+        if (recordDuration < minSpeakTimeMillis) {
+            console.info("audio is less than ms", minSpeakTimeMillis)
             return
         }
 
         const id = uuidv4()
-        let messages = historyMessages(qaSlice, maxHistoryMessage)
+        let messages = historyMessages(qaSlice, maxHistory)
         messages = [systemMessage, ...messages]
 
-        const qa = newQueAns(id, newMyText('receiving', ""), newAudio("sending"))
+        const qa = newQueAns(id,false, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)
         postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {

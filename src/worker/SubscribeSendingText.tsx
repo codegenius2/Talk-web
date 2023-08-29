@@ -20,17 +20,17 @@ export const SubscriberSendingText: React.FC = () => {
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const updateQueText = useConvStore((state) => (state.updateQueText))
     const getQueText = useConvStore((state) => (state.getQueText))
-    const maxHistoryMessage = useSettingStore((state) => state.maxHistoryMessage)
+    const maxHistory = useSettingStore((state) => state.maxHistory)
     const sendingText = useSendingTextStore((state) => state.sendingText)
 
     useEffect(() => {
         if (!sendingText) {
             return
         }
-        let messages = historyMessages(qaSlice, maxHistoryMessage)
+        let messages = historyMessages(qaSlice, maxHistory)
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
         const id = uuidv4()
-        const qa = newQueAns(id, newMyText('sending', sendingText))
+        const qa = newQueAns(id, true, newMyText('sending', sendingText))
         pushQueAns(qa)
         postConv({id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {

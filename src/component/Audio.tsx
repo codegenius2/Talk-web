@@ -38,7 +38,7 @@ const selfColor: Color = {
 }
 
 const assistantColor: Color = {
-    boxBg: 'bg-slate-200',
+    boxBg: 'bg-equal-200',
     playBg: 'bg-white',
     play: '#5e5e5e',
     pause: 'text-gray-500',

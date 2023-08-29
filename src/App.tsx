@@ -1,11 +1,14 @@
 import {useEffect, useRef, useState} from "react";
 import Recorder from "./component/Recorder.tsx";
 import {useRecorderStore} from "./state/Recording.tsx";
-import MessageList from "./component/MessageList.tsx";
+import {MessageList} from "./component/MessageList.tsx";
 import TextArea from "./component/TextArea.tsx";
 import {Workers} from "./worker/Workers.tsx";
 import {SSE} from "./SSE.tsx";
 import {MyRecorder} from "./util/MyRecorder.ts";
+import Head from "./component/Head.tsx";
+import Setting from "./component/setting/Setting.tsx";
+import {useMouseStore} from "./state/Mouse.tsx";
 
 export default function App() {
     const isRecording = useRecorderStore((state) => state.isRecording)
@@ -14,7 +17,7 @@ export default function App() {
     const setRecordDuration = useRecorderStore((state) => state.setDuration)
     const [spacePressed, setSpacePressed] = useState<boolean>(false)
     const spacePressedRef = useRef(spacePressed);
-
+    const setMouseDown = useMouseStore(state => state.setMouseDown)
     useEffect(() => {
         if (isRecording) {
             setRecordDuration(0)
@@ -63,6 +66,8 @@ export default function App() {
 
         window.addEventListener("keyup", handleKeyUp);
         window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("mousedown", () => setMouseDown(true));
+        window.addEventListener("mouseup", () => setMouseDown(false));
 
         return () => {
             window.removeEventListener("keyup", handleKeyUp);
@@ -72,17 +77,27 @@ export default function App() {
 
 
     return (
-        <div className="flex flex-col items-center justify-between h-screen w-screen gap-1 p-1 overflow-hidden"
-             id="container">
-            <MessageList/>
-            <div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-2xl backdrop-blur bg-opacity-75">
-                <TextArea/>
-                <div className="flex justify-center items-center w-full mt-1">
-                    <Recorder/>
+        <div className="flex items-center justify-center h-screen w-screen overflow-hidden divide-x bg-equal-800">
+            <div
+                className="flex flex-col items-center max-w-4xl w-full h-full rounded-l-lg justify-between gap-1 p-2 bg-white">
+                <div className="flex flex-col items-center w-full mt-auto top-0 backdrop-blur bg-opacity-75">
+                    <Head/>
                 </div>
+                <MessageList/>
+                <div
+                    className="flex flex-col items-center w-full mt-auto bottom-0 backdrop-blur bg-opacity-75">
+                    <TextArea/>
+                    <div className="flex justify-center items-center w-full mt-1">
+                        <Recorder/>
+                    </div>
+                </div>
+                <SSE/>
+                <Workers/>
             </div>
-            <SSE/>
-            <Workers/>
+            <div className="flex flex-col items-end h-full max-w-1/4 w-full rounded-r-lg bg-gray-200">
+                <Setting/>
+            </div>
+
         </div>
     )
 }

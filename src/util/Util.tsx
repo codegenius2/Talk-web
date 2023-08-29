@@ -40,8 +40,8 @@ const padZero = (num: number): string => {
     return num.toString().padStart(2, '0');
 };
 
-export const historyMessages = (qaSlice: QueAns[], maxHistoryMessage: number): Message[] => {
-    if (maxHistoryMessage <= 0) {
+export const historyMessages = (qaSlice: QueAns[], maxHistory: number): Message[] => {
+    if (maxHistory <= 0) {
         return []
     }
     let messages: Message[] = []
@@ -51,7 +51,7 @@ export const historyMessages = (qaSlice: QueAns[], maxHistoryMessage: number): M
     qaSlice.map(qa => qa.ans.text)
         .filter(t => t.status == "received")
         .forEach(t => messages.push({role: "assistant", content: t.text}))
-    messages = messages.slice(-maxHistoryMessage)
+    messages = messages.slice(-maxHistory)
     return messages
 }
 
@@ -102,4 +102,8 @@ export function timeDiffSecond(isoTime: string): number {
   const currentDate = new Date();
   const difference = currentDate.getTime() - isoDate.getTime();
     return Math.floor(difference / 1000);
+}
+
+export function joinClassNames(...classes: string[]) {
+    return classes.filter(Boolean).join(' ')
 }

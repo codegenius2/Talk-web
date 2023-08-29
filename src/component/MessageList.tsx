@@ -4,7 +4,7 @@ import {QueAns} from "../ds/Conversation.tsx";
 import {Audio} from "./Audio.tsx";
 import {AssistantText, SelfText} from "./Text.tsx";
 
-const MessageList: React.FC = () => {
+export const MessageList: React.FC = () => {
     const qaSlice: QueAns[] = useConvStore((state) => state.qaSlice)
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -16,25 +16,57 @@ const MessageList: React.FC = () => {
         }
     }, [qaSlice]);
 
-    return (<div className="overflow-auto w-full max-w-2xl" ref={scrollRef}>
-            <div className="flex flex-col gap-5 rounded-lg w-full justify-end max-w-2xl">
+    return (<div className="overflow-auto w-full" ref={scrollRef}>
+            <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
                 {qaSlice.map((qa) =>
-                    <div className="flex flex-col gap-2 mr-2" id="message-list" key={qa.id}>
-                        <SelfText text={qa.que.text}/>
-                        <div
-                            className="rounded-lg max-w-1/2 w-full self-end text-neutral-900">
-                            <Audio audio={qa.que.audio} self={true}/>
-                        </div>
-                        <AssistantText text={qa.ans.text}/>
-                        <div className="rounded-lg max-w-1/2 text-neutral-900">
-                            <Audio audio={qa.ans.audio} self={false}/>
-                        </div>
-                    </div>
+                    qaDiv(qa)
                 )}
             </div>
         </div>
     )
 };
 
-export default MessageList;
+type render = 'queText' | 'queAudio' | 'ansText' | 'ansAudio' | undefined
+
+// if there are multiple elements are pending, only render the first of them
+function qaDiv(qa: QueAns) {
+    const renderOrder: render[] = ['queText', 'queAudio', 'ansText', 'ansAudio']
+    const statusSlice: string[] = [qa.que.text.status, qa.que.audio?.status ?? "", qa.ans.text.status, qa.ans.audio.status]
+
+    let thereIsAPendingAlready = false
+    for (let i = 0; i < statusSlice.length; i++) {
+        if (['sending', 'receiving', 'error'].includes(statusSlice[i])) {
+            if (thereIsAPendingAlready) {
+                renderOrder[i] = undefined
+            } else {
+                thereIsAPendingAlready = true
+            }
+        }
+    }
+
+    if (!qa.que.textFirst) {
+        [renderOrder[0], renderOrder[1]] = [renderOrder[1], renderOrder[0]]
+    }
+
+    return <div className="flex flex-col gap-1 mr-2" id="message-list" key={qa.id}>
+        {renderOrder.map((render) => {
+                switch (render) {
+                    case 'queText' :
+                        return <SelfText text={qa.que.text}/>
+                    case 'queAudio' :
+                        return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end">
+                            <Audio audio={qa.que.audio} self={true}/>
+                        </div>
+                    case 'ansText' :
+                        return <AssistantText text={qa.ans.text}/>
+                    case 'ansAudio':
+                        return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900">
+                            <Audio audio={qa.ans.audio} self={false}/>
+                        </div>
+                }
+            }
+        )}
+    </div>;
+}
+

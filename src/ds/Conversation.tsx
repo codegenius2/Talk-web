@@ -14,7 +14,7 @@ export type Conversation = {
     updateAnsText: (id: string, myText: MyText) => void
     updateAnsAudio: (id: string, audio: Audio) => void
     getQueText: (id: string) => MyText
-    getQueAudio: (id: string) => Audio| undefined
+    getQueAudio: (id: string) => Audio | undefined
     getAnsText: (id: string) => MyText
     getAnsAudio: (id: string) => Audio
 }
@@ -30,6 +30,7 @@ export type QueAns = {
 type Que = {
     text: MyText
     audio?: Audio // if user sends only words to dialog window, those words will not be synthesized to audio
+    textFirst: boolean
 }
 
 type Ans = {
@@ -37,13 +38,14 @@ type Ans = {
     audio: Audio
 }
 
-export const newQueAns = (id: string, queText: MyText, audio?: Audio): QueAns => {
+export const newQueAns = (id: string, textFirst: boolean, queText: MyText, audio?: Audio): QueAns => {
 
     return {
         id: id,
         que: {
             text: queText,
-            audio: audio
+            audio: audio,
+            textFirst: textFirst
         },
         ans: {
             text: newMyText("receiving", ""),
