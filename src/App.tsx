@@ -3,7 +3,7 @@ import Recorder from "./component/Recorder.tsx";
 import {useRecorderStore} from "./state/Recording.tsx";
 import MessageList from "./component/MessageList.tsx";
 import TextArea from "./component/TextArea.tsx";
-import {Subscribers} from "./subscriber/Subscribers.tsx";
+import {Workers} from "./worker/Workers.tsx";
 import {SSE} from "./SSE.tsx";
 import {MyRecorder} from "./util/MyRecorder.ts";
 
@@ -82,7 +82,7 @@ export default function App() {
                 </div>
             </div>
             <SSE/>
-            <Subscribers/>
+            <Workers/>
         </div>
     )
 }

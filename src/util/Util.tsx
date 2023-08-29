@@ -96,3 +96,10 @@ export function chooseAudioMimeType(): RecordingMimeType | undefined {
     console.debug("found mimeType: ", find)
     return find
 }
+
+export function timeDiffSecond(isoTime: string): number {
+  const isoDate = new Date(isoTime);
+  const currentDate = new Date();
+  const difference = currentDate.getTime() - isoDate.getTime();
+    return Math.floor(difference / 1000);
+}
