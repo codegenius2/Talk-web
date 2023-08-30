@@ -1,7 +1,8 @@
-import {currentProtocolHostPortPath, joinUrl} from "./util/Util.tsx";
-import {useSSEStore} from "./state/SSE.tsx";
-import {ConversationReq} from "./api/Interface.tsx";
 import axios from "axios";
+import { joinUrl } from "../util/Util";
+import {currentProtocolHostPortPath} from "../util/Util.tsx";
+import {useSSEStore} from "../state/SSE.tsx";
+import {ConversationReq} from "./restful.ts";
 
 export function SSEEndpoint(): string {
     let ep = import.meta.env.VITE_REACT_APP_SSE_ENDPOINT

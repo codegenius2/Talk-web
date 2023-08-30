@@ -1,5 +1,5 @@
 import {create} from "zustand";
-import {Answer, Audio, Trans} from "../api/Interface";
+import {Answer, Audio, Trans} from "../api/sse-event.ts";
 
 interface Events {
     answers: Answer[]

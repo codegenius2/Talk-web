@@ -33,7 +33,7 @@ const Recorder = () => {
     }
 
     const handleTouchStart = () => {
-        console.log('handleTouchStart');
+        console.debug('handleTouchStart');
         recorder.start().catch(
             (e) => {
                 console.error("failed to start recorder", e)
@@ -41,11 +41,11 @@ const Recorder = () => {
         )
     };
     const handleTouchEnd = () => {
-        console.log('handleTouchEnd');
+        console.debug('handleTouchEnd');
         recorder.done()
     };
     const handleTouchCancel = () => {
-        console.log('handleTouchCancel');
+        console.debug('handleTouchCancel');
         recorder.cancel()
     };
 
@@ -87,7 +87,6 @@ const Recorder = () => {
         </div>
     </div>
 }
-
 
 export default Recorder;
 

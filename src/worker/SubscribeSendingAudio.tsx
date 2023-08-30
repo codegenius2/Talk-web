@@ -9,8 +9,8 @@ import {useRecorderStore} from "../state/Recording.tsx";
 import {addBlob} from "../store/BlobDB.tsx";
 import {newMyText} from "../ds/Text.tsx";
 import {error, newAudio, newAudioId, sent} from "../ds/Audio.tsx";
-import {Message} from "../api/Interface.tsx";
-import {postAudioConv} from "../instance.ts";
+import {Message} from "../api/restful.ts";
+import {postAudioConv} from "../api/axios.ts";
 import {minSpeakTimeMillis} from "../config.ts";
 import {AxiosError} from "axios";
 

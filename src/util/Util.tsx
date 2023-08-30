@@ -1,5 +1,5 @@
 import {QueAns} from "../ds/Conversation.tsx";
-import {Message} from "../api/Interface.tsx";
+import {Message} from "../api/restful.ts";
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
