@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import defaultTheme from 'tailwindcss/defaultTheme'
+
 export default {
     content: [
         "./index.html",
@@ -19,6 +21,7 @@ export default {
                 'equal-600': 'rgb(100,100,100)',
                 'equal-800': 'rgb(46,46,46)',
                 'equal-900': 'rgb(27,27,27)',
+                'equal-950': 'rgb(17,17,17)',
             },
             maxWidth: {
                 '1/4': '25%',
@@ -27,6 +30,12 @@ export default {
                 '1/2': '50%',
                 '3/4': '75%',
             },
+            transitionDuration: {
+                '5000': '5000ms',
+            },
+            fontFamily: {
+                'borel': ['borel', ...defaultTheme.fontFamily.sans],
+            }
         },
 
     },

@@ -36,7 +36,7 @@ export const TimeoutContentDetection: React.FC = () => {
                     updateAnsAudio(qa.id, errorAudio(qa.ans.audio, "timeout"))
                 }
             }
-        }, 2);
+        }, 2000);
 
         return () => {
             if (interval) {

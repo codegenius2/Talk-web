@@ -1,5 +1,6 @@
 import {QueAns} from "../ds/Conversation.tsx";
 import {Message} from "../api/restful.ts";
+import SHA256 from 'crypto-js/sha256';
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
@@ -106,4 +107,24 @@ export function timeDiffSecond(isoTime: string): number {
 
 export function joinClassNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
+}
+
+export function generateHash(input: string): string {
+    return SHA256(input).toString();
+}
+
+export function getRandomElement<T>(arr: T[]): T | undefined {
+  if (arr.length === 0) {
+    return undefined;
+  }
+
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
+}
+
+export function compareSlices<T>(arr1: T[], arr2: T[]): boolean {
+  const slice1 = arr1.slice();
+  const slice2 = arr2.slice();
+
+  return JSON.stringify(slice1) === JSON.stringify(slice2);
 }

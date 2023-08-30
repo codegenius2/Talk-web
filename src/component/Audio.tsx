@@ -6,47 +6,10 @@ import {getBlob} from "../store/BlobDB.tsx";
 import {Spin} from "./Spin.tsx";
 import {usePlayingStore} from "../state/Playing.tsx";
 
-
 interface WaveSurferProps {
     url: string;
     audioIndex: string;
     self: boolean;
-}
-
-type Color = {
-    boxBg: string
-    playBg: string
-    play: string
-    pause: string
-    wave: string
-    progress: string
-    hoverLine: string
-    labelBg: string
-    label: string
-}
-
-const selfColor: Color = {
-    boxBg: 'bg-blue-600',
-    playBg: 'bg-blue-grey',
-    play: 'white',
-    pause: 'text-white',
-    wave: 'rgb(128, 154, 241)',
-    progress: 'rgb(213, 221, 250)',
-    hoverLine: 'white',
-    labelBg: '#94a3b8',
-    label: 'white',
-}
-
-const assistantColor: Color = {
-    boxBg: 'bg-equal-200',
-    playBg: 'bg-white',
-    play: '#5e5e5e',
-    pause: 'text-gray-500',
-    wave: '#8c8c8c',
-    progress: '#2f2f2f',
-    hoverLine: 'black',
-    labelBg: '#d1d5db',
-    label: 'black',
 }
 
 interface AudioProps {
@@ -188,3 +151,40 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
         <div ref={waveformRef} className="w-full h-10"/>
     </div>
 };
+
+
+type Color = {
+    boxBg: string
+    playBg: string
+    play: string
+    pause: string
+    wave: string
+    progress: string
+    hoverLine: string
+    labelBg: string
+    label: string
+}
+
+const selfColor: Color = {
+    boxBg: 'bg-blue-600',
+    playBg: 'bg-blue-grey',
+    play: 'white',
+    pause: 'text-white',
+    wave: 'rgb(128, 154, 241)',
+    progress: 'rgb(213, 221, 250)',
+    hoverLine: 'white',
+    labelBg: '#94a3b8',
+    label: 'white',
+}
+
+const assistantColor: Color = {
+    boxBg: 'bg-equal-200',
+    playBg: 'bg-white',
+    play: '#5e5e5e',
+    pause: 'text-gray-500',
+    wave: '#8c8c8c',
+    progress: '#2f2f2f',
+    hoverLine: 'black',
+    labelBg: '#d1d5db',
+    label: 'black',
+}
