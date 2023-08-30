@@ -8,7 +8,7 @@ import {SSE} from "../SSE.tsx";
 import {MyRecorder} from "../util/MyRecorder.ts";
 import Setting from "../component/setting/Setting.tsx";
 import {useMouseStore} from "../state/Mouse.tsx";
-import HomeWallpaper, {wpStyleBluePeach, wpStyleGreenPurple, wpStyleSkyPink} from "./wallpaper/HomeWallpaper.tsx";
+import HomeWallpaper from "./wallpaper/HomeWallpaper.tsx";
 
 export default function Home() {
     const isRecording = useRecorderStore((state) => state.isRecording)
@@ -83,7 +83,7 @@ export default function Home() {
                 // style={wpStyleSkyPink}
                 className="home flex items-center justify-center h-screen w-screen overflow-hidden divide-x ">
                 <div
-                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-l-lg justify-between gap-1 p-2 bg-white bg-opacity-60 backdrop-blur backdrop-filter">
+                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-l-lg justify-between gap-1 p-2 bg-white bg-opacity-60 backdrop-blur">
                     <MessageList/>
                     <div
                         className="flex flex-col rounded-lg items-center w-full px-2 mt-auto bottom-0 backdrop-blur bg-opacity-75">

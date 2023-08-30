@@ -30,6 +30,7 @@ export default function Auth() {
         event.preventDefault();
         if (!validatePassword(value)) {
             setIsError(true);
+            setValue('')
         } else {
             setIsError(false);
         }
@@ -49,7 +50,6 @@ export default function Auth() {
                         type="password"
                         inputMode="url"
                         id="password"
-                        placeholder="*******"
                         value={value}
                         autoComplete="current-password"
                         animate={isError ? shakeAnimation : {}}
@@ -58,8 +58,9 @@ export default function Auth() {
                             setValue(e.target.value);
                             setIsError(false);
                         }}
-                        className="appearance-none w-full h-16 rounded-lg  text-slate-800 outline-0 shadow-md caret-transparent
-                    text-6xl text-center tracking-widest placeholder:text-slate-400"
+                        className={"appearance-none w-full h-16 rounded-lg outline-0 shadow-md caret-transparent " +
+                            "text-6xl text-center tracking-widest bg-white bg-opacity-10 backdrop-blur " +
+                            "placeholder:text-equal-200 transition duration-5000" + (authWallpaperDark ? "text-equal-200" : "text-equal-800")}
                     />
                 </form>
             </div>
