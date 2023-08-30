@@ -26,7 +26,7 @@ export default {
                 '2/5': '40%',
                 '1/2': '50%',
                 '3/4': '75%',
-            }
+            },
         },
 
     },
@@ -38,5 +38,6 @@ export default {
     plugins: [
         require('@tailwindcss/typography'),
     ],
+
 }
 

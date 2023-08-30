@@ -8,6 +8,7 @@ import {historyMessages} from "../util/Util.tsx";
 import {Message} from "../api/Interface.tsx";
 import {error, newMyText, sent} from "../ds/Text.tsx";
 import {postConv} from "../instance.ts";
+import {AxiosError} from "axios";
 
 const systemMessage: Message = {
     role: "system",
@@ -40,8 +41,8 @@ export const SubscriberSendingText: React.FC = () => {
                 }
                 console.debug(useConvStore.getState())
             }
-        ).catch((e) => {
-            updateQueText(id, error(getQueText(id), e))
+        ).catch((e: AxiosError) => {
+            updateQueText(id, error(getQueText(id), e.message))
         })
     }, [sendingText]);
     return null

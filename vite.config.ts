@@ -10,7 +10,8 @@ export default defineConfig({
     base: './',
     build: {
         minify: false,
-        outDir:'../talk/web',
-        emptyOutDir:true
+        outDir: '../talk/web',
+        emptyOutDir: true,
+        sourcemap: true,
     },
 })

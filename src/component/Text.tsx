@@ -24,7 +24,7 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
                 <p>{text.text}</p>
             </div>
         case 'error':
-            return <div> {text.errorMessage}</div>
+            return <React.Fragment> {text.errorMessage}</React.Fragment>
         default:
             console.error('impossible text status', text.status)
             return null;
@@ -44,7 +44,7 @@ export const SelfText: React.FC<TextProps> = ({text}) => {
         case 'typing' :
             return <RichOpText text={text}/>
         case 'error':
-            return <div> {text.errorMessage}</div>
+            return <div className="self-end w-auto px-2 py-1.5"> {text.errorMessage}</div>
         default:
             console.error('impossible text status', text.status)
             return null;

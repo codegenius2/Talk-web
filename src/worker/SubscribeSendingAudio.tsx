@@ -12,6 +12,7 @@ import {error, newAudio, newAudioId, sent} from "../ds/Audio.tsx";
 import {Message} from "../api/Interface.tsx";
 import {postAudioConv} from "../instance.ts";
 import {minSpeakTimeMillis} from "../config.ts";
+import {AxiosError} from "axios";
 
 const systemMessage: Message = {
     role: "system",
@@ -43,7 +44,7 @@ export const SubscribeSendingAudio: React.FC = () => {
         let messages = historyMessages(qaSlice, maxHistory)
         messages = [systemMessage, ...messages]
 
-        const qa = newQueAns(id,false, newMyText('receiving', ""), newAudio("sending"))
+        const qa = newQueAns(id, false, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)
         postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
@@ -52,8 +53,8 @@ export const SubscribeSendingAudio: React.FC = () => {
                     updateQueAudio(id, error(getQueAudio(id)!, r.statusText))
                 }
             }
-        ).catch((e) => {
-            updateQueAudio(id, error(getQueAudio(id)!, e))
+        ).catch((e: AxiosError) => {
+            updateQueAudio(id, error(getQueAudio(id)!, e.message))
         })
 
         const audioId = uuidv4()
@@ -61,7 +62,7 @@ export const SubscribeSendingAudio: React.FC = () => {
             console.debug("saved audio blob, audioId: ", audioId)
             updateQueAudio(id, newAudioId(getQueAudio(id)!, audioId))
         }).catch((e) => {
-            console.error("saved audio blob, audioId:", id, e)
+            console.error("saved audio blob, audioId:", id, e.message)
         })
 
     }, [sendingAudio]);
