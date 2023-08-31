@@ -1,9 +1,12 @@
 import {MyText, newMyText} from "./Text.tsx";
 import {Audio, newAudio} from "./Audio.tsx";
 import {formatISO} from "date-fns";
+import {Ability, ChatGPTLLM} from "./ability/client-ability.tsx";
+
+// Data structure that represents the conversation. Each "QueAns" constitutes a complete round trip.
+
 // do not change these types by modifying fields, use useConvStore instead
 
-// multi Q&A, representing the whole dialog window
 export type Conversation = {
     qaSlice: QueAns[]
     pushQueAns: (queAns: QueAns) => void
@@ -17,6 +20,12 @@ export type Conversation = {
     getQueAudio: (id: string) => Audio | undefined
     getAnsText: (id: string) => MyText
     getAnsAudio: (id: string) => Audio
+
+
+    ability: Ability
+    setAbility: (ability: Ability) => void
+    getChatGPT: () => ChatGPTLLM
+    setChatGPT: (chatGPT: ChatGPTLLM) => void
 }
 
 // exactly one pair of Q&A

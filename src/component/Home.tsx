@@ -6,9 +6,9 @@ import TextArea from "../component/TextArea.tsx";
 import {Workers} from "../worker/Workers.tsx";
 import {SSE} from "../SSE.tsx";
 import {MyRecorder} from "../util/MyRecorder.ts";
-import Setting from "../component/setting/Setting.tsx";
 import {useMouseStore} from "../state/Mouse.tsx";
 import HomeWallpaper from "./wallpaper/HomeWallpaper.tsx";
+import Setting from "./setting/setting.tsx";
 
 export default function Home() {
     const isRecording = useRecorderStore((state) => state.isRecording)

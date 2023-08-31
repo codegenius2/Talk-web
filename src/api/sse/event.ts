@@ -1,6 +1,9 @@
+import {LLM, STT, TTS} from "./ability.ts";
+
 export const EventAudio = "audio"
 export const EventAnswer = "answer"
 export const EventTrans = "trans"
+export const EventAbility = "ability"
 
 export interface EventMeta {
     convId: string; // unique ID for every Q&A
@@ -18,4 +21,11 @@ export interface Audio extends EventMeta {
 
 export interface Trans extends EventMeta {
     text: string;
+}
+
+// Ability guide clients in adjusting all parameters.
+export type AbilityEvent = {
+    llm: LLM
+    tts: TTS
+    stt: STT
 }

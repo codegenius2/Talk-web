@@ -1,6 +1,5 @@
 import {v4 as uuidv4} from "uuid";
 import {useConvStore} from "../state/ConversationStore.tsx";
-import {useSettingStore} from "../state/Setting.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingAudioStore} from "../state/Input.tsx";
@@ -8,7 +7,7 @@ import {historyMessages, RecordingMimeType} from "../util/Util.tsx";
 import {useRecorderStore} from "../state/Recording.tsx";
 import {addBlob} from "../store/BlobDB.tsx";
 import {newMyText} from "../ds/Text.tsx";
-import {error, newAudio, newAudioId, sent} from "../ds/Audio.tsx";
+import {newAudio, onError, onNewAudioId, onSent} from "../ds/Audio.tsx";
 import {Message} from "../api/restful.ts";
 import {postAudioConv} from "../api/axios.ts";
 import {minSpeakTimeMillis} from "../config.ts";
@@ -22,7 +21,7 @@ const systemMessage: Message = {
 export const SubscribeSendingAudio: React.FC = () => {
 
     const qaSlice = useConvStore((state) => state.qaSlice)
-    const maxHistory = useSettingStore((state) => state.maxHistory)
+    const ability = useConvStore((state) => state.ability)
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const updateQueAudio = useConvStore((state) => (state.updateQueAudio))
     const getQueAudio = useConvStore((state) => (state.getQueAudio))
@@ -41,26 +40,26 @@ export const SubscribeSendingAudio: React.FC = () => {
         }
 
         const id = uuidv4()
-        let messages = historyMessages(qaSlice, maxHistory)
+        let messages = historyMessages(qaSlice, ability.llm.maxHistory())
         messages = [systemMessage, ...messages]
 
         const qa = newQueAns(id, false, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)
         postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
-                    updateQueAudio(id, sent(getQueAudio(id)!))
+                    updateQueAudio(id, onSent(getQueAudio(id)!))
                 } else {
-                    updateQueAudio(id, error(getQueAudio(id)!, r.statusText))
+                    updateQueAudio(id, onError(getQueAudio(id)!, r.statusText))
                 }
             }
         ).catch((e: AxiosError) => {
-            updateQueAudio(id, error(getQueAudio(id)!, e.message))
+            updateQueAudio(id, onError(getQueAudio(id)!, e.message))
         })
 
         const audioId = uuidv4()
         addBlob({id: audioId, blob: sendingAudio}).then(() => {
             console.debug("saved audio blob, audioId: ", audioId)
-            updateQueAudio(id, newAudioId(getQueAudio(id)!, audioId))
+            updateQueAudio(id, onNewAudioId(getQueAudio(id)!, audioId))
         }).catch((e) => {
             console.error("saved audio blob, audioId:", id, e.message)
         })

@@ -21,7 +21,7 @@ export const newMyText = (status: TextStatus, text: string): MyText => {
     }
 }
 
-export const sent = (prev: MyText): MyText => {
+export const onSent = (prev: MyText): MyText => {
     switch (prev.status) {
         case "sending":
             return {
@@ -38,7 +38,7 @@ export const sent = (prev: MyText): MyText => {
     }
 }
 
-export const newText = (prev: MyText, newText: string, eof: boolean): MyText => {
+export const onNewText = (prev: MyText, newText: string, eof: boolean): MyText => {
     switch (prev.status) {
         case "sending":
         case "sent":
@@ -60,7 +60,7 @@ export const newText = (prev: MyText, newText: string, eof: boolean): MyText => 
     }
 }
 
-export const error = (prev: MyText, errMsg: string): MyText => {
+export const onError = (prev: MyText, errMsg: string): MyText => {
     switch (prev.status) {
         case "sending":
         case "sent":

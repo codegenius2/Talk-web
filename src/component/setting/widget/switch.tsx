@@ -2,19 +2,18 @@ import React from 'react'
 import {Switch} from '@headlessui/react'
 
 export type  MySwitchProps = {
-    switchColor: string
     enabled: boolean
     setEnabled: (enabled: boolean) => void
 }
 
-export const MySwitch: React.FC<MySwitchProps> = ({switchColor, enabled, setEnabled}) => {
+export const MySwitch: React.FC<MySwitchProps> = ({ enabled, setEnabled}) => {
 
     return (
         <div className="flex items-center">
             <Switch
                 checked={enabled}
                 onChange={setEnabled}
-                className={`${enabled ? switchColor : 'bg-neutral-400'}
+                className={`${enabled ? 'bg-blue-600' : 'bg-neutral-400'}
           relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
                 <span className="sr-only">Use setting</span>

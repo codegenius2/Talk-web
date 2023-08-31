@@ -1,11 +1,10 @@
 import {v4 as uuidv4} from "uuid"
 import {useConvStore} from "../state/ConversationStore.tsx";
-import {useSettingStore} from "../state/Setting.tsx";
 import {newQueAns} from "../ds/Conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingTextStore} from "../state/Input.tsx";
 import {historyMessages} from "../util/Util.tsx";
-import {error, newMyText, sent} from "../ds/Text.tsx";
+import {newMyText, onError, onSent} from "../ds/Text.tsx";
 import {AxiosError} from "axios";
 import {Message} from "../api/restful.ts";
 import {postConv} from "../api/axios.ts";
@@ -21,28 +20,28 @@ export const SubscriberSendingText: React.FC = () => {
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const updateQueText = useConvStore((state) => (state.updateQueText))
     const getQueText = useConvStore((state) => (state.getQueText))
-    const maxHistory = useSettingStore((state) => state.maxHistory)
+    const ability = useConvStore((state) => state.ability)
     const sendingText = useSendingTextStore((state) => state.sendingText)
 
     useEffect(() => {
         if (!sendingText) {
             return
         }
-        let messages = historyMessages(qaSlice, maxHistory)
+        let messages = historyMessages(qaSlice, ability.llm.maxHistory())
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
         const id = uuidv4()
         const qa = newQueAns(id, true, newMyText('sending', sendingText))
         pushQueAns(qa)
         postConv({id: id, ms: messages}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
-                    updateQueText(id, sent(getQueText(id)))
+                    updateQueText(id, onSent(getQueText(id)))
                 } else {
-                    updateQueText(id, error(getQueText(id), r.statusText))
+                    updateQueText(id, onError(getQueText(id), r.statusText))
                 }
                 console.debug(useConvStore.getState())
             }
         ).catch((e: AxiosError) => {
-            updateQueText(id, error(getQueText(id), e.message))
+            updateQueText(id, onError(getQueText(id), e.message))
         })
     }, [sendingText]);
     return null

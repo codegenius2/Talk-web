@@ -15,7 +15,7 @@ export const newAudio = (status: AudioStatus, audioId?: string): Audio => {
     }
 }
 
-export const sent = (prev: Audio): Audio => {
+export const onSent = (prev: Audio): Audio => {
     switch (prev.status) {
         case "sending":
             return {
@@ -30,7 +30,7 @@ export const sent = (prev: Audio): Audio => {
     }
 }
 
-export const newAudioId = (prev: Audio, audioId: string): Audio => {
+export const onNewAudioId = (prev: Audio, audioId: string): Audio => {
     switch (prev.status) {
         case "sending":
         case "sent":
@@ -54,7 +54,7 @@ export const newAudioId = (prev: Audio, audioId: string): Audio => {
     }
 }
 
-export const error = (prev: Audio, errMsg: string): Audio => {
+export const onError = (prev: Audio, errMsg: string): Audio => {
     switch (prev.status) {
         case "sending":
         case "receiving":

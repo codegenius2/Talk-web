@@ -2,8 +2,8 @@ import {useConvStore} from "../state/ConversationStore.tsx";
 import React, {useEffect} from "react";
 import {timeDiffSecond} from "../util/Util.tsx";
 import {contentTimeoutSeconds} from "../config.ts";
-import {error} from "../ds/Text.tsx";
-import {error as errorAudio} from "../ds/Audio.tsx";
+import {onError} from "../ds/Text.tsx";
+import {onError as errorAudio} from "../ds/Audio.tsx";
 
 const timeoutCheckStatus = ['sending', 'receiving']
 
@@ -24,13 +24,13 @@ export const TimeoutContentDetection: React.FC = () => {
                     continue
                 }
                 if (timeoutCheckStatus.includes(qa.que.text.status)) {
-                    updateQueText(qa.id, error(qa.que.text, "timeout"))
+                    updateQueText(qa.id, onError(qa.que.text, "timeout"))
                 }
                 if (timeoutCheckStatus.includes(qa.que.audio?.status ?? "")) {
                     updateQueAudio(qa.id, errorAudio(qa.que.audio!, "timeout"))
                 }
                 if (timeoutCheckStatus.includes(qa.ans.text.status)) {
-                    updateAnsText(qa.id, error(qa.ans.text, "timeout"))
+                    updateAnsText(qa.id, onError(qa.ans.text, "timeout"))
                 }
                 if (timeoutCheckStatus.includes(qa.ans.audio?.status ?? "")) {
                     updateAnsAudio(qa.id, errorAudio(qa.ans.audio, "timeout"))

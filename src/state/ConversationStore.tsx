@@ -4,6 +4,8 @@ import {createJSONStorage, devtools, persist} from "zustand/middleware";
 import {zustandStorage} from "../store/ZustandDB.tsx";
 import {MyText} from "../ds/Text.tsx";
 import {Audio} from "../ds/Audio.tsx";
+import {defaultAbility} from "../ds/ability/defauts.ts";
+import {Ability, ChatGPTLLM} from "../ds/ability/client-ability.tsx";
 
 export const useConvStore = create<Conversation>()(
     devtools(
@@ -58,7 +60,23 @@ export const useConvStore = create<Conversation>()(
             getQueAudio: (id: string) => get().qaSlice.find(qa => qa.id === id)!.que.audio,
             getAnsText: (id: string) => get().qaSlice.find(qa => qa.id === id)!.ans.text,
             getAnsAudio: (id: string) => get().qaSlice.find(qa => qa.id === id)!.ans.audio,
-
+            ability: defaultAbility(),
+            setAbility: (ability: Ability) =>
+                set(() => ({
+                    ability: ability
+                })),
+            getChatGPT: () => get().ability.llm.chatGPT,
+            setChatGPT: (chatGPT: ChatGPTLLM) =>
+                set((state) => ({
+                    ...state,
+                    ability: {
+                        ...state.ability,
+                        llm: {
+                            ...state.ability.llm,
+                            chatGPT: chatGPT
+                        }
+                    }
+                })),
         }), {
             name: 'conversation',
             storage: createJSONStorage<string>(() => zustandStorage), // (optional) by default the 'localStorage' is used

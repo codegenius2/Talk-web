@@ -1,15 +1,25 @@
 import {useEffect} from 'react';
-import {Answer, Audio, EventAnswer, EventAudio, EventTrans, Trans,} from "./api/sse-event.ts";
+import {
+    AbilityEvent,
+    Answer,
+    Audio,
+    Trans,
+    EventAbility,
+    EventAnswer,
+    EventAudio,
+    EventTrans,
+} from "./api/sse/event.ts";
 import {v4 as uuidv4} from "uuid";
 import {useConvStore} from "./state/ConversationStore.tsx";
 import {addBlob} from "./store/BlobDB.tsx";
 import {SSEEndpoint} from "./api/axios.ts";
-import {error, MyText, newText} from "./ds/Text.tsx";
-import {error as errorAudio, newAudioId,} from "./ds/Audio.tsx";
+import {MyText, onError, onNewText} from "./ds/Text.tsx";
+import {onError as errorAudio, onNewAudioId,} from "./ds/Audio.tsx";
 import {base64ToBlob} from "./util/Util.tsx";
 import {audioPlayerMimeType} from './config.ts';
 import {useAuthStore} from "./state/Auth.tsx";
 import {fetchEventSource} from '@microsoft/fetch-event-source';
+import {mergeAbility} from "./ds/ability/client-ability.tsx";
 
 export const SSE = () => {
         const getQueText = useConvStore((state) => state.getQueText)
@@ -20,6 +30,7 @@ export const SSE = () => {
         const updateAnsAudio = useConvStore((state) => state.updateAnsAudio)
         const passwordHash = useAuthStore((state) => state.passwordHash)
         const setVerified = useAuthStore((state) => state.setVerified)
+        const setAbility = useConvStore((state) => state.setAbility)
 
         useEffect(() => {
             const ep = SSEEndpoint()
@@ -42,12 +53,12 @@ export const SSE = () => {
                     if (msg.event === EventAnswer) {
                         const answer: Answer = JSON.parse(msg.data)
                         const prev: MyText = getAnsText(answer.convId);
-                        const now: MyText = answer.eMsg ? error(prev, answer.eMsg) : newText(prev, answer.text, answer.eof)
+                        const now: MyText = answer.eMsg ? onError(prev, answer.eMsg) : onNewText(prev, answer.text, answer.eof)
                         updateAnsText(answer.convId, now)
                     } else if (msg.event == EventTrans) {
                         const trans: Trans = JSON.parse(msg.data)
                         const prev = getQueText(trans.convId);
-                        const now = trans.eMsg ? error(prev, trans.eMsg) : newText(prev, trans.text, true)
+                        const now = trans.eMsg ? onError(prev, trans.eMsg) : onNewText(prev, trans.text, true)
                         updateQueText(trans.convId, now)
                     } else if (msg.event == EventAudio) {
                         const audio: Audio = JSON.parse(msg.data)
@@ -58,12 +69,16 @@ export const SSE = () => {
                             const blobId = uuidv4()
                             addBlob({id: blobId, blob: blob}).then(() => {
                                 console.debug("saved audio, blobId:", blobId)
-                                updateAnsAudio(audio.convId, newAudioId(getAnsAudio(audio.convId), blobId))
+                                updateAnsAudio(audio.convId, onNewAudioId(getAnsAudio(audio.convId), blobId))
                             }).catch((e) => {
                                 updateAnsAudio(audio.convId, errorAudio(getAnsAudio(audio.convId), e))
                                 console.error("failed to save audio blobId", blobId, e)
                             })
                         }
+                    } else if (msg.event === EventAbility) {
+                        const ae: AbilityEvent = JSON.parse(msg.data)
+                        const newAbility = mergeAbility(useConvStore.getState().ability, ae)
+                        setAbility(newAbility)
                     } else {
                         console.warn("unknown event type:", msg.event)
                     }
