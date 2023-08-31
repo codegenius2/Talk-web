@@ -16,6 +16,7 @@ export const MessageList: React.FC = () => {
             scrollRef.current.scrollTop = scrollHeight;
         }
     }, [qaSlice]);
+    console.debug("qaSlice ids", qaSlice.map(it => it.id))
     return (<div className="overflow-y-auto  overflow-x-hidden w-full" ref={scrollRef}>
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
@@ -37,39 +38,43 @@ const Qa: React.FC<QaProps> = ({qa}) => {
     const renderOrder: render[] = ['queText', 'queAudio', 'ansText', 'ansAudio']
     const statusSlice: string[] = [qa.que.text.status, qa.que.audio?.status ?? "", qa.ans.text.status, qa.ans.audio.status]
 
-    let thereIsAPendingAlready = false
-    for (let i = 0; i < statusSlice.length; i++) {
-        if (['sending', 'receiving', 'error'].includes(statusSlice[i])) {
-            if (thereIsAPendingAlready) {
-                renderOrder[i] = undefined
-            } else {
-                thereIsAPendingAlready = true
-            }
-        }
-    }
-
     if (!qa.que.textFirst) {
         [renderOrder[0], renderOrder[1]] = [renderOrder[1], renderOrder[0]]
     }
+    const newOrder: render[] = []
+    let thereIsAPendingAlready = false
+    for (let i = 0; i < statusSlice.length; i++) {
+        if (['sending', 'receiving', 'error'].includes(statusSlice[i])) {
+            if (!thereIsAPendingAlready) {
+                newOrder.push(renderOrder[i])
+                thereIsAPendingAlready = true
+            }
+        } else {
+            newOrder.push(renderOrder[i])
+        }
+    }
 
+    console.debug("message renderOrder", newOrder)
+    console.debug("qa", qa)
     return <MessageErrorBoundary>
         <div className="flex flex-col gap-1 mr-2">
-            {renderOrder.map((render) => {
+            {newOrder.map((render) => {
                     switch (render) {
                         case 'queText' :
-                            return <SelfText text={qa.que.text} key={"que.text" + qa.id}/>
+                            return <SelfText text={qa.que.text} key={"que.text"}/>
                         case 'queAudio' :
                             return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end">
-                                <Audio audio={qa.que.audio} self={true} key={"que.audio" + qa.id}/>
+                                <Audio audio={qa.que.audio} self={true} key={"que.audio"}/>
                             </div>
                         case 'ansText' :
-                            return <AssistantText text={qa.ans.text} key={"ans.text" + qa.id}/>
+                            return <AssistantText text={qa.ans.text} key={"ans.text"}/>
                         case 'ansAudio':
                             return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900">
-                                <Audio audio={qa.ans.audio} self={false} key={"ans.audio" + qa.id}/>
+                                <Audio audio={qa.ans.audio} self={false} key={"ans.audio"}/>
                             </div>
                         default:
-                            return null
+                            console.error("impossible render case", render)
+                            return <div key={"impossible render case"} hidden={true}/>
                     }
                 }
             )}

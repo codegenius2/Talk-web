@@ -12,7 +12,6 @@ export const AuthWallpaper: React.FC = () => {
             const g = new Granim({
                 element: canvasRef.current,
                 direction: "diagonal",
-                stateTransitionSpeed: 1e3,
                 states: {
                     "default-state": {
                         gradients: [

@@ -5,7 +5,7 @@ import {AuthWallpaper} from "../wallpaper/AuthWallpaper.tsx";
 import {useThemeStore} from "../../state/Theme.tsx";
 
 const shakeAnimation = {
-    x: [0, -10, 10, -10, 10, 0],
+    x: [0, -500, 500, -500, 500, 0],
     y: [0, 0, 0, 0, 0, 0],
 };
 

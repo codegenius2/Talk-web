@@ -3,7 +3,9 @@ import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/Inp
 
 const TextArea: React.FC = () => {
     const inputAreaIsLarge = useTextAreaStore((state) => state.inputAreaIsLarge)
-    const buttonRef= useRef(null);
+    const arrowButtonRef = useRef(null);
+    const sendButtonRef = useRef(null);
+    const textAreaRef = useRef(null);
 
     const stopPropagation = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         console.log('stopPropagation', event.code);
@@ -16,6 +18,9 @@ const TextArea: React.FC = () => {
     const [isComposing, setIsComposing] = useState(false);
 
     const sendAndClearText = () => {
+        if (sendButtonRef.current) {
+            sendButtonRef.current.blur()
+        }
         const it = useInputStore.getState().inputText
         if (it) {
             useSendingTextStore.setState({sendingText: it})
@@ -27,7 +32,12 @@ const TextArea: React.FC = () => {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !isComposing) {
             event.preventDefault(); // prevent new line action
             sendAndClearText();
+        } else if (event.key === 'Escape' && !isComposing) {
+            if (textAreaRef.current) {
+                textAreaRef.current!.blur()
+            }
         } else {
+
             event.stopPropagation();
         }
     }, []);
@@ -42,27 +52,28 @@ const TextArea: React.FC = () => {
 
     const handleClick = () => {
         useTextAreaStore.setState({inputAreaIsLarge: !inputAreaIsLarge})
-        if (buttonRef) {
-            buttonRef!.current!.blur();
+        if (arrowButtonRef) {
+            arrowButtonRef!.current!.blur();
         }
     };
 
 
-    return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl backdrop-blur bg-opacity-75">
+    return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
             <button
-                ref={buttonRef}
-            className="rounded-full bg-equal-200 flex items-center justify-center w-10 -mb-1 "
-                    onClick={handleClick}
+                ref={arrowButtonRef}
+                className="rounded-full flex items-center justify-center w-10 -mb-1 "
+                onClick={handleClick}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                     stroke="currentColor" className="text-equal-400 w-6 h-6 mb-0.5">
+                     stroke="currentColor" className="text-slate-400 w-6 h-6 mb-0.5">
                     <path strokeLinecap="round" strokeLinejoin="round"
                           d={inputAreaIsLarge ? "M19.5 8.25l-7.5 7.5-7.5-7.5" : "M4.5 15.75l7.5-7.5 7.5 7.5"}/>
                 </svg>
             </button>
             <div className="flex w-full">
                     <textarea
-                        className="w-full outline-0 rounded-lg resize-none bg-equal-200 pl-2 py-1 mt-auto "
+                        ref={textAreaRef}
+                        className="w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto "
                         rows={inputAreaIsLarge ? 8 : 2}
                         onKeyUp={stopPropagation}
                         value={inputText}
@@ -73,6 +84,7 @@ const TextArea: React.FC = () => {
                         placeholder="Message"/>
 
                 <button
+                    ref={sendButtonRef}
                     className="-ml-8 mb-1 self-end capitalize text-equal-700 "
                     onClick={sendAndClearText}
                 >

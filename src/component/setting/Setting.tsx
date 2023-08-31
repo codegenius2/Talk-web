@@ -13,28 +13,28 @@ const Setting: React.FC = () => {
     const maxHistory = useSettingStore((state) => state.maxHistory);
     const setMaxHistory = useSettingStore((state) => state.setMaxHistory);
 
-    return <div className="flex flex-col w-full items-end justify-center gap-5 p-1 select-none">
+    return <div className="flex flex-col w-full items-end justify-center gap-5 select-none">
         {/* LLM */}
-        <div className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-lg bg-blue-200">
+        <div className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-xl bg-gray-white bg-white bg-opacity-60">
             <div className="flex justify-center items-center w-full">
-                <p className="prose text-lg text-equal-600">LLM</p>
+                <p className="prose text-lg text-neutral-600">LLM</p>
             </div>
             <div className="flex justify-between items-center bg-white rounded-lg w-full px-3">
-                <p className="prose">Send History</p>
+                <p className="prose text-neutral-600">Send History</p>
                 <MySwitch enabled={historyEnabled} setEnabled={setHistoryEnabled} switchColor={"bg-blue-600"}/>
             </div>
-            <div className={"bg-white rounded-full w-full overflow-hidden " + (historyEnabled ? "" : "hidden")}>
+            <div className={"rounded-xl overflow-hidden w-full  " + (historyEnabled ? "" : "hidden")}>
                 <DiscreteRange options={historyOptions} setValue={setMaxHistory} value={maxHistory}
                                bgColor={"bg-blue-600"}/>
             </div>
             <div className="flex justify-between items-center bg-white rounded-lg w-full px-3">
                 <p className="prose">Model</p>
-                <div className="w-full ml-3 py-1">
+                <div className="w-full md:ml-3 py-1">
                     <ListBox/>
                 </div>
             </div>
         </div>
-        <div className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-lg bg-blue-200">
+        <div className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-xl bg-white bg-opacity-60 ">
             <div className="flex justify-center items-center w-full">
                 <p className="prose text-lg text-equal-600">Text to Speech</p>
             </div>

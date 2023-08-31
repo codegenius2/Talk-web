@@ -1,7 +1,7 @@
 import './HomeWallpaper.css'
 
 export default function HomeWallpaper() {
-    return <div className="home-wallpaper absolute w-full h-full -z-10" style={{position: 'fixed'}}/>
+    return <div className="home-wallpaper w-full h-full -z-10"/>
 }
 
 

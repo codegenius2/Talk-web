@@ -14,9 +14,9 @@ export default function ListBox() {
             {({open}) => (
                 <div className="relative">
                     <Listbox.Button
-                        className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 sm:text-sm sm:leading-6">
-                          <span className="flex items-center">
-                            <span className="ml-3 block truncate">{selected.name}</span>
+                        className="relative w-full cursor-default rounded-2xl bg-white py-0.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 sm:text-sm sm:leading-6">
+                          <span className="flex items-center truncate">
+                            <span className="ml-3">{selected.name}</span>
                           </span>
                         <span
                             className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
@@ -32,7 +32,9 @@ export default function ListBox() {
                         leaveTo="opacity-0"
                     >
                         <Listbox.Options
-                            className="absolute z-10 mt-1 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                            className="absolute w-full rounded-xl text-base
+                            shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
+                            bg-white bg-opacity-70 backdrop-blur">
                             {options.map((option) => (
                                 <Listbox.Option
                                     key={option.id}
@@ -40,7 +42,7 @@ export default function ListBox() {
                                     className={({active}) =>
                                         joinClassNames(
                                             active ? 'bg-blue-600 text-white' : 'text-gray-900',
-                                            'relative cursor-default select-none py-0.5 pl-3 pr-0.5'
+                                            'rounded-lg relative cursor-default select-none py-0.5 pl-3 pr-0.5'
                                         )
                                     }
                                 >
@@ -50,15 +52,15 @@ export default function ListBox() {
                                                 <CheckIcon className={joinClassNames(
                                                     active ? 'text-white' : 'text-gray-900', 'absolute inset-x-0 left-0 h-5 w-5'
                                                 )} aria-hidden="true"/>) : null}
-                                            <div className="flex items-center w-full">
+                                            <div className="flex items-center w-full ">
                                                     <span
-                                                        className={joinClassNames(selected ? 'font-semibold' : 'font-normal', 'flex justify-between w-full items-center ml-3 truncate')}
+                                                        className={joinClassNames(selected ? 'font-semibold' : 'font-normal', 'flex flex-wrap justify-between items-center w-full ml-3')}
                                                     >
-                                                    <p className="">{option.name}</p>
+                                                    <p className="m-0">{option.name}</p>
                                                     <div className='flex justify-between items-center gap-1 '>
                                                          {option.tags.map(tag =>
                                                              <span
-                                                                 className="bg-gray-400 text-white rounded-full px-1 text-xs">{tag}</span>
+                                                                 className="bg-gray-400 text-white rounded-md px-1 text-xs">{tag}</span>
                                                          )}
                                                         </div>
                                                   </span>

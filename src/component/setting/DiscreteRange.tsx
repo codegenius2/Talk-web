@@ -63,16 +63,18 @@ export const DiscreteRange: React.FC<Props> = ({options, value, setValue, bgColo
     }
 
     return (
-        <div className="flex flex-grow items-center divide-x h-full bg-white">
+        <div className="flex flex-wrap items-center divide-x divide-opacity-0 h-full bg-white">
             {opColors.map((oc: OpColor) =>
-                <div className={"flex justify-center items-center w-full " + (oc.inRange ? bgColor : "")}
+                <div className={"flex justify-center items-center flex-grow " + (oc.inRange ? bgColor : "")}
                      key={oc.index}
                      onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
                      }}
                      onMouseDown={() => handleMouseDownChild(oc)}
                      onMouseEnter={() => handleMouseEnterChild(oc)}
                 >
-                    <p className={"prose text-center px-0.5  " + (oc.inRange ? "text-equal-100" : "")}>{oc.option.mark}</p>
+                    <p className={"prose text-center px-0.5  " + (oc.inRange ? "text-equal-100" : "")}>
+                        {oc.option.mark}
+                    </p>
                 </div>
             )}
         </div>

@@ -14,7 +14,7 @@ export const MySwitch: React.FC<MySwitchProps> = ({switchColor, enabled, setEnab
             <Switch
                 checked={enabled}
                 onChange={setEnabled}
-                className={`${enabled ? switchColor : 'bg-gray-200'}
+                className={`${enabled ? switchColor : 'bg-neutral-400'}
           relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
                 <span className="sr-only">Use setting</span>

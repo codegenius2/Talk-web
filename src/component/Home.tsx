@@ -81,24 +81,24 @@ export default function Home() {
             <HomeWallpaper/>
             <div
                 // style={wpStyleSkyPink}
-                className="home flex items-center justify-center h-screen w-screen overflow-hidden divide-x ">
+                className="home flex items-center justify-center h-screen w-screen overflow-hidden gap-2 lg:p-3">
                 <div
-                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-l-lg justify-between gap-1 p-2 bg-white bg-opacity-60 backdrop-blur">
+                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-lg justify-between gap-1 p-2 bg-white bg-opacity-60">
                     <MessageList/>
                     <div
-                        className="flex flex-col rounded-lg items-center w-full px-2 mt-auto bottom-0 backdrop-blur bg-opacity-75">
+                        className="flex flex-col rounded-lg items-center gap-2 w-full px-2 mt-auto bottom-0">
                         <TextArea/>
                         <div className="flex justify-center items-center w-full mt-1">
                             <Recorder/>
                         </div>
                     </div>
-                    <SSE/>
-                    <Workers/>
                 </div>
-                <div className="flex flex-col items-end h-full max-w-1/4 w-full rounded-r-lg bg-gray-200">
+                <div className="h-full w-full max-w-1/4 hidden sm:block">
                     <Setting/>
                 </div>
             </div>
+            <SSE/>
+            <Workers/>
         </div>
     )
 }
