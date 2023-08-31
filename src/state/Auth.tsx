@@ -6,18 +6,20 @@ import {zustandStorage} from "../store/ZustandDB.tsx";
 type Auth = {
     passwordHash?: string
     setPassword: (password: string) => void
+    getPasswordHash: () => string | undefined
     verified: boolean
     setVerified: (verified: boolean) => void
 }
 
 export const useAuthStore = create<Auth>()(
     devtools(
-        persist((set) => ({
+        persist((set, get) => ({
             passwordHash: undefined,
             verified: false,
             setPassword: (password: string) => set(() => ({
                 passwordHash: generateHash(password)
             })),
+            getPasswordHash: () => get().passwordHash,
             setVerified: (verified: boolean) => set(() => ({
                 verified: verified
             })),

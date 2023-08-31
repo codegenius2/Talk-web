@@ -1,21 +1,19 @@
-import axios from "axios";
-import { joinUrl } from "../util/Util";
+import axios, {AxiosError} from "axios";
+import {joinUrl} from "../util/Util";
 import {currentProtocolHostPortPath} from "../util/Util.tsx";
 import {useSSEStore} from "../state/SSE.tsx";
 import {ConversationReq} from "./restful.ts";
+import {useAuthStore} from "../state/Auth.tsx";
 
 export function SSEEndpoint(): string {
-    let ep = import.meta.env.VITE_REACT_APP_SSE_ENDPOINT
-    if (!ep) {
-        ep = joinUrl(currentProtocolHostPortPath(), "events")
-    }
-    ep = ep + "?stream=" + useSSEStore.getState().streamId
-    console.debug("SSEEndpoint:", ep)
-    return ep
+    let sseEp = joinUrl(Endpoint(), "events")
+    sseEp = sseEp + "?stream=" + useSSEStore.getState().streamId
+    console.debug("SSEEndpoint:", sseEp)
+    return sseEp
 }
 
-export function RestfulEndpoint(): string {
-    let ep = import.meta.env.VITE_REACT_APP_RESTFUL_ENDPOINT
+export function Endpoint(): string {
+    let ep = import.meta.env.VITE_REACT_APP_ENDPOINT
     if (ep) {
         return ep
     }
@@ -25,10 +23,29 @@ export function RestfulEndpoint(): string {
 }
 
 export const axiosInstance = axios.create({
-    baseURL: RestfulEndpoint(),
+    baseURL: Endpoint(),
     timeout: 5000,
-    headers: {'stream-id': useSSEStore.getState().streamId}
 })
+
+axiosInstance.interceptors.request.use((config) => {
+    config.headers['stream-id'] = useSSEStore.getState().streamId;
+    config.headers['Authorization'] = 'Bearer ' + useAuthStore.getState().getPasswordHash();
+    return config;
+});
+
+axiosInstance.interceptors.response.use(
+    response => {
+        return response;
+    },
+    (error: AxiosError) => {
+        if (error.response && error.response.status === 401) {
+            useAuthStore.setState({...useAuthStore.getState, verified: false})
+            console.info('Unauthorized', error.response);
+        }
+        return Promise.reject(error);
+    }
+);
+
 
 export const postConv = async (conv: ConversationReq) => {
     return axiosInstance.post("conversation", conv);
@@ -40,4 +57,8 @@ export const postAudioConv = async (audio: Blob, fileName: string, conv: Convers
     formData.append('conversation', JSON.stringify(conv));
 
     return axiosInstance.postForm("audio-conversation", formData);
+};
+
+export const getHealth = async () => {
+    return axiosInstance.get("health");
 };

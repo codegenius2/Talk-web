@@ -63,14 +63,16 @@ const Qa: React.FC<QaProps> = ({qa}) => {
                         case 'queText' :
                             return <SelfText text={qa.que.text} key={"que.text"}/>
                         case 'queAudio' :
-                            return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end">
-                                <Audio audio={qa.que.audio} self={true} key={"que.audio"}/>
+                            return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end"
+                                        key={"que.audio"}>
+                                <Audio audio={qa.que.audio} self={true}/>
                             </div>
                         case 'ansText' :
                             return <AssistantText text={qa.ans.text} key={"ans.text"}/>
                         case 'ansAudio':
-                            return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900">
-                                <Audio audio={qa.ans.audio} self={false} key={"ans.audio"}/>
+                            return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900"
+                                        key={"ans.audio"}>
+                                <Audio audio={qa.ans.audio} self={false}/>
                             </div>
                         default:
                             console.error("impossible render case", render)

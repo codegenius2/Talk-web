@@ -8,8 +8,9 @@ export const AuthWallpaper: React.FC = () => {
     const setAuthWallpaperDark = useThemeStore((state) => state.setAuthWallpaperDark)
 
     useEffect(() => {
+        let g: Granim
         if (canvasRef.current) {
-            const g = new Granim({
+            g = new Granim({
                 element: canvasRef.current,
                 direction: "diagonal",
                 states: {
@@ -32,6 +33,11 @@ export const AuthWallpaper: React.FC = () => {
                     console.debug("isDark", isDark)
                 }
             });
+        }
+        return () => {
+            if (g) {
+                g.destroy()
+            }
         }
     }, []);
 

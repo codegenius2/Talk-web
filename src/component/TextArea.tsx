@@ -3,9 +3,9 @@ import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/Inp
 
 const TextArea: React.FC = () => {
     const inputAreaIsLarge = useTextAreaStore((state) => state.inputAreaIsLarge)
-    const arrowButtonRef = useRef(null);
-    const sendButtonRef = useRef(null);
-    const textAreaRef = useRef(null);
+    const arrowButtonRef = useRef<HTMLButtonElement>(null);
+    const sendButtonRef = useRef<HTMLButtonElement>(null);
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const stopPropagation = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         console.log('stopPropagation', event.code);
