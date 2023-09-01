@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import defaultTheme from 'tailwindcss/defaultTheme'
+import typography from '@tailwindcss/typography';
 
 export default {
     content: [
@@ -8,14 +9,10 @@ export default {
     ],
     theme: {
         extend: {
-            transitionProperty: {
-                'height': 'height',
-                'spacing': 'margin, padding',
-            },
-            backdropFilter: {
-                'none': 'none',
-                'blur': 'blur(px)',
-            },
+            // backdropFilter: {
+            //     'none': 'none',
+            //     'blur': 'blur(px)',
+            // },
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
                 'equal-50': 'rgb(252,252,252)',
@@ -35,6 +32,8 @@ export default {
                 '3/4': '75%',
             },
             transitionDuration: {
+                '1500': '1500ms',
+                '2500': '2500ms',
                 '2000': '2000ms',
                 '3000': '3000ms',
                 '4000': '4000ms',
@@ -52,7 +51,7 @@ export default {
         },
     },
     plugins: [
-        require('@tailwindcss/typography'),
+        typography,
     ],
 
 }

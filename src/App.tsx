@@ -4,7 +4,6 @@ import './App.css'
 
 import Home from "./component/Home.tsx";
 
-const fadeInDuration = 2000
 
 export default function App() {
 
@@ -15,7 +14,7 @@ export default function App() {
             {(!verified) && <Auth/>}
             {/*home page fades in*/}
             <div
-                className={`transition-opacity duration-${fadeInDuration} ${verified ? 'opacity-100' : 'opacity-20'}`}>
+                className={`transition-opacity duration-1000 ${verified ? 'opacity-100' : 'opacity-20'}`}>
                 {verified && <Home/>}
             </div>
         </div>
