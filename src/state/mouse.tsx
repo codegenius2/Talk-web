@@ -8,7 +8,7 @@ type Mouse = {
 export const useMouseStore = create<Mouse>(
     (set) => (
         {
-            isMouseDown: true,
+            isMouseDown: false,
             setMouseDown: (down: boolean) => set(() => ({
                 isMouseDown: down
             })),

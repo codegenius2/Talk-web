@@ -61,7 +61,7 @@ export default function Auth() {
                 <WallpaperAuth/>
                 <div
                     className="flex flex-col items-center justify-center h-screen w-screen overflow-hidden gap-14 transition-colors">
-                    <p className={"font-borel text-6xl lg:text-9xl  tracking-widest z-10 transition duration-5000 " + (authWallpaperDark ? "text-equal-200" : "text-equal-800")}>
+                    <p className={"font-borel text-6xl lg:text-9xl  tracking-widest z-10 transition duration-5000 " + (authWallpaperDark ? "text-neutral-200" : "text-neutral-800")}>
                         Let's talk
                     </p>
                     <form className="z-10 max-w-3/4 w-96 mb-[25vh]" onSubmit={handleSubmit}>
@@ -80,7 +80,7 @@ export default function Auth() {
                             }}
                             className={"appearance-none w-full h-16 rounded-lg outline-0 shadow-md caret-transparent " +
                                 "text-6xl text-center tracking-widest bg-white bg-opacity-10 backdrop-blur " +
-                                "placeholder:text-equal-200 transition duration-5000" + (authWallpaperDark ? "text-equal-200" : "text-equal-800")}
+                                "placeholder:text-neutral-200 transition duration-5000" + (authWallpaperDark ? "text-neutral-200" : "text-neutral-800")}
                         />
                     </form>
                 </div>

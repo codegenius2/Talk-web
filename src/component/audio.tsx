@@ -178,10 +178,10 @@ const selfColor: Color = {
 }
 
 const assistantColor: Color = {
-    boxBg: 'bg-equal-200',
+    boxBg: 'bg-neutral-200',
     playBg: 'bg-white',
     play: '#5e5e5e',
-    pause: 'text-gray-500',
+    pause: 'text-neutral-500',
     wave: '#8c8c8c',
     progress: '#2f2f2f',
     hoverLine: 'black',

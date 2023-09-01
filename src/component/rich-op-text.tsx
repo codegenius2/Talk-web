@@ -38,16 +38,16 @@ export const RichOpText: React.FC<TextProps> = ({text}) => {
                                  setConfettiCount(confettiCount + 1)
                              }}>
                 <button
-                    className="bg-slate-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
+                    className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
                     <span className="text-green-400">Copy</span>
                 </button>
             </CopyToClipboard>
             <button
-                className="bg-slate-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
+                className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
                 <span className="text-sky-400">Retry</span>
             </button>
             <button
-                className="bg-slate-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
+                className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
                 <span className="text-red-400">Delete</span>
             </button>
         </div>}

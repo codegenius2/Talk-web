@@ -3,6 +3,7 @@ import {useMouseStore} from "../../../state/mouse.tsx";
 import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
 
 type Props = {
+    title: string
     choices: Choice[]
     value: NumStr
     setValue: (value: NumStr) => void
@@ -15,8 +16,7 @@ type ChoiceColor = {
     inRange: boolean
 }
 
-const switchBgColor = "bg-blue-600"
-export const DiscreteRange: React.FC<Props> = ({choices, value, setValue, outOfLeftBoundary}) => {
+export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue, outOfLeftBoundary}) => {
 
     const [choicesContainsValue, setChoicesContainsValue] = useState<ChoiceColor[]>([])
     const [containsValue, setContainsValue] = useState<boolean>(false)
@@ -61,30 +61,42 @@ export const DiscreteRange: React.FC<Props> = ({choices, value, setValue, outOfL
         setValue(oc.choice.value)
     }
 
+    // const c = <div className="grid grid-flow-row-dense grid-cols-3 gap-4 grow overflow-scroll"/>
+
     return (
-        <div className="flex gx-2">
-            <textarea
-                className={" " + containsValue ? "bg-slate-500" : "bg-transparent"}
-                onChange={e => setValue(e.target.value)}
-                value={value}
-            >
+        <div className="flex flex-col gap-y-0.5">
+            <div className="flex justify-between items-center max-h-10 ring-transparent ">
+                <p className="text-neutral-600">{title}</p>
+                <textarea
+                    className={"w-11 max-h-6 outline-0 overflow-hidden text-center align-middle border border-neutral-500 rounded-xl resize-none "
+                        + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
+                    rows={1}
+                    onChange={e => setValue(e.target.value)}
+                    onFocus={(e)=>{e.target.select()}}
+                    value={value}
+                >
             </textarea>
+            </div>
+
             <div
-                className={"flex flex-wrap items-center divide-x divide-opacity-0 h-full bg-white "
-                + containsValue ? "bg-transparent" : "bg-slate-500"}>
-                {choicesContainsValue.map((oc: ChoiceColor) =>
-                    <div className={"flex justify-center items-center flex-grow " + (oc.inRange ? switchBgColor : "")}
-                         key={oc.index}
-                         onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
-                         }}
-                         onMouseDown={() => handleMouseDownChild(oc)}
-                         onMouseEnter={() => handleMouseEnterChild(oc)}
-                    >
-                        <p className={"prose text-center px-0.5  " + (oc.inRange ? "text-equal-100" : "")}>
-                            {oc.choice.name}
-                        </p>
-                    </div>
-                )}
+                className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
+                <div
+                    className={"flex  justify-start items-center  w-full overflow-auto "}>
+                    {choicesContainsValue.map((oc: ChoiceColor) =>
+                        <div
+                            className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")}
+                            key={oc.index}
+                            onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
+                            }}
+                            onMouseDown={() => handleMouseDownChild(oc)}
+                            onMouseEnter={() => handleMouseEnterChild(oc)}
+                        >
+                            <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100" : "text-neutral-800")}>
+                                {oc.choice.name}
+                            </p>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

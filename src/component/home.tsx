@@ -88,12 +88,12 @@ export default function Home() {
                     <div
                         className="flex flex-col rounded-xl items-center gap-2 w-full px-2 mt-auto bottom-0">
                         <TextArea/>
-                        <div className="flex justify-center items-center w-full mt-1">
+                        <div className="flex justify-center items-center w-full my-1">
                             <Recorder/>
                         </div>
                     </div>
                 </div>
-                <div className="h-full w-full max-w-1/4 hidden sm:block">
+                <div className="h-full w-full max-w-1/4  hidden sm:block">
                     <Setting/>
                 </div>
             </div>

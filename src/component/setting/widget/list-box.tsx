@@ -1,4 +1,4 @@
-import {Fragment, useEffect} from 'react'
+import React, {Fragment, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
 import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
@@ -31,13 +31,15 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
             {({open}) => (
                 <div className="relative">
                     <Listbox.Button
-                        className="relative w-full cursor-default rounded-2xl bg-white py-0.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-200 sm:text-sm sm:leading-6">
-                          <span className="flex items-center truncate">
+                        className="relative w-full cursor-default rounded-2xl border border-neutral-500 bg-transparent
+                          py-0.5 pl-3 pr-10 text-left text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300
+                          focus:outline-none focus:ring-2 focus:ring-blue-400">
+                          <span className="flex items-center ">
                             <span className="ml-3">{value ?? ""}</span>
                           </span>
                         <span
                             className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                            <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true"/>
+                            <ChevronUpDownIcon className="h-5 w-5 text-neutral-400" aria-hidden="true"/>
                           </span>
                     </Listbox.Button>
 
@@ -51,14 +53,14 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                         <Listbox.Options
                             className="absolute w-full rounded-xl text-base
                             shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
-                            bg-white bg-opacity-70 backdrop-blur">
+                            bg-white bg-opacity-40 backdrop-blur ">
                             {choices.map((ch) => (
                                 <Listbox.Option
                                     key={ch.value}
-                                    value={ch}
+                                    value={ch.value}
                                     className={({active}) =>
                                         joinClassNames(
-                                            active ? 'bg-blue-600 text-white' : 'text-gray-900',
+                                            active ? 'bg-blue-600 text-white' : 'text-neutral-900',
                                             'rounded-lg relative cursor-default select-none py-0.5 pl-3 pr-0.5'
                                         )
                                     }
@@ -67,7 +69,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                                         <>
                                             {selected ? (
                                                 <CheckIcon className={joinClassNames(
-                                                    active ? 'text-white' : 'text-gray-900', 'absolute inset-x-0 left-0 h-5 w-5'
+                                                    active ? 'text-white' : 'text-neutral-900', 'absolute inset-x-0 left-0 h-5 w-5'
                                                 )} aria-hidden="true"/>) : null}
                                             <div className="flex items-center w-full ">
                                                     <span
@@ -77,7 +79,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                                                     <div className='flex justify-between items-center gap-1 '>
                                                          {ch.tags.map(tag =>
                                                              <span
-                                                                 className="bg-gray-400 text-white rounded-md px-1 text-xs">{tag}</span>
+                                                                 className="bg-neutral-400 text-white rounded-md px-1 text-xs">{tag}</span>
                                                          )}
                                                         </div>
                                                   </span>

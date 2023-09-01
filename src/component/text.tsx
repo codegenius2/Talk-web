@@ -20,7 +20,7 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
         case 'half-received':
         case 'typing' :
             return <div
-                className="rounded-lg max-w-3/4 mr-auto whitespace-pre-wrap text-neutral-900 bg-equal-200 p-2">
+                className="rounded-lg max-w-3/4 mr-auto whitespace-pre-wrap text-neutral-900 bg-neutral-200 p-2">
                 <p>{text.text}</p>
             </div>
         case 'error':

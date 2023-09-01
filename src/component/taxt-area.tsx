@@ -65,7 +65,7 @@ const TaxtArea: React.FC = () => {
                 onClick={handleClick}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                     stroke="currentColor" className="text-slate-400 w-6 h-6 mb-0.5">
+                     stroke="currentColor" className="text-neutral-500 w-6 h-6 mb-0.5">
                     <path strokeLinecap="round" strokeLinejoin="round"
                           d={inputAreaIsLarge ? "M19.5 8.25l-7.5 7.5-7.5-7.5" : "M4.5 15.75l7.5-7.5 7.5 7.5"}/>
                 </svg>
@@ -73,7 +73,7 @@ const TaxtArea: React.FC = () => {
             <div className="flex w-full">
                     <textarea
                         ref={textAreaRef}
-                        className="w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto "
+                        className="w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto placeholder:text-neutral-500"
                         rows={inputAreaIsLarge ? 8 : 2}
                         onKeyUp={stopPropagation}
                         value={inputText}
@@ -85,7 +85,7 @@ const TaxtArea: React.FC = () => {
 
                 <button
                     ref={sendButtonRef}
-                    className="-ml-8 mb-1 self-end capitalize text-equal-700 "
+                    className="-ml-8 mb-1 self-end capitalize text-neutral-600 "
                     onClick={sendAndClearText}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2"
