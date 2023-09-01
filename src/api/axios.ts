@@ -1,9 +1,9 @@
 import axios, {AxiosError} from "axios";
-import {joinUrl} from "../util/Util";
-import {currentProtocolHostPortPath} from "../util/Util.tsx";
-import {useSSEStore} from "../state/SSE.tsx";
+import {joinUrl} from "../util/util";
+import {currentProtocolHostPortPath} from "../util/util.tsx";
+import {useSSEStore} from "../state/sse.tsx";
 import {ConversationReq} from "./restful.ts";
-import {useAuthStore} from "../state/Auth.tsx";
+import {useAuthStore} from "../state/auth.tsx";
 
 export function SSEEndpoint(): string {
     let sseEp = joinUrl(Endpoint(), "events")

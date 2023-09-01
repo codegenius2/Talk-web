@@ -1,8 +1,8 @@
 import {create} from 'zustand';
-import {randomHash} from "../util/Util.tsx";
+import {randomHash} from "../util/util.tsx"
 import {streamIdLength} from "../config.ts";
 import {createJSONStorage, devtools, persist} from "zustand/middleware";
-import {zustandStorage} from "../store/ZustandDB.tsx";
+import {zustandStorage} from "../store/zustant-db.tsx"
 
 
 interface SSE {

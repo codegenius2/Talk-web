@@ -1,15 +1,15 @@
 import {useEffect, useRef, useState} from "react";
-import {useRecorderStore} from "../state/Recording.tsx";
+import {useRecorderStore} from "../state/recording.tsx";
 import TextArea from "./taxt-area.tsx";
-import {Workers} from "../worker/Workers.tsx";
-import {SSE} from "../SSE.tsx";
-import {MyRecorder} from "../util/MyRecorder.ts";
-import {useMouseStore} from "../state/Mouse.tsx";
+import {Workers} from "../worker/workers.tsx"
+import {MyRecorder} from "../util/my-recorder.ts"
+import {useMouseStore} from "../state/mouse.tsx";
 import Setting from "./setting/setting.tsx";
 import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import {MessageList} from "./message-list.tsx";
 import Recorder from "./recorder.tsx";
+import {SSE} from "../sse.tsx";
 
 export default function Home() {
     const isRecording = useRecorderStore((state) => state.isRecording)

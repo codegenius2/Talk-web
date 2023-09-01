@@ -1,6 +1,6 @@
 import {create} from 'zustand';
-import {MyRecorder} from "../util/MyRecorder.ts";
-import {chooseAudioMimeType, RecordingMimeType} from "../util/Util.tsx";
+import {MyRecorder} from "../util/my-recorder.ts"
+import {chooseAudioMimeType, RecordingMimeType} from "../util/util.tsx"
 
 interface Recorder {
     isRecording: boolean

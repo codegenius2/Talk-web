@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {useConvStore} from "../../state/ConversationStore.tsx";
+import {useConvStore} from "../../state/conversation.tsx";
 import {DiscreteRange} from "./widget/discrete-range.tsx";
 import {MySwitch} from "./widget/switch.tsx";
 import {historyChoices} from "../../ds/ability/defauts.ts";

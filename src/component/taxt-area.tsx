@@ -1,5 +1,5 @@
 import React, {KeyboardEventHandler, useCallback, useRef, useState} from "react";
-import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/Input.tsx";
+import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/input.tsx";
 
 const TaxtArea: React.FC = () => {
     const inputAreaIsLarge = useTextAreaStore((state) => state.inputAreaIsLarge)

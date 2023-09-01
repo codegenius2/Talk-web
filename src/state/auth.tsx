@@ -1,7 +1,7 @@
 import {create} from 'zustand';
-import {generateHash} from "../util/Util.tsx";
+import {generateHash} from "../util/util.tsx";
 import {createJSONStorage, devtools, persist} from "zustand/middleware";
-import {zustandStorage} from "../store/ZustandDB.tsx";
+import {zustandStorage} from "../store/zustant-db.tsx"
 
 type Auth = {
     passwordHash?: string

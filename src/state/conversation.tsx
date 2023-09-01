@@ -1,9 +1,9 @@
 import {create} from 'zustand';
-import {Conversation, QueAns} from "../ds/Conversation.tsx";
+import {Conversation, QueAns} from "../ds/conversation.tsx";
 import {createJSONStorage, devtools, persist} from "zustand/middleware";
-import {zustandStorage} from "../store/ZustandDB.tsx";
-import {MyText} from "../ds/Text.tsx";
-import {Audio} from "../ds/Audio.tsx";
+import {zustandStorage} from "../store/zustant-db.tsx"
+import {MyText} from "../ds/text.tsx";
+import {Audio} from "../ds/audio.tsx";
 import {defaultAbility} from "../ds/ability/defauts.ts";
 import {Ability, ChatGPTLLM} from "../ds/ability/client-ability.tsx";
 

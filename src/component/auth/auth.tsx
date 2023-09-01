@@ -1,7 +1,7 @@
 import {motion} from 'framer-motion';
 import React, {useEffect, useState} from 'react';
-import {useAuthStore} from "../../state/Auth.tsx";
-import {useThemeStore} from "../../state/Theme.tsx";
+import {useAuthStore} from "../../state/auth.tsx";
+import {useThemeStore} from "../../state/theme.tsx";
 import {getHealth} from "../../api/axios.ts";
 import {AxiosError, AxiosResponse} from "axios";
 import {WallpaperAuth} from "../wallpaper/wallpaper.tsx";

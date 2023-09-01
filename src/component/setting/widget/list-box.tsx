@@ -2,7 +2,7 @@ import {Fragment, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
 import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
-import {joinClassNames} from "../../../util/Util.tsx";
+import {joinClassNames} from "../../../util/util.tsx";
 
 // https://tailwindui.com/components/application-ui/forms/select-menus
 

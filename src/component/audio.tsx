@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import Hover from 'wavesurfer.js/plugins/hover'
-import {Audio as _Audio} from "../ds/Audio.tsx"
-import {getBlob} from "../store/BlobDB.tsx";
+import {Audio as _Audio} from "../ds/audio.tsx"
 import {Spin} from "./spin.tsx";
-import {usePlayingStore} from "../state/Playing.tsx";
+import {usePlayingStore} from "../state/playing.tsx";
+import {getBlob} from "../store/blob-db.tsx";
 
 interface WaveSurferProps {
     url: string;

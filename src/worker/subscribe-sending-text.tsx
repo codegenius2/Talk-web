@@ -1,10 +1,10 @@
 import {v4 as uuidv4} from "uuid"
-import {useConvStore} from "../state/ConversationStore.tsx";
-import {newQueAns} from "../ds/Conversation.tsx";
+import {useConvStore} from "../state/conversation.tsx";
+import {newQueAns} from "../ds/conversation.tsx";
 import React, {useEffect} from "react";
-import {useSendingTextStore} from "../state/Input.tsx";
-import {historyMessages} from "../util/Util.tsx";
-import {newMyText, onError, onSent} from "../ds/Text.tsx";
+import {useSendingTextStore} from "../state/input.tsx";
+import {historyMessages} from "../util/util.tsx";
+import {newMyText, onError, onSent} from "../ds/text.tsx";
 import {AxiosError} from "axios";
 import {Message} from "../api/restful.ts";
 import {postConv} from "../api/axios.ts";

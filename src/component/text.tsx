@@ -1,6 +1,6 @@
 import React from 'react';
 import {Spin} from "./spin.tsx";
-import {MyText} from "../ds/Text.tsx";
+import {MyText} from "../ds/text.tsx";
 import { RichOpText } from './rich-op-text.tsx';
 
 

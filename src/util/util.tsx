@@ -1,4 +1,4 @@
-import {QueAns} from "../ds/Conversation.tsx";
+import {QueAns} from "../ds/conversation.tsx";
 import {Message} from "../api/restful.ts";
 import {SHA256} from 'crypto-js';
 

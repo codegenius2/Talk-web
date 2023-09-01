@@ -1,5 +1,5 @@
 import RecordPlugin from "wavesurfer.js/plugins/record";
-import {RecordingMimeType} from "./Util.tsx";
+import {RecordingMimeType} from "./util.tsx";
 
 export type RecordingStatus = 'init-idle' | 'recording' | 'done' | 'canceled'
 

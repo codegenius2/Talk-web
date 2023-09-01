@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useMouseStore} from "../../../state/Mouse.tsx";
+import {useMouseStore} from "../../../state/mouse.tsx";
 import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
 
 type Props = {

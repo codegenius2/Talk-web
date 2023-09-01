@@ -1,5 +1,5 @@
-import {useAuthStore} from "./state/Auth.tsx";
-import Auth from "./component/auth/Auth.tsx";
+import {useAuthStore} from "./state/auth.tsx";
+import Auth from "./component/auth/auth.tsx";
 import './App.css'
 
 import Home from "./component/home.tsx";

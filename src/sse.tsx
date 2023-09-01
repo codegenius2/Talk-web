@@ -10,16 +10,16 @@ import {
     EventTrans,
 } from "./api/sse/event.ts";
 import {v4 as uuidv4} from "uuid";
-import {useConvStore} from "./state/ConversationStore.tsx";
-import {addBlob} from "./store/BlobDB.tsx";
+import {useConvStore} from "./state/conversation.tsx";
 import {SSEEndpoint} from "./api/axios.ts";
-import {MyText, onError, onNewText} from "./ds/Text.tsx";
-import {onError as errorAudio, onNewAudioId,} from "./ds/Audio.tsx";
-import {base64ToBlob} from "./util/Util.tsx";
+import {MyText, onError, onNewText} from "./ds/text.tsx";
+import {onError as errorAudio, onNewAudioId,} from "./ds/audio.tsx";
+import {base64ToBlob} from "./util/util.tsx";
 import {audioPlayerMimeType} from './config.ts';
-import {useAuthStore} from "./state/Auth.tsx";
+import {useAuthStore} from "./state/auth.tsx";
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {mergeAbility} from "./ds/ability/client-ability.tsx";
+import {addBlob} from "./store/blob-db.tsx";
 
 export const SSE = () => {
         const getQueText = useConvStore((state) => state.getQueText)

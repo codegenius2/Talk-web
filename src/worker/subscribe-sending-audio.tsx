@@ -1,13 +1,13 @@
 import {v4 as uuidv4} from "uuid";
-import {useConvStore} from "../state/ConversationStore.tsx";
-import {newQueAns} from "../ds/Conversation.tsx";
+import {useConvStore} from "../state/conversation.tsx";
+import {newQueAns} from "../ds/conversation.tsx";
 import React, {useEffect} from "react";
-import {useSendingAudioStore} from "../state/Input.tsx";
-import {historyMessages, RecordingMimeType} from "../util/Util.tsx";
-import {useRecorderStore} from "../state/Recording.tsx";
-import {addBlob} from "../store/BlobDB.tsx";
-import {newMyText} from "../ds/Text.tsx";
-import {newAudio, onError, onNewAudioId, onSent} from "../ds/Audio.tsx";
+import {useSendingAudioStore} from "../state/input.tsx";
+import {historyMessages, RecordingMimeType} from "../util/util.tsx"
+import {useRecorderStore} from "../state/recording.tsx";
+import {addBlob} from "../store/blob-db.tsx";
+import {newMyText} from "../ds/text.tsx";
+import {newAudio, onError, onNewAudioId, onSent} from "../ds/audio.tsx";
 import {Message} from "../api/restful.ts";
 import {postAudioConv} from "../api/axios.ts";
 import {minSpeakTimeMillis} from "../config.ts";

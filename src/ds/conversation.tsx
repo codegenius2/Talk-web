@@ -1,5 +1,5 @@
-import {MyText, newMyText} from "./Text.tsx";
-import {Audio, newAudio} from "./Audio.tsx";
+import {MyText, newMyText} from "./text.tsx";
+import {Audio, newAudio} from "./audio.tsx";
 import {formatISO} from "date-fns";
 import {Ability, ChatGPTLLM} from "./ability/client-ability.tsx";
 

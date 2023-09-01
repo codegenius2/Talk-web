@@ -1,6 +1,6 @@
 import React from 'react';
 import ChatGpt from "./chat-gpt.tsx";
-import {useConvStore} from "../../state/ConversationStore.tsx";
+import {useConvStore} from "../../state/conversation.tsx";
 
 
 const Setting: React.FC = () => {

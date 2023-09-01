@@ -1,8 +1,8 @@
 import './Wallpaper.css'
 import React, {useEffect, useRef} from "react";
-import {useThemeStore} from "../../state/Theme.tsx";
+import {useThemeStore} from "../../state/theme.tsx";
 import Granim from "granim";
-import {compareSlices} from "../../util/Util.tsx";
+import {compareSlices} from "../../util/util.tsx";
 
 export function WallpaperDefault() {
     return <div>

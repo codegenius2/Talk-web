@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {MyText} from "../ds/Text.tsx";
+import {MyText} from "../ds/text.tsx";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Confetti from 'react-confetti';
 

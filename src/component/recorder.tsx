@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
-import {useRecorderStore} from "../state/Recording.tsx";
-import {MyRecorder} from "../util/MyRecorder.ts";
-import {useSendingAudioStore} from "../state/Input.tsx";
-import {joinClassNames, timeElapsedMMSS} from "../util/Util.tsx";
+import {useRecorderStore} from "../state/recording.tsx"
+import {MyRecorder} from "../util/my-recorder.ts"
+import {useSendingAudioStore} from "../state/input.tsx";
+import {joinClassNames, timeElapsedMMSS} from "../util/util.tsx"
 
 
 const Recorder = () => {
