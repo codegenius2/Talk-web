@@ -1,10 +1,10 @@
 import {motion} from 'framer-motion';
 import React, {useEffect, useState} from 'react';
 import {useAuthStore} from "../../state/Auth.tsx";
-import {AuthWallpaper} from "../wallpaper/AuthWallpaper.tsx";
 import {useThemeStore} from "../../state/Theme.tsx";
 import {getHealth} from "../../api/axios.ts";
 import {AxiosError, AxiosResponse} from "axios";
+import {WallpaperAuth} from "../wallpaper/wallpaper.tsx";
 
 const detectDelay = 1000
 const fadeOutDuration = 3000
@@ -58,7 +58,7 @@ export default function Auth() {
     return (
         <div className={`transition-opacity duration-2500 ${startFadeOut ? 'opacity-0' : 'opacity-100'}`}>
             <div className={`transition-opacity duration-500 ${startFadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                <AuthWallpaper/>
+                <WallpaperAuth/>
                 <div
                     className="flex flex-col items-center justify-center h-screen w-screen overflow-hidden gap-14 transition-colors">
                     <p className={"font-borel text-6xl lg:text-9xl  tracking-widest z-10 transition duration-5000 " + (authWallpaperDark ? "text-equal-200" : "text-equal-800")}>

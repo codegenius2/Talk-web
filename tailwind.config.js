@@ -30,6 +30,16 @@ export default {
                 '2/5': '40%',
                 '1/2': '50%',
                 '3/4': '75%',
+                'screen-105': '105vw',
+            },
+            width: {
+                'screen-105': '105vw',
+            },
+            maxHeight: {
+                'screen-105': '105vh',
+            },
+            height: {
+                'screen-105': '105vh',
             },
             transitionDuration: {
                 '1500': '1500ms',
@@ -41,6 +51,16 @@ export default {
             },
             fontFamily: {
                 'borel': ['borel', ...defaultTheme.fontFamily.sans],
+            },
+            backgroundImage: {
+                // we have no copyright. limited to personal use. do not put them on a website that is public accessible
+                // see https://www.behance.net/gallery/84818869/Fuzzies-vol-1
+                'balloon': "url('/src/assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b.png')",
+                'walk-in-green': "url('/src/assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png')",
+
+                // wikiart.org public domain arts, completely free to use
+                'simultaneous-counter-composition-1930': "url('/src/assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg')",
+                'noise': "url('/src/assets/bg/noise.svg')",
             }
         },
 

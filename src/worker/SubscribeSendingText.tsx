@@ -8,6 +8,7 @@ import {newMyText, onError, onSent} from "../ds/Text.tsx";
 import {AxiosError} from "axios";
 import {Message} from "../api/restful.ts";
 import {postConv} from "../api/axios.ts";
+import {maxHistory} from "../ds/ability/client-ability.tsx";
 
 const systemMessage: Message = {
     role: "system",
@@ -27,7 +28,7 @@ export const SubscriberSendingText: React.FC = () => {
         if (!sendingText) {
             return
         }
-        let messages = historyMessages(qaSlice, ability.llm.maxHistory())
+        let messages = historyMessages(qaSlice, maxHistory(ability.llm))
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
         const id = uuidv4()
         const qa = newQueAns(id, true, newMyText('sending', sendingText))

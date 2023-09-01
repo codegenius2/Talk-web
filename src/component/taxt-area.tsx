@@ -1,14 +1,14 @@
 import React, {KeyboardEventHandler, useCallback, useRef, useState} from "react";
 import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/Input.tsx";
 
-const TextArea: React.FC = () => {
+const TaxtArea: React.FC = () => {
     const inputAreaIsLarge = useTextAreaStore((state) => state.inputAreaIsLarge)
     const arrowButtonRef = useRef<HTMLButtonElement>(null);
     const sendButtonRef = useRef<HTMLButtonElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const stopPropagation = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.log('stopPropagation', event.code);
+        console.debug('stopPropagation', event.code);
         event.stopPropagation();
     };
 
@@ -99,4 +99,4 @@ const TextArea: React.FC = () => {
     );
 };
 
-export default TextArea;
+export default TaxtArea;

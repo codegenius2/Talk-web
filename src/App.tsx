@@ -2,7 +2,7 @@ import {useAuthStore} from "./state/Auth.tsx";
 import Auth from "./component/auth/Auth.tsx";
 import './App.css'
 
-import Home from "./component/Home.tsx";
+import Home from "./component/home.tsx";
 
 
 export default function App() {

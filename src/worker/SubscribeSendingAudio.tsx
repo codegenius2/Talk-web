@@ -12,6 +12,7 @@ import {Message} from "../api/restful.ts";
 import {postAudioConv} from "../api/axios.ts";
 import {minSpeakTimeMillis} from "../config.ts";
 import {AxiosError} from "axios";
+import {maxHistory} from "../ds/ability/client-ability.tsx";
 
 const systemMessage: Message = {
     role: "system",
@@ -40,7 +41,7 @@ export const SubscribeSendingAudio: React.FC = () => {
         }
 
         const id = uuidv4()
-        let messages = historyMessages(qaSlice, ability.llm.maxHistory())
+        let messages = historyMessages(qaSlice, maxHistory(ability.llm))
         messages = [systemMessage, ...messages]
 
         const qa = newQueAns(id, false, newMyText('receiving', ""), newAudio("sending"))

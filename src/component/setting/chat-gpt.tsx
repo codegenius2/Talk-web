@@ -27,7 +27,7 @@ const ChatGpt: React.FC = () => {
         }), [getChatGPT, setChatGPT])
 
         return <div
-            className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-xl bg-gray-white bg-white bg-opacity-60">
+            className="flex flex-col w-full items-center justify-between gap-2 px-3 pt-2 pb-4 rounded-xl bg-white bg-opacity-40 backdrop-blur">
             <div className="flex justify-center items-center w-full">
                 <p className="prose text-lg text-neutral-600">ChatGPT</p>
             </div>

@@ -18,8 +18,19 @@ export const mergeAbility = (c: Ability, s: ServerAbility): Ability => {
 export type LLM = {
     available: boolean
     chatGPT: ChatGPTLLM
-    maxHistory: () => number
 }
+
+export const maxHistory = (llm: LLM): number => {
+    if (!llm.available) {
+        return 0;
+    }
+    const gpt = llm.chatGPT;
+    if (gpt.available && gpt.enabled && gpt.maxHistory.available) {
+        return gpt.maxHistory.chosen ?? gpt.maxHistory.default;
+    }
+    return 0;
+}
+
 
 export const mergeLLM = (c: LLM, s: ServerLLM): LLM => {
     return {

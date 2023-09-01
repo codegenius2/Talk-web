@@ -42,23 +42,10 @@ export const defaultChatGPTLLM = (): ChatGPTLLM => ({
     },
 })
 
-export const defaultLLM = function (): LLM {
-    return {
-        available: false,
-        chatGPT: defaultChatGPTLLM(),
-        maxHistory: function () {
-            if (!this.available) {
-                return 0;
-            }
-            const gpt = this.chatGPT;
-            if (gpt.available && gpt.enabled && gpt.maxHistory.available) {
-                return gpt.maxHistory.chosen ?? gpt.maxHistory.default;
-            }
-            return 0;
-        }
-    };
-};
-
+export const defaultLLM = (): LLM => ({
+    available: false,
+    chatGPT: defaultChatGPTLLM(),
+})
 
 export const defaultAbility = (): Ability => ({
     llm: defaultLLM()

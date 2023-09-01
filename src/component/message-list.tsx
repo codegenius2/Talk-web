@@ -1,9 +1,9 @@
 import React, {useLayoutEffect, useRef} from "react";
 import {useConvStore} from "../state/ConversationStore.tsx";
 import {QueAns} from "../ds/Conversation.tsx";
-import {Audio} from "./Audio.tsx";
-import {AssistantText, SelfText} from "./Text.tsx";
-import MessageErrorBoundary from "./MessageErrorBoundary.tsx";
+import {Audio} from "./audio.tsx";
+import {AssistantText, SelfText} from "./text.tsx";
+import ErrorBoundary from "./error-boundary.tsx";
 
 export const MessageList: React.FC = () => {
     const qaSlice: QueAns[] = useConvStore((state) => state.qaSlice)
@@ -56,7 +56,7 @@ const Qa: React.FC<QaProps> = ({qa}) => {
 
     console.debug("message renderOrder", newOrder)
     console.debug("qa", qa)
-    return <MessageErrorBoundary>
+    return <ErrorBoundary>
         <div className="flex flex-col gap-1 mr-2">
             {newOrder.map((render) => {
                     switch (render) {
@@ -76,12 +76,11 @@ const Qa: React.FC<QaProps> = ({qa}) => {
                             </div>
                         default:
                             console.error("impossible render case", render)
-                            return <div key={"impossible render case"} hidden={true}/>
                     }
                 }
             )}
         </div>
-    </MessageErrorBoundary>
+    </ErrorBoundary>
 
 }
 

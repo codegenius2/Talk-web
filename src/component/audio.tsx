@@ -3,7 +3,7 @@ import WaveSurfer from 'wavesurfer.js';
 import Hover from 'wavesurfer.js/plugins/hover'
 import {Audio as _Audio} from "../ds/Audio.tsx"
 import {getBlob} from "../store/BlobDB.tsx";
-import {Spin} from "./Spin.tsx";
+import {Spin} from "./spin.tsx";
 import {usePlayingStore} from "../state/Playing.tsx";
 
 interface WaveSurferProps {

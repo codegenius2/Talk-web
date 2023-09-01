@@ -9,7 +9,7 @@ interface ErrorBoundaryState {
   error?: Error;
 }
 
-class MessageErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -26,6 +26,7 @@ class MessageErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   render() {
     if (this.state.hasError) {
       return (
+          // todo push error to message box UI
         <div>
           <p>Something went wrong.</p>
           <p>{this.state.error?.message}</p>
@@ -37,5 +38,5 @@ class MessageErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 }
 
-export default MessageErrorBoundary;
+export default ErrorBoundary;
 

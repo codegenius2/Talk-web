@@ -1,14 +1,15 @@
 import {useEffect, useRef, useState} from "react";
-import Recorder from "../component/Recorder.tsx";
 import {useRecorderStore} from "../state/Recording.tsx";
-import {MessageList} from "./MessageList.tsx";
-import TextArea from "../component/TextArea.tsx";
+import TextArea from "./taxt-area.tsx";
 import {Workers} from "../worker/Workers.tsx";
 import {SSE} from "../SSE.tsx";
 import {MyRecorder} from "../util/MyRecorder.ts";
 import {useMouseStore} from "../state/Mouse.tsx";
-import HomeWallpaper from "./wallpaper/HomeWallpaper.tsx";
 import Setting from "./setting/setting.tsx";
+import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
+import ErrorBoundary from "./error-boundary.tsx";
+import {MessageList} from "./message-list.tsx";
+import Recorder from "./recorder.tsx";
 
 export default function Home() {
     const isRecording = useRecorderStore((state) => state.isRecording)
@@ -75,18 +76,17 @@ export default function Home() {
         };
     }, []);
 
-
     return (
         <div>
-            <HomeWallpaper/>
+            <WallpaperSimultaneousCounter/>
             <div
-                // style={wpStyleSkyPink}
                 className="home flex items-center justify-center h-screen w-screen overflow-hidden gap-2 lg:p-3">
                 <div
-                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-lg justify-between gap-1 p-2 bg-white bg-opacity-60">
+                    className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2
+                    bg-white bg-opacity-40 backdrop-blur">
                     <MessageList/>
                     <div
-                        className="flex flex-col rounded-lg items-center gap-2 w-full px-2 mt-auto bottom-0">
+                        className="flex flex-col rounded-xl items-center gap-2 w-full px-2 mt-auto bottom-0">
                         <TextArea/>
                         <div className="flex justify-center items-center w-full mt-1">
                             <Recorder/>
@@ -97,8 +97,10 @@ export default function Home() {
                     <Setting/>
                 </div>
             </div>
-            <SSE/>
-            <Workers/>
+            <ErrorBoundary>
+                <SSE/>
+                <Workers/>
+            </ErrorBoundary>
         </div>
     )
 }

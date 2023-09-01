@@ -1,7 +1,7 @@
 import React from 'react';
-import {Spin} from "./Spin.tsx";
+import {Spin} from "./spin.tsx";
 import {MyText} from "../ds/Text.tsx";
-import {RichOpText} from "./RichOpText.tsx";
+import { RichOpText } from './rich-op-text.tsx';
 
 
 interface TextProps {

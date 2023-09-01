@@ -65,8 +65,9 @@ export const DiscreteRange: React.FC<Props> = ({choices, value, setValue, outOfL
         <div className="flex gx-2">
             <textarea
                 className={" " + containsValue ? "bg-slate-500" : "bg-transparent"}
-                onChange={e => setValue(e.target.value)}>
-                {value}
+                onChange={e => setValue(e.target.value)}
+                value={value}
+            >
             </textarea>
             <div
                 className={"flex flex-wrap items-center divide-x divide-opacity-0 h-full bg-white "
