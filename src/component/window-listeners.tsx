@@ -11,39 +11,36 @@ export const WindowListeners: React.FC = () => {
             // spacebar has the lowest priority on starting/ending a recording
 
             const handleKeyUp = (event: KeyboardEvent) => {
-                console.debug('handleKeyUp');
                 if (event.code == 'Space' && recorder.currentContext()?.triggeredBy === 'spacebar') {
                     recorder.done()
                 }
             }
 
             const handleKeyDown = (event: KeyboardEvent) => {
-                console.debug('handleKeyDown', event.code);
                 if (event.code === 'Space') {
-                    if (!recorder.currentContext()?.triggeredBy) {
-                        recorder.start({triggeredBy: 'spacebar'}).catch((e) => {
-                            console.error("failed to start recorder", e)
-                        })
-                    }
                     if (event.repeat) {
                         console.debug('handleKeyDown skip repeated space');
                         return
                     }
+                    if (!recorder.currentContext()?.triggeredBy) {
+                        console.debug('handleKeyDown with not repeated space');
+                        recorder.start({triggeredBy: 'spacebar'}).catch((e) => {
+                            console.error("failed to start recorder", e)
+                        })
+                    }
                 } else {
                     if (recorder.currentContext()?.triggeredBy === 'spacebar') {
-                        // press any key other spacebar to cancel a recorder
+                        // press any key other spacebar to cancel the recording
                         recorder.cancel()
                     }
                 }
             };
 
             const handleMouseDown = () => {
-                console.debug('handleMouseDown');
                 setMouseDown(true)
             }
 
             const handleMouseUp = () => {
-                console.debug('handleMouseUp');
                 setMouseDown(false)
             }
 

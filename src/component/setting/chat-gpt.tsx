@@ -22,7 +22,7 @@ const ChatGpt: React.FC = () => {
         const setMaxHistory = (hist: NumStr) => {
             setChatGPT({
                 ...getChatGPT(),
-                maxHistory: {...getChatGPT().maxHistory, chosen: hist as number}
+                maxHistory: {...getChatGPT().maxHistory, chosen: hist as number|undefined}
             })
         }
 

@@ -15,7 +15,6 @@ export const MessageList: React.FC = () => {
             scrollRef.current.scrollTop = scrollHeight;
         }
     }, [qaSlice]);
-    console.debug("qaSlice ids", qaSlice.map(it => it.id))
     return (<div
             className="overflow-y-auto overflow-x-hidden w-full hide-scrollbar hover:show-scrollbar"
             ref={scrollRef}>
@@ -55,8 +54,6 @@ const Qa: React.FC<QaProps> = ({qa}) => {
         }
     }
 
-    console.debug("message renderOrder", newOrder)
-    console.debug("qa", qa)
     return <ErrorBoundary>
         <div className="flex flex-col gap-1 mr-2">
             {newOrder.map((render) => {

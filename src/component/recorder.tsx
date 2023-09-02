@@ -54,8 +54,7 @@ const Recorder = () => {
 
     const handleClickStart = useCallback(() => {
         console.debug('handleClickStart');
-        recorder.start({triggeredBy: 'click'}).catch(
-            (e) => {
+        recorder.start({triggeredBy: 'click'}).catch((e) => {
                 console.error("failed to start recorder", e)
             }
         )
@@ -63,9 +62,7 @@ const Recorder = () => {
 
     const handleClickDone = useCallback(() => {
         console.debug('handleClickDone');
-        if (recorder.currentContext()?.triggeredBy === 'click') {
-            recorder.done()
-        }
+        recorder.done()
     }, [recorder])
 
     // todo add a button for handleClickCancel

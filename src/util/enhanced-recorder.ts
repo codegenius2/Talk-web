@@ -21,7 +21,7 @@ export class EnhancedRecorder<CTX> {
      * 1. Certain browsers may prompt for microphone permission each time a recording begins.
      * 2. Initiating a new recording may be subject to a delay.
      **/
-    private readonly stopMicToo: boolean
+    private readonly stopMicToo: boolean // todo cannot start RecordPlugin after calling stopMic once, RecordPlugin should be replaced
     /**
      * Callers should not access recodingStatus field. Callers can only be notified about recodingStatus in callbacks.
      * The reason is that recodingStatus does not reflect the real state RecordPlugin
@@ -105,9 +105,8 @@ export class EnhancedRecorder<CTX> {
             await this.r.startMic()
         }
         this.recodingStatus = 'recording'
-        return this.r.startRecording().then(() => {
-            this.context = context
-        })
+        this.context = context // this should be done in  r.startRecording().then(() => {}), but RecordPlugin trigger other listeners first
+        return this.r.startRecording()
     }
 
     done(): void {
