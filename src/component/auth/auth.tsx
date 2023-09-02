@@ -7,7 +7,7 @@ import {AxiosError, AxiosResponse} from "axios";
 import {WallpaperAuth} from "../wallpaper/wallpaper.tsx";
 
 const detectDelay = 1000
-const fadeOutDuration = 3000
+const fadeOutDuration = 1500
 
 const shakeAnimation = {
     x: [0, -500, 500, -500, 500, 0],
@@ -56,7 +56,8 @@ export default function Auth() {
     }, []);
 
     return (
-        <div className={`transition-opacity duration-2500 ${startFadeOut ? 'opacity-0' : 'opacity-100'}`}>
+        // fadeOutDuration is a little shorter than duration-2000 to avoid staying in a white page
+        <div className={`transition-opacity duration-2000 ${startFadeOut ? 'opacity-0' : 'opacity-100'}`}>
             <div className={`transition-opacity duration-500 ${startFadeIn ? 'opacity-100' : 'opacity-0'}`}>
                 <WallpaperAuth/>
                 <div

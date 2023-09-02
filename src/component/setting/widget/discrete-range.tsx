@@ -7,24 +7,55 @@ type Props = {
     choices: Choice[]
     value: NumStr
     setValue: (value: NumStr) => void
+    fallbackValue: NumStr,
+    range?: { rangeStart: NumStr, rangeEnd: NumStr }
     outOfLeftBoundary?: NumStr // whether set value to this as mouse moves out of left-most element, usually as zero
 }
 
 type ChoiceColor = {
     index: number
     choice: Choice
-    inRange: boolean
+    inChoice: boolean
 }
 
-export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue, outOfLeftBoundary}) => {
+export const DiscreteRange: React.FC<Props> = ({
+                                                   title,
+                                                   choices,
+                                                   value,
+                                                   setValue,
+                                                   fallbackValue,
+                                                   outOfLeftBoundary,
+                                                   range
+                                               }) => {
 
-    const [choicesContainsValue, setChoicesContainsValue] = useState<ChoiceColor[]>([])
-    const [containsValue, setContainsValue] = useState<boolean>(false)
+    const [cccc, setChoiceColors] = useState<ChoiceColor[]>([])
+    const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
     const textareaBoxRef = useRef<HTMLTextAreaElement>(null);
+    const [text, setText] = useState<string>();
 
+    const onTextChanged = (text: string) => {
+        const found = choices.find((c) => c.name === text)?.value
+        if (found !== undefined) {
+            setValue(found)
+            return
+        }
+        if (range && range.rangeStart <= text && text <= range.rangeEnd) {
+            setValue(fallbackValue)
+        } else {
+            setValue(fallbackValue)
+        }
+    }
 
     useEffect(() => {
+        const found = choices.find((c) => c.value === value)?.name
+        if (found !== undefined) {
+            setText(found!)
+        } else {
+            setText(value.toString())
+        }
+    }, [value, choices]);
 
+    useEffect(() => {
         const res: ChoiceColor[] = []
         const contain = choices.find(it => it.value == value) !== undefined
         for (let i = 0; i < choices.length; i++) {
@@ -32,11 +63,11 @@ export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue,
                 index: i,
                 choice: choices[i],
                 // only render color when div is in selected range
-                inRange: contain && value !== undefined && choices[i].value <= value
+                inChoice: contain && value !== undefined && choices[i].value <= value
             })
         }
-        setContainsValue(contain)
-        setChoicesContainsValue(res)
+        setChoiceContainsValue(contain)
+        setChoiceColors(res)
     }, [choices, value, setValue])
 
     const handleMouseLeaveFirstElement = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -78,11 +109,11 @@ export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue,
                     className={"w-11 max-h-6 outline-0 overflow-hidden text-center align-middle border border-neutral-500 rounded-xl resize-none "
                         + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
                     rows={1}
-                    onChange={e => setValue(e.target.value)}
+                    onChange={e => onTextChanged(e.target.value)}
                     onFocus={(e) => {
                         e.target.select()
                     }}
-                    value={value}
+                    value={text}
                     onKeyDown={handleKeyDown}
                 >
             </textarea>
@@ -92,16 +123,16 @@ export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue,
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
                 <div
                     className={"flex  justify-start items-center  w-full overflow-auto "}>
-                    {choicesContainsValue.map((oc: ChoiceColor) =>
+                    {cccc.map((oc: ChoiceColor) =>
                         <div
-                            className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")}
+                            className={"flex justify-center items-center flex-grow " + (oc.inChoice ? "bg-blue-600" : "")}
                             key={oc.index}
                             onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
                             }}
                             onMouseDown={() => handleMouseDownChild(oc)}
                             onMouseEnter={() => handleMouseEnterChild(oc)}
                         >
-                            <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100" : "text-neutral-800")}>
+                            <p className={"prose text-center px-0.5 " + (oc.inChoice ? "text-neutral-100" : "text-neutral-800")}>
                                 {oc.choice.name}
                             </p>
                         </div>

@@ -30,7 +30,7 @@ export function blobToBase64(blob: Blob): Promise<string> {
     });
 }
 
-// MM:SS
+// duration is in ms
 export const timeElapsedMMSS = (duration: number): string => {
     let seconds = Math.floor(duration / 1000);
     const minutes = Math.floor((seconds % 3600) / 60);

@@ -31,7 +31,7 @@
     "react-dom": "^18.2.0",
     "react-use": "^17.4.0",
     "uuid": "^9.0.0",
-    "wavesurfer.js": "^7.1.5",
+    "wavesurfer.js": "^7.2.0",
     "zustand": "^4.4.1"
   },
   "devDependencies": {

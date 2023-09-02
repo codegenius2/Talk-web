@@ -30,23 +30,25 @@ const TaxtArea: React.FC = () => {
     }
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
-        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter' && !isComposing) {
-            event.preventDefault(); // prevent new line action
+        event.stopPropagation();
+        if (isComposing) {
+            return
+        } else if ((event.ctrlKey || event.metaKey) && event.code === 'Enter') {
             sendAndClearText();
-        } else if (event.key === 'Escape' && !isComposing) {
+        } else if (event.code === 'Escape') {
             if (textAreaRef.current) {
                 textAreaRef.current!.blur()
             }
-        } else {
-            event.stopPropagation();
         }
-    }, []);
+    }, [isComposing]);
 
     const handleCompositionStart = () => {
+        console.debug("is composing")
         setIsComposing(true);
     };
 
     const handleCompositionEnd = () => {
+        console.debug("is not composing")
         setIsComposing(false);
     };
 

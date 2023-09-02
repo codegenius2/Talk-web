@@ -2,7 +2,7 @@ import React from 'react';
 import {useConvStore} from "../../state/conversation.tsx";
 import {DiscreteRange} from "./widget/discrete-range.tsx";
 import {MySwitch} from "./widget/switch.tsx";
-import {historyChoices} from "../../ds/ability/defauts.ts";
+import {historyChoices, tokenChoices} from "../../ds/ability/defauts.ts";
 import {ListBox} from "./widget/list-box.tsx";
 import {NumStr} from "../../ds/ability/client-ability.tsx";
 
@@ -20,13 +20,6 @@ const ChatGpt: React.FC = () => {
         }
 
         const setMaxHistory = (hist: NumStr) => {
-            if (typeof hist === 'string') {
-                if (hist.match(/^\d+$/)) {
-                    hist = Number(hist)
-                } else {
-                    hist = 0
-                }
-            }
             setChatGPT({
                 ...getChatGPT(),
                 maxHistory: {...getChatGPT().maxHistory, chosen: hist as number}
@@ -37,6 +30,14 @@ const ChatGpt: React.FC = () => {
             ...getChatGPT(),
             models: {...getChatGPT().models, chosen: model as number | undefined}
         })
+
+        const setMaxTokens = (token: NumStr) => {
+            setChatGPT({
+                ...getChatGPT(),
+                maxTokens: {...getChatGPT().maxTokens, chosen: token as number}
+            })
+        }
+
 
         const gpt = getChatGPT()
 
@@ -54,7 +55,18 @@ const ChatGpt: React.FC = () => {
                                        title="Max History"
                                        setValue={setMaxHistory}
                                        value={gpt.maxHistory.chosen ?? gpt.maxHistory.default}
-                                       outOfLeftBoundary={0}
+                                       outOfLeftBoundary={gpt.maxHistory.default}
+                                       fallbackValue={gpt.maxHistory.default}
+                                       range={{rangeStart: gpt.maxHistory.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
+                        />}
+                    {gpt.maxTokens.available &&
+                        <DiscreteRange choices={tokenChoices}
+                                       title="Max Tokens"
+                                       setValue={setMaxTokens}
+                                       value={gpt.maxTokens.chosen ?? gpt.maxTokens.default}
+                                       outOfLeftBoundary={gpt.maxTokens.default}
+                                       fallbackValue={gpt.maxTokens.default}
+                                       range={{rangeStart: gpt.maxTokens.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
                         />}
                     {gpt.models.available &&
                         <div className="flex justify-between items-center gap-2">

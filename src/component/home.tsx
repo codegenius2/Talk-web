@@ -1,84 +1,18 @@
-import {useEffect, useRef, useState} from "react";
-import {useRecorderStore} from "../state/recording.tsx";
 import TextArea from "./taxt-area.tsx";
 import {Workers} from "../worker/workers.tsx"
-import {MyRecorder} from "../util/my-recorder.ts"
-import {useMouseStore} from "../state/mouse.tsx";
 import Setting from "./setting/setting.tsx";
-import {WallpaperDefault, WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
+import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import {MessageList} from "./message-list.tsx";
 import Recorder from "./recorder.tsx";
 import {SSE} from "../sse.tsx";
+import {WindowListeners} from "./window-listeners.tsx";
 
 export default function Home() {
-    const isRecording = useRecorderStore((state) => state.isRecording)
-    const recorder = useRecorderStore<MyRecorder>((state) => state.recorder)
-    const incrRecordDuration = useRecorderStore((state) => state.incrDuration)
-    const setRecordDuration = useRecorderStore((state) => state.setDuration)
-    const [spacePressed, setSpacePressed] = useState<boolean>(false)
-    const spacePressedRef = useRef(spacePressed);
-    const setMouseDown = useMouseStore(state => state.setMouseDown)
-    useEffect(() => {
-        if (isRecording) {
-            setRecordDuration(0)
-        }
-        const interval = setInterval(() => {
-            incrRecordDuration(50)
-        }, 50);
-
-        return () => {
-            if (interval) {
-                clearInterval(interval)
-            }
-        };
-    }, [isRecording]);
-
-    useEffect(() => {
-        spacePressedRef.current = spacePressed;
-    }, [spacePressed]);
-
-    useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            console.debug('handleKeyDown', event.code);
-            if (event.code === 'Space') {
-                if (event.repeat) {
-                    console.debug('handleKeyDown skip repeated space');
-                    return
-                }
-                setSpacePressed(true)
-                recorder.start().catch((e) => {
-                    console.error("failed to start recorder", e)
-                })
-            } else {
-                if (spacePressedRef.current) {
-                    recorder.cancel()
-                }
-            }
-        };
-
-        const handleKeyUp = (event: KeyboardEvent) => {
-            console.debug('handleKeyUp', event.code);
-            if (event.code == 'Space') {
-                setSpacePressed(false)
-                recorder.done()
-            }
-        };
-
-        window.addEventListener("keyup", handleKeyUp);
-        window.addEventListener("keydown", handleKeyDown);
-        window.addEventListener("mousedown", () => setMouseDown(true));
-        window.addEventListener("mouseup", () => setMouseDown(false));
-
-        return () => {
-            window.removeEventListener("keyup", handleKeyUp);
-            window.removeEventListener("keydown", handleKeyDown);
-        };
-    }, []);
-
     return (
         <div>
             <WallpaperSimultaneousCounter/>
+            {/*<WallpaperDefault/>*/}
             <div
                 className="home flex items-center justify-center h-screen w-screen overflow-hidden gap-2 lg:p-3">
                 <div
@@ -100,6 +34,7 @@ export default function Home() {
             <ErrorBoundary>
                 <SSE/>
                 <Workers/>
+                <WindowListeners/>
             </ErrorBoundary>
         </div>
     )

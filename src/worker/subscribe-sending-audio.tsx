@@ -27,7 +27,7 @@ export const SubscribeSendingAudio: React.FC = () => {
     const updateQueAudio = useConvStore((state) => (state.updateQueAudio))
     const getQueAudio = useConvStore((state) => (state.getQueAudio))
     const sendingAudio = useSendingAudioStore((state) => state.sendingAudio)
-    const recordDuration = useRecorderStore((state) => state.duration)
+    const duration = useSendingAudioStore((state) => state.duration)
     const recordingMimeType: RecordingMimeType | undefined = useRecorderStore((state) => state.recordingMimeType)
     useEffect(() => {
         if (sendingAudio.length === 0) {
@@ -35,7 +35,7 @@ export const SubscribeSendingAudio: React.FC = () => {
             return
         }
 
-        if (recordDuration < minSpeakTimeMillis) {
+        if (duration < minSpeakTimeMillis) {
             console.info("audio is less than ms", minSpeakTimeMillis)
             return
         }
