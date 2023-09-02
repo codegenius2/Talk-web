@@ -6,9 +6,10 @@ import Confetti from 'react-confetti';
 
 interface TextProps {
     text: MyText
+    deleteFunc: () => void
 }
 
-export const RichOpText: React.FC<TextProps> = ({text}) => {
+export const RichOpText: React.FC<TextProps> = ({text,deleteFunc}) => {
     const [hovering, setHovering] = useState(false)
     const [copied, setCopied] = useState(false);
     const [confettiCount, setConfettiCount] = useState(0);
@@ -22,7 +23,6 @@ export const RichOpText: React.FC<TextProps> = ({text}) => {
             clearTimeout(timer);
         };
     }, [copied]);
-
 
     return <div
         onMouseOver={() => setHovering(true)}
@@ -42,12 +42,14 @@ export const RichOpText: React.FC<TextProps> = ({text}) => {
                     <span className="text-green-400">Copy</span>
                 </button>
             </CopyToClipboard>
+            {/*<button*/}
+            {/*    className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">*/}
+            {/*    <span className="text-sky-400">Retry</span>*/}
+            {/*</button>*/}
             <button
-                className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
-                <span className="text-sky-400">Retry</span>
-            </button>
-            <button
-                className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
+                onClick={deleteFunc}
+                className="bg-neutral-400 bg-opacity-10 hover:bg-opacity-20 pointer-events-auto relative px-4 py-2 text-xs
+                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
                 <span className="text-red-400">Delete</span>
             </button>
         </div>}

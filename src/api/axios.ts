@@ -29,7 +29,6 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
     config.headers['stream-id'] = useSSEStore.getState().streamId;
     config.headers['Authorization'] = 'Bearer ' + useAuthStore.getState().getPasswordHash();
-    console.debug('Request Body:', config.data)
     return config;
 });
 

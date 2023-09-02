@@ -1,6 +1,6 @@
 // do not change these types by modifying fields, using the defined functions instead
 
-export type AudioStatus = 'sending' | 'sent' | 'receiving' | 'received' | 'error'
+export type AudioStatus = 'sending' | 'sent' | 'receiving' | 'received' | 'error' | 'deleted'
 
 export type Audio = {
     status: AudioStatus
@@ -26,6 +26,7 @@ export const onSent = (prev: Audio): Audio => {
         case "receiving":
         case "received":
         case "error":
+        case "deleted":
             return {...prev}
     }
 }
@@ -51,6 +52,8 @@ export const onNewAudioId = (prev: Audio, audioId: string): Audio => {
         case "error":
             console.error("invalid state:" + prev.status)
             return {...prev,}
+        case "deleted":
+            return {...prev}
     }
 }
 
@@ -70,6 +73,20 @@ export const onError = (prev: Audio, errMsg: string): Audio => {
         case "error":
             console.error("invalid state:" + prev.status)
             return {...prev,}
+        case "deleted":
+            return {...prev}
+    }
+}
+
+export const onDelete = (prev: Audio): Audio => {
+    switch (prev.status) {
+        case "sending":
+        case "receiving":
+        case "sent":
+        case "received":
+        case "error":
+        case "deleted":
+            return {errorMessage: "", audioId: "", status: "deleted"}
     }
 }
 

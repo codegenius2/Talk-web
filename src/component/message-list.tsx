@@ -44,7 +44,7 @@ const Qa: React.FC<QaProps> = ({qa}) => {
     const newOrder: render[] = []
     let thereIsAPendingAlready = false
     for (let i = 0; i < statusSlice.length; i++) {
-        if (['sending', 'receiving', 'error'].includes(statusSlice[i])) {
+        if (['sending', 'receiving', 'error', 'deleted'].includes(statusSlice[i])) {
             if (!thereIsAPendingAlready) {
                 newOrder.push(renderOrder[i])
                 thereIsAPendingAlready = true
@@ -59,14 +59,14 @@ const Qa: React.FC<QaProps> = ({qa}) => {
             {newOrder.map((render) => {
                     switch (render) {
                         case 'queText' :
-                            return <SelfText text={qa.que.text} key={"que.text"}/>
+                            return <SelfText text={qa.que.text} qaId={qa.id} key={"que.text"}/>
                         case 'queAudio' :
                             return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end"
                                         key={"que.audio"}>
                                 <Audio audio={qa.que.audio} self={true}/>
                             </div>
                         case 'ansText' :
-                            return <AssistantText text={qa.ans.text} key={"ans.text"}/>
+                            return <AssistantText qaId={qa.id} text={qa.ans.text} key={"ans.text"}/>
                         case 'ansAudio':
                             return <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900"
                                         key={"ans.audio"}>

@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Spin} from "./spin.tsx";
-import {MyText} from "../ds/text.tsx";
-import { RichOpText } from './rich-op-text.tsx';
+import {MyText, onDelete} from "../ds/text.tsx";
+import {RichOpText} from './rich-op-text.tsx';
+import {useConvStore} from "../state/conversation.tsx";
 
 
 interface TextProps {
     text: MyText
+    qaId: string
 }
 
-export const AssistantText: React.FC<TextProps> = ({text}) => {
+export const AssistantText: React.FC<TextProps> = ({text, qaId}) => {
+    const updateAnsText = useConvStore(state => state.updateAnsText)
+
+    const handleDelete = useCallback(() => {
+        const now = onDelete(text)
+        updateAnsText(qaId, now)
+    }, [qaId, text, updateAnsText])
+
     switch (text.status) {
         case 'sending':
         case 'receiving':
@@ -31,7 +40,14 @@ export const AssistantText: React.FC<TextProps> = ({text}) => {
     }
 }
 
-export const SelfText: React.FC<TextProps> = ({text}) => {
+export const SelfText: React.FC<TextProps> = ({text, qaId}) => {
+    const updateQueText = useConvStore(state => state.updateQueText)
+
+    const handleDelete = useCallback(() => {
+        const now = onDelete(text)
+        updateQueText(qaId, now)
+    }, [qaId, text, updateQueText])
+
     switch (text.status) {
         case 'sending':
         case 'receiving':
@@ -42,7 +58,7 @@ export const SelfText: React.FC<TextProps> = ({text}) => {
         case 'received':
         case 'half-received':
         case 'typing' :
-            return <RichOpText text={text}/>
+            return <RichOpText deleteFunc={handleDelete} text={text}/>
         case 'error':
             return <div className="self-end w-auto px-2 py-1.5"> {text.errorMessage}</div>
         default:

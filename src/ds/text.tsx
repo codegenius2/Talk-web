@@ -2,7 +2,15 @@
 
 import {formatISO} from "date-fns";
 
-export type TextStatus = 'sending' | 'sent' | 'receiving' | 'typing' | 'half-received' | 'received' | 'error'
+export type TextStatus =
+    'sending'
+    | 'sent'
+    | 'receiving'
+    | 'typing'
+    | 'half-received'
+    | 'received'
+    | 'error'
+    | 'deleted'
 
 export type MyText = {
     textLastUpdatedAt?: string
@@ -11,7 +19,7 @@ export type MyText = {
     // status 'receiving' should be changed to 'half-received'
     status: TextStatus
     errorMessage?: string
-    text: string;
+    text: string
 }
 
 export const newMyText = (status: TextStatus, text: string): MyText => {
@@ -34,6 +42,7 @@ export const onSent = (prev: MyText): MyText => {
         case "half-received":
         case "received":
         case "error":
+        case "deleted":
             return {...prev}
     }
 }
@@ -57,6 +66,8 @@ export const onNewText = (prev: MyText, newText: string, eof: boolean): MyText =
         case "error":
             console.error("invalid text state ", prev.status, newText);
             return {...prev,}
+        case "deleted":
+            return {...prev}
     }
 }
 
@@ -78,5 +89,21 @@ export const onError = (prev: MyText, errMsg: string): MyText => {
         case "error":
             console.error("invalid state, errMsg:" + errMsg)
             return {...prev,}
+        case "deleted":
+            return {...prev}
+    }
+}
+
+export const onDelete = (prev: MyText): MyText => {
+    switch (prev.status) {
+        case "sending":
+        case "sent":
+        case "receiving":
+        case "typing":
+        case "half-received":
+        case "received":
+        case "error":
+        case "deleted":
+            return {errorMessage: "", text: "", status: "deleted"}
     }
 }

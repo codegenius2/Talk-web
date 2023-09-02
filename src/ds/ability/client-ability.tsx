@@ -59,6 +59,7 @@ export const mergeChatGPT = (c: ChatGPTLLM, s: ServerChatGPTLLM): ChatGPTLLM => 
         ...c,
         available: s.available,
         models: {
+            ...c.models,
             choices: s.models.map((m) => ({name: m, value: m, tags: []})),
         }
     }

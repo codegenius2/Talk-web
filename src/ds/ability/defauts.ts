@@ -74,3 +74,33 @@ export const tokenChoices: Choice[] = [
     {value: 32000, name: "32k", tags: []},
     {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []},
 ]
+
+export const temperatureChoices: Choice[] = [
+    {value: 0, name: "0", tags: []},
+    {value: 0.2, name: "0.2", tags: []},
+    {value: 0.4, name: "0.4", tags: []},
+    {value: 0.6, name: "0.6", tags: []},
+    {value: 0.8, name: "0.8", tags: []},
+    {value: 1, name: "1", tags: []},
+    {value: 1.2, name: "1.2", tags: []},
+    {value: 1.4, name: "1.4", tags: []},
+    {value: 1.6, name: "1.6", tags: []},
+    {value: 1.8, name: "1.8", tags: []},
+    {value: 2, name: "2", tags: []},
+]
+
+export const presencePenaltyChoices: Choice[] = [
+    {value: -2, name: "-2", tags: []},
+    {value: -1.75, name: "-1.75", tags: []},
+    {value: -1.5, name: "-1.5", tags: []},
+    {value: -1.25, name: "-1.25", tags: []},
+    {value: -1, name: "-1", tags: []},
+    {value: 0, name: "0", tags: []},
+    {value: 1, name: "1", tags: []},
+    {value: 1.25, name: "1.25", tags: []},
+    {value: 1.5, name: "1.5", tags: []},
+    {value: 1.75, name: "1.75", tags: []},
+    {value: 2, name: "2", tags: []},
+]
+
+export const frequencyPenaltyChoices = presencePenaltyChoices

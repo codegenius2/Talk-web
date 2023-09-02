@@ -8,6 +8,7 @@ type Props = {
     value: NumStr
     setValue: (value: NumStr) => void
     fallbackValue: NumStr,
+    showRange: boolean, // show range or single point
     range?: { rangeStart: NumStr, rangeEnd: NumStr }
     outOfLeftBoundary?: NumStr // whether set value to this as mouse moves out of left-most element, usually as zero
 }
@@ -15,7 +16,7 @@ type Props = {
 type ChoiceColor = {
     index: number
     choice: Choice
-    inChoice: boolean
+    inRange: boolean
 }
 
 export const DiscreteRange: React.FC<Props> = ({
@@ -24,42 +25,54 @@ export const DiscreteRange: React.FC<Props> = ({
                                                    value,
                                                    setValue,
                                                    fallbackValue,
+                                                   showRange,
                                                    outOfLeftBoundary,
                                                    range
                                                }) => {
 
     const [choiceColor, setChoiceColors] = useState<ChoiceColor[]>([])
-    const [containsValue, setChoiceContainsValue] =useState<boolean>(false)
+    const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
     const textareaBoxRef = useRef<HTMLTextAreaElement>(null);
-    const [text, setText] = useState<string>();
+    const [valueUpdated, setValueUpdated] = useState(0)
 
-    const onTextChanged = (text: string) => {
-        const found = choices.find((c) => c.name === text)?.value
+    const onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+        const target = e.target.value
+        const found = choices.find((c) => c.name === target)?.value
+        let res: NumStr
         if (found !== undefined) {
-            setValue(found)
-            return
-        }
-        if (range && range.rangeStart <= text && text <= range.rangeEnd) {
-            if (typeof value == 'number') {
-                if (text.includes(".")) {
-                    setValue(Number.parseFloat(text))
-                }else{
-                    setValue(Number.parseInt(text))
+            res = found
+        } else if (typeof value === 'string' && range && range.rangeStart <= target && target <= range.rangeEnd) {
+            res = target
+        } else if (typeof value === 'number') {
+            if (range && range.rangeStart <= target && target <= range.rangeEnd) {
+                if (!target.match(/^-?\d+(\.\d+)?$/)) {
+                    res = fallbackValue
+                } else if (target.includes(".")) {
+                    res = Number.parseFloat(target)
+                } else {
+                    res = Number.parseInt(target)
                 }
+            } else {
+                res = fallbackValue
             }
         } else {
-            setValue(fallbackValue)
+            res = fallbackValue
         }
+        setValue(res)
+        setValueUpdated(valueUpdated + 1)
     }
 
     useEffect(() => {
+        if (!textareaBoxRef.current) {
+            return
+        }
         const found = choices.find((c) => c.value === value)?.name
         if (found !== undefined) {
-            setText(found)
+            textareaBoxRef.current.value = found
         } else {
-            setText(value.toString())
+            textareaBoxRef.current.value = value.toString()
         }
-    }, [value, choices]);
+    }, [value, choices, valueUpdated]);
 
     useEffect(() => {
         const res: ChoiceColor[] = []
@@ -69,7 +82,7 @@ export const DiscreteRange: React.FC<Props> = ({
                 index: i,
                 choice: choices[i],
                 // only render color when div is in selected range
-                inChoice: contain && value !== undefined && choices[i].value <= value
+                inRange: showRange ? contain && value !== undefined && choices[i].value <= value : choices[i].value === value
             })
         }
         setChoiceContainsValue(contain)
@@ -115,11 +128,10 @@ export const DiscreteRange: React.FC<Props> = ({
                     className={"w-11 max-h-6 outline-0 overflow-hidden text-center align-middle border border-neutral-500 rounded-xl resize-none "
                         + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
                     rows={1}
-                    onChange={e => onTextChanged(e.target.value)}
+                    onBlur={onBlur}
                     onFocus={(e) => {
                         e.target.select()
                     }}
-                    value={text}
                     onKeyDown={handleKeyDown}
                 >
             </textarea>
@@ -131,14 +143,15 @@ export const DiscreteRange: React.FC<Props> = ({
                     className={"flex  justify-start items-center  w-full overflow-auto "}>
                     {choiceColor.map((oc: ChoiceColor) =>
                         <div
-                            className={"flex justify-center items-center flex-grow " + (oc.inChoice ? "bg-blue-600" : "")}
+                            className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")
+                                 + (showRange? '': ' rounded-full')}
                             key={oc.index}
                             onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
                             }}
                             onMouseDown={() => handleMouseDownChild(oc)}
                             onMouseEnter={() => handleMouseEnterChild(oc)}
                         >
-                            <p className={"prose text-center px-0.5 " + (oc.inChoice ? "text-neutral-100" : "text-neutral-800")}>
+                            <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100 " : "text-neutral-800 ") }>
                                 {oc.choice.name}
                             </p>
                         </div>
