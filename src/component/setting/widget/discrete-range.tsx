@@ -40,7 +40,13 @@ export const DiscreteRange: React.FC<Props> = ({
             return
         }
         if (range && range.rangeStart <= text && text <= range.rangeEnd) {
-            setValue(fallbackValue)
+            if (typeof value == 'number') {
+                if (text.includes(".")) {
+                    setValue(Number.parseFloat(text))
+                }else{
+                    setValue(Number.parseInt(text))
+                }
+            }
         } else {
             setValue(fallbackValue)
         }
@@ -49,7 +55,7 @@ export const DiscreteRange: React.FC<Props> = ({
     useEffect(() => {
         const found = choices.find((c) => c.value === value)?.name
         if (found !== undefined) {
-            setText(found!)
+            setText(found)
         } else {
             setText(value.toString())
         }

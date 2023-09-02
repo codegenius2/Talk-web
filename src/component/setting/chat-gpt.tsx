@@ -38,7 +38,6 @@ const ChatGpt: React.FC = () => {
             })
         }
 
-
         const gpt = getChatGPT()
 
         return <div
@@ -55,7 +54,7 @@ const ChatGpt: React.FC = () => {
                                        title="Max History"
                                        setValue={setMaxHistory}
                                        value={gpt.maxHistory.chosen ?? gpt.maxHistory.default}
-                                       outOfLeftBoundary={gpt.maxHistory.default}
+                                       outOfLeftBoundary={gpt.maxHistory.rangeStart}
                                        fallbackValue={gpt.maxHistory.default}
                                        range={{rangeStart: gpt.maxHistory.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
                         />}
@@ -64,7 +63,7 @@ const ChatGpt: React.FC = () => {
                                        title="Max Tokens"
                                        setValue={setMaxTokens}
                                        value={gpt.maxTokens.chosen ?? gpt.maxTokens.default}
-                                       outOfLeftBoundary={gpt.maxTokens.default}
+                                       outOfLeftBoundary={gpt.maxTokens.rangeStart}
                                        fallbackValue={gpt.maxTokens.default}
                                        range={{rangeStart: gpt.maxTokens.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
                         />}
