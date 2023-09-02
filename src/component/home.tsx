@@ -5,7 +5,7 @@ import {Workers} from "../worker/workers.tsx"
 import {MyRecorder} from "../util/my-recorder.ts"
 import {useMouseStore} from "../state/mouse.tsx";
 import Setting from "./setting/setting.tsx";
-import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
+import {WallpaperDefault, WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import {MessageList} from "./message-list.tsx";
 import Recorder from "./recorder.tsx";

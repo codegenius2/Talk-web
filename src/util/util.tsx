@@ -1,6 +1,7 @@
 import {QueAns} from "../ds/conversation.tsx";
 import {Message} from "../api/restful.ts";
 import {SHA256} from 'crypto-js';
+import {KeyboardEventHandler} from "react";
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
@@ -127,4 +128,10 @@ export function compareSlices<T>(arr1: T[], arr2: T[]): boolean {
     const slice2 = arr2.slice();
 
     return JSON.stringify(slice1) === JSON.stringify(slice2);
+}
+
+export const escapeSpaceKey: KeyboardEventHandler<HTMLElement> = (event) => {
+    if (event.code === 'Space') {
+        event.stopPropagation();
+    }
 }

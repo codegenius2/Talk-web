@@ -6,10 +6,10 @@
 https://benborgers.com/posts/tailwind-h-screen
 */
 @supports (-webkit-touch-callout: none) {
-  .h-screen {
-      /*noinspection CssInvalidPropertyValue*/
-      height: -webkit-fill-available;
-  }
+    .h-screen {
+        /*noinspection CssInvalidPropertyValue*/
+        height: -webkit-fill-available;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -17,5 +17,19 @@ https://benborgers.com/posts/tailwind-h-screen
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #b9b9b9;
+    background: #eeeeee;
+    border-radius: 10px;
 }
+
+@layer utilities {
+    .show-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #eeeeee;
+        transition: background-color 1000ms linear;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0);
+        transition: background-color 1000ms linear;
+    }
+}
+

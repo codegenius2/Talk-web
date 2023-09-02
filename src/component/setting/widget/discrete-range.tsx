@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
 import {useMouseStore} from "../../../state/mouse.tsx";
 import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
 
@@ -20,6 +20,8 @@ export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue,
 
     const [choicesContainsValue, setChoicesContainsValue] = useState<ChoiceColor[]>([])
     const [containsValue, setContainsValue] = useState<boolean>(false)
+    const textareaBoxRef = useRef<HTMLTextAreaElement>(null);
+
 
     useEffect(() => {
 
@@ -61,19 +63,27 @@ export const DiscreteRange: React.FC<Props> = ({title, choices, value, setValue,
         setValue(oc.choice.value)
     }
 
-    // const c = <div className="grid grid-flow-row-dense grid-cols-3 gap-4 grow overflow-scroll"/>
+    const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
+        if (event.code == 'Escape') {
+            textareaBoxRef.current?.blur()
+        }
+    }
 
     return (
         <div className="flex flex-col gap-y-0.5">
             <div className="flex justify-between items-center max-h-10 ring-transparent ">
                 <p className="text-neutral-600">{title}</p>
                 <textarea
+                    ref={textareaBoxRef}
                     className={"w-11 max-h-6 outline-0 overflow-hidden text-center align-middle border border-neutral-500 rounded-xl resize-none "
                         + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
                     rows={1}
                     onChange={e => setValue(e.target.value)}
-                    onFocus={(e)=>{e.target.select()}}
+                    onFocus={(e) => {
+                        e.target.select()
+                    }}
                     value={value}
+                    onKeyDown={handleKeyDown}
                 >
             </textarea>
             </div>

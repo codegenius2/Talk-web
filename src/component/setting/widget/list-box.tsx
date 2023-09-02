@@ -53,7 +53,8 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                         <Listbox.Options
                             className="absolute w-full rounded-xl text-base
                             shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
-                            bg-white bg-opacity-40 backdrop-blur ">
+                            bg-white bg-opacity-40 backdrop-blur"
+                        >
                             {choices.map((ch) => (
                                 <Listbox.Option
                                     key={ch.value}

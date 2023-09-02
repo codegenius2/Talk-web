@@ -7,7 +7,6 @@ import ErrorBoundary from "./error-boundary.tsx";
 
 export const MessageList: React.FC = () => {
     const qaSlice: QueAns[] = useConvStore((state) => state.qaSlice)
-
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
@@ -17,7 +16,9 @@ export const MessageList: React.FC = () => {
         }
     }, [qaSlice]);
     console.debug("qaSlice ids", qaSlice.map(it => it.id))
-    return (<div className="overflow-y-auto  overflow-x-hidden w-full" ref={scrollRef}>
+    return (<div
+            className="overflow-y-auto overflow-x-hidden w-full hide-scrollbar hover:show-scrollbar"
+            ref={scrollRef}>
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
                 {qaSlice.map((qa) =>

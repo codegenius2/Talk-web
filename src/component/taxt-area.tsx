@@ -1,4 +1,4 @@
-import React, {KeyboardEventHandler, useCallback, useRef, useState} from "react";
+import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
 import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/input.tsx";
 
 const TaxtArea: React.FC = () => {
@@ -26,6 +26,7 @@ const TaxtArea: React.FC = () => {
             useSendingTextStore.setState({sendingText: it})
         }
         useInputStore.setState({inputText: ""})
+        textAreaRef.current?.focus()
     }
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
@@ -37,7 +38,6 @@ const TaxtArea: React.FC = () => {
                 textAreaRef.current!.blur()
             }
         } else {
-
             event.stopPropagation();
         }
     }, []);
@@ -56,6 +56,11 @@ const TaxtArea: React.FC = () => {
             arrowButtonRef!.current!.blur();
         }
     };
+
+    useEffect(() =>
+            inputAreaIsLarge ? textAreaRef.current?.focus() : textAreaRef.current?.blur()
+        , [inputAreaIsLarge]
+    )
 
 
     return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">

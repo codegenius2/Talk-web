@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {Switch} from '@headlessui/react'
 
 export type  MySwitchProps = {
@@ -6,15 +6,23 @@ export type  MySwitchProps = {
     setEnabled: (enabled: boolean) => void
 }
 
-export const MySwitch: React.FC<MySwitchProps> = ({ enabled, setEnabled}) => {
-
+export const MySwitch: React.FC<MySwitchProps> = ({enabled, setEnabled}) => {
+    const switchBoxRef = useRef<HTMLButtonElement>(null);
+    useEffect(() => {
+        if (switchBoxRef.current) {
+            switchBoxRef.current.blur()
+        }
+    }, [enabled])
     return (
         <div className="flex items-center">
             <Switch
+                ref={switchBoxRef}
                 checked={enabled}
                 onChange={setEnabled}
-                className={`${enabled ? 'bg-blue-600' : 'bg-neutral-500 '}
-          relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+                className={`${enabled ? 'bg-blue-600 border-transparent' : ' border-neutral-600'} relative 
+                inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full transition-colors duration-200 ease-in-out 
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-white 
+                focus-visible:ring-opacity-75 border-2 border-neutral-600 border-dotted`}
             >
                 <span className="sr-only">Use setting</span>
                 <span
