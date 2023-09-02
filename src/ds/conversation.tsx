@@ -21,7 +21,6 @@ export type Conversation = {
     getAnsText: (id: string) => MyText
     getAnsAudio: (id: string) => Audio
 
-
     ability: Ability
     setAbility: (ability: Ability) => void
     getChatGPT: () => ChatGPTLLM

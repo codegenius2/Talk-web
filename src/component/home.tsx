@@ -1,4 +1,4 @@
-import TextArea from "./taxt-area.tsx";
+import TextArea from "./text-area.tsx";
 import {Workers} from "../worker/workers.tsx"
 import Setting from "./setting/setting.tsx";
 import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";

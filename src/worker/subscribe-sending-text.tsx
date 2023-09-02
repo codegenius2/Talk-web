@@ -6,7 +6,7 @@ import {useSendingTextStore} from "../state/input.tsx";
 import {historyMessages} from "../util/util.tsx";
 import {newMyText, onError, onSent} from "../ds/text.tsx";
 import {AxiosError} from "axios";
-import {Message} from "../api/restful.ts";
+import {Message, toTalkOption} from "../api/restful.ts";
 import {postConv} from "../api/axios.ts";
 import {maxHistory} from "../ds/ability/client-ability.tsx";
 
@@ -33,7 +33,7 @@ export const SubscriberSendingText: React.FC = () => {
         const id = uuidv4()
         const qa = newQueAns(id, true, newMyText('sending', sendingText))
         pushQueAns(qa)
-        postConv({id: id, ms: messages}).then((r) => {
+        postConv({id: id, ms: messages, talkOption: toTalkOption(ability)}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
                     updateQueText(id, onSent(getQueText(id)))
                 } else {

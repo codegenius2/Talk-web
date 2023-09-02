@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useConvStore} from "../../state/conversation.tsx";
 import {DiscreteRange} from "./widget/discrete-range.tsx";
 import {MySwitch} from "./widget/switch.tsx";
@@ -12,31 +12,31 @@ const ChatGpt: React.FC = () => {
         const getChatGPT = useConvStore((state) => state.getChatGPT);
         const setChatGPT = useConvStore((state) => state.setChatGPT);
 
-        const setEnabled = (enabled: boolean) => {
+        const setEnabled = useCallback(() => (enabled: boolean) => {
             console.log(enabled)
             setChatGPT(
                 {...getChatGPT(), enabled: enabled}
             )
-        }
+        }, [getChatGPT, setChatGPT])
 
-        const setMaxHistory = (hist: NumStr) => {
+        const setMaxHistory = useCallback(() =>(hist: NumStr) => {
             setChatGPT({
                 ...getChatGPT(),
-                maxHistory: {...getChatGPT().maxHistory, chosen: hist as number|undefined}
+                maxHistory: {...getChatGPT().maxHistory, chosen: hist as number | undefined}
             })
-        }
+        },[getChatGPT, setChatGPT])
 
-        const setModel = (model?: NumStr) => setChatGPT({
+        const setModel = useCallback(() =>(model?: NumStr) => setChatGPT({
             ...getChatGPT(),
-            models: {...getChatGPT().models, chosen: model as number | undefined}
-        })
+            models: {...getChatGPT().models, chosen: model}
+        }),[getChatGPT, setChatGPT])
 
-        const setMaxTokens = (token: NumStr) => {
+        const setMaxTokens = useCallback(() =>(token: NumStr) => {
             setChatGPT({
                 ...getChatGPT(),
                 maxTokens: {...getChatGPT().maxTokens, chosen: token as number}
             })
-        }
+        },[getChatGPT, setChatGPT])
 
         const gpt = getChatGPT()
 
@@ -49,35 +49,32 @@ const ChatGpt: React.FC = () => {
             {gpt.enabled &&
                 <div
                     className="flex flex-col justify-center gap-2 py-2 border-2 border-neutral-500 border-dashed rounded-lg w-full px-3">
-                    {gpt.maxHistory.available &&
-                        <DiscreteRange choices={historyChoices}
-                                       title="Max History"
-                                       setValue={setMaxHistory}
-                                       value={gpt.maxHistory.chosen ?? gpt.maxHistory.default}
-                                       outOfLeftBoundary={gpt.maxHistory.rangeStart}
-                                       fallbackValue={gpt.maxHistory.default}
-                                       range={{rangeStart: gpt.maxHistory.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
-                        />}
-                    {gpt.maxTokens.available &&
-                        <DiscreteRange choices={tokenChoices}
-                                       title="Max Tokens"
-                                       setValue={setMaxTokens}
-                                       value={gpt.maxTokens.chosen ?? gpt.maxTokens.default}
-                                       outOfLeftBoundary={gpt.maxTokens.rangeStart}
-                                       fallbackValue={gpt.maxTokens.default}
-                                       range={{rangeStart: gpt.maxTokens.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
-                        />}
-                    {gpt.models.available &&
-                        <div className="flex justify-between items-center gap-2">
-                            <p className="prose text-neutral-600">Model</p>
-                            <div className="rounded-xl w-full md:ml-3 py-1">
-                                <ListBox choices={gpt.models.choices}
-                                         value={gpt.models.chosen}
-                                         setValue={setModel}
-                                         mostEffort={true}
-                                />
-                            </div>
-                        </div>}
+                    <DiscreteRange choices={historyChoices}
+                                   title="Max History"
+                                   setValue={setMaxHistory}
+                                   value={gpt.maxHistory.chosen ?? gpt.maxHistory.default}
+                                   outOfLeftBoundary={gpt.maxHistory.rangeStart}
+                                   fallbackValue={gpt.maxHistory.default}
+                                   range={{rangeStart: gpt.maxHistory.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
+                    />
+                    <DiscreteRange choices={tokenChoices}
+                                   title="Max Tokens"
+                                   setValue={setMaxTokens}
+                                   value={gpt.maxTokens.chosen ?? gpt.maxTokens.default}
+                                   outOfLeftBoundary={gpt.maxTokens.rangeStart}
+                                   fallbackValue={gpt.maxTokens.default}
+                                   range={{rangeStart: gpt.maxTokens.rangeStart, rangeEnd: gpt.maxHistory.rangeEnd,}}
+                    />
+                    <div className="flex justify-between items-center gap-2">
+                        <p className="prose text-neutral-600">Model</p>
+                        <div className="rounded-xl w-full md:ml-3 py-1">
+                            <ListBox choices={gpt.models.choices}
+                                     value={gpt.models.chosen}
+                                     setValue={setModel}
+                                     mostEffort={true}
+                            />
+                        </div>
+                    </div>
                 </div>}
         </div>
     }

@@ -23,8 +23,14 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                 }
             }
         },
-        [choices, value, setValue, mostEffort]
+        [choices, setValue, mostEffort]
     )
+
+    if (choices.length === 0) {
+        return <div className="flex w-full justify-end text-neutral-600 line-through">
+            <div>Not Available</div>
+        </div>
+    }
 
     return (
         <Listbox value={value} onChange={setValue}>

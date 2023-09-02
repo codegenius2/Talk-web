@@ -5,21 +5,21 @@ export const EventAnswer = "answer"
 export const EventTrans = "trans"
 export const EventAbility = "ability"
 
-export interface EventMeta {
+export type EventMeta = {
     convId: string; // unique ID for every Q&A
     eMsg: string;
 }
 
-export interface Answer extends EventMeta {
+export type Answer = EventMeta & {
     text: string;
     eof: boolean; // whether it is the last piece of content
 }
 
-export interface Audio extends EventMeta {
+export type Audio = EventMeta & {
     audio: string; // base64 of byte array
 }
 
-export interface Trans extends EventMeta {
+export type Trans = EventMeta & {
     text: string;
 }
 

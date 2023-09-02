@@ -1,8 +1,8 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
-import {useInputStore, useSendingTextStore, useTextAreaStore} from "../state/input.tsx";
+import {useInputStore, useSendingTextStore} from "../state/input.tsx";
 
-const TaxtArea: React.FC = () => {
-    const inputAreaIsLarge = useTextAreaStore((state) => state.inputAreaIsLarge)
+const TextArea: React.FC = () => {
+    const [inputAreaIsLarge,setInputAreaIsLarge] = useState(false)
     const arrowButtonRef = useRef<HTMLButtonElement>(null);
     const sendButtonRef = useRef<HTMLButtonElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -53,7 +53,7 @@ const TaxtArea: React.FC = () => {
     };
 
     const handleClick = () => {
-        useTextAreaStore.setState({inputAreaIsLarge: !inputAreaIsLarge})
+        setInputAreaIsLarge(!inputAreaIsLarge)
         if (arrowButtonRef) {
             arrowButtonRef!.current!.blur();
         }
@@ -106,4 +106,4 @@ const TaxtArea: React.FC = () => {
     );
 };
 
-export default TaxtArea;
+export default TextArea;

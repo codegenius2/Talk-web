@@ -6,10 +6,9 @@ import {ConversationReq} from "./restful.ts";
 import {useAuthStore} from "../state/auth.tsx";
 
 export function SSEEndpoint(): string {
-    let sseEp = joinUrl(Endpoint(), "events")
-    sseEp = sseEp + "?stream=" + useSSEStore.getState().streamId
-    console.debug("SSEEndpoint:", sseEp)
-    return sseEp
+    const ep = joinUrl(Endpoint(), "events")
+    console.debug("SSEEndpoint:", ep)
+    return ep
 }
 
 export function Endpoint(): string {
@@ -30,6 +29,7 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
     config.headers['stream-id'] = useSSEStore.getState().streamId;
     config.headers['Authorization'] = 'Bearer ' + useAuthStore.getState().getPasswordHash();
+    console.debug('Request Body:', config.data)
     return config;
 });
 

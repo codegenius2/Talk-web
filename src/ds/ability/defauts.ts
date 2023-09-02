@@ -5,35 +5,29 @@ export const defaultChatGPTLLM = (): ChatGPTLLM => ({
     enabled: true,
     available: false,
     models: {
-        available: false,
         choices: [],
     },
     maxHistory: {
-        available: true,
         rangeStart: 0,
         rangeEnd: Number.MAX_SAFE_INTEGER,
         default: 4,
     },
     maxTokens: {
-        available: true,
         rangeStart: 0,
         rangeEnd: Number.MAX_SAFE_INTEGER,
         default: 2000,
     },
     temperature: {
-        available: true,
         rangeStart: 0,
         rangeEnd: 2,
         default: 1,
     },
     presencePenalty: {
-        available: true,
         rangeStart: -2,
         rangeEnd: 2,
         default: 0,
     },
     frequencyPenalty: {
-        available: true,
         rangeStart: -2,
         rangeEnd: 2,
         default: 0,

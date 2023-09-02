@@ -1,8 +1,11 @@
-// Data structure that represents the parameters to be displayed on the settings page.
-
 import {AbilityEvent as ServerAbility} from "../../api/sse/event.ts"
 import {ChatGPTLLM as ServerChatGPTLLM, LLM as ServerLLM,} from "../../api/sse/ability.ts"
 
+/**
+ * Data structures embodying the parameters intended for the settings page display.
+ * Despite the Talk server's capacity to support a multitude of providers, each LLM, TTS, and SST within Ability
+ * can only engage one provider at a time.
+ */
 export  type Ability = {
     llm: LLM
 }
@@ -25,22 +28,21 @@ export const maxHistory = (llm: LLM): number => {
         return 0;
     }
     const gpt = llm.chatGPT;
-    if (gpt.available && gpt.enabled && gpt.maxHistory.available) {
+    if (gpt.available && gpt.enabled) {
         return gpt.maxHistory.chosen ?? gpt.maxHistory.default;
     }
     return 0;
 }
 
-
 export const mergeLLM = (c: LLM, s: ServerLLM): LLM => {
     return {
         ...c,
         available: s.available,
-        chatGPT: mergeChatGPTAbility(c.chatGPT, s.chatGPT)
+        chatGPT: mergeChatGPT(c.chatGPT, s.chatGPT)
     }
 }
 
-export  type ChatGPTLLM = {
+export type ChatGPTLLM = {
     // there is diff between 'enabled' and 'available'
     enabled: boolean // represents user's choice to disable ChatGPT, irrespective of its availability - preventing use of LLM.
     available: boolean // indicates if server provides support for ChatGPT
@@ -52,25 +54,22 @@ export  type ChatGPTLLM = {
     frequencyPenalty: FloatRange;
 }
 
-export const mergeChatGPTAbility = (c: ChatGPTLLM, s: ServerChatGPTLLM): ChatGPTLLM => {
+export const mergeChatGPT = (c: ChatGPTLLM, s: ServerChatGPTLLM): ChatGPTLLM => {
     return {
         ...c,
         available: s.available,
         models: {
-            available: s.models.length > 0,
             choices: s.models.map((m) => ({name: m, value: m, tags: []})),
         }
     }
 }
 
 export interface Boolean {
-    available: boolean;
     default: boolean;
     chosen?: boolean;
 }
 
 export interface IntRange {
-    available: boolean;
     rangeStart: number;
     rangeEnd: number;
     default: number;
@@ -78,7 +77,6 @@ export interface IntRange {
 }
 
 export interface FloatRange {
-    available: boolean;
     rangeStart: number;
     rangeEnd: number;
     default: number;
@@ -88,7 +86,6 @@ export interface FloatRange {
 export type NumStr = number | string
 
 export interface ChooseOne {
-    available: boolean;
     choices: Choice[];
     chosen?: NumStr;
 }

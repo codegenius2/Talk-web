@@ -20,6 +20,7 @@ import {useAuthStore} from "./state/auth.tsx";
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {mergeAbility} from "./ds/ability/client-ability.tsx";
 import {addBlob} from "./store/blob-db.tsx";
+import {useSSEStore} from "./state/sse.tsx";
 
 export const SSE = () => {
         const getQueText = useConvStore((state) => state.getQueText)
@@ -31,12 +32,15 @@ export const SSE = () => {
         const passwordHash = useAuthStore((state) => state.passwordHash)
         const setVerified = useAuthStore((state) => state.setVerified)
         const setAbility = useConvStore((state) => state.setAbility)
+        const streamId = useSSEStore((state) => state.streamId)
 
         useEffect(() => {
             const ep = SSEEndpoint()
-            console.info("connecting to SSE: ", ep);
+            const url = ep + "?stream=" + streamId
+
+            console.info("connecting to SSE: ", url);
             const ctrl = new AbortController();
-            fetchEventSource(ep, {
+            fetchEventSource(url, {
                 signal: ctrl.signal,
                 headers: {
                     'Authorization': 'Bearer ' + passwordHash,
@@ -90,7 +94,7 @@ export const SSE = () => {
             return () => {
                 ctrl.abort("passwordHash changed")
             }
-        }, [passwordHash])
+        }, [getAnsAudio, streamId])
         return null
     }
 ;

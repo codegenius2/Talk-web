@@ -8,7 +8,7 @@ import {useRecorderStore} from "../state/recording.tsx";
 import {addBlob} from "../store/blob-db.tsx";
 import {newMyText} from "../ds/text.tsx";
 import {newAudio, onError, onNewAudioId, onSent} from "../ds/audio.tsx";
-import {Message} from "../api/restful.ts";
+import {Message, toTalkOption} from "../api/restful.ts";
 import {postAudioConv} from "../api/axios.ts";
 import {minSpeakTimeMillis} from "../config.ts";
 import {AxiosError} from "axios";
@@ -46,7 +46,11 @@ export const SubscribeSendingAudio: React.FC = () => {
 
         const qa = newQueAns(id, false, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)
-        postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {id: id, ms: messages}).then((r) => {
+        postAudioConv(sendingAudio, recordingMimeType?.fileName ?? "audio.webm", {
+            id: id,
+            ms: messages,
+            talkOption: toTalkOption(ability)
+        }).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
                     updateQueAudio(id, onSent(getQueAudio(id)!))
                 } else {

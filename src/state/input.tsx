@@ -1,7 +1,6 @@
 import {create} from 'zustand';
 
 
-export const useTextAreaStore = create(() => ({inputAreaIsLarge: false}))
 export const useInputStore = create(() => ({inputText: ""}))
 export const useSendingTextStore = create(() => ({sendingText: ""}))
 

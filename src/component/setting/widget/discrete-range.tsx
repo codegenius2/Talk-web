@@ -28,8 +28,8 @@ export const DiscreteRange: React.FC<Props> = ({
                                                    range
                                                }) => {
 
-    const [cccc, setChoiceColors] = useState<ChoiceColor[]>([])
-    const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
+    const [choiceColor, setChoiceColors] = useState<ChoiceColor[]>([])
+    const [containsValue, setChoiceContainsValue] =useState<boolean>(false)
     const textareaBoxRef = useRef<HTMLTextAreaElement>(null);
     const [text, setText] = useState<string>();
 
@@ -74,7 +74,7 @@ export const DiscreteRange: React.FC<Props> = ({
         }
         setChoiceContainsValue(contain)
         setChoiceColors(res)
-    }, [choices, value, setValue])
+    }, [choices, value])
 
     const handleMouseLeaveFirstElement = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (outOfLeftBoundary === undefined) {
@@ -129,7 +129,7 @@ export const DiscreteRange: React.FC<Props> = ({
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
                 <div
                     className={"flex  justify-start items-center  w-full overflow-auto "}>
-                    {cccc.map((oc: ChoiceColor) =>
+                    {choiceColor.map((oc: ChoiceColor) =>
                         <div
                             className={"flex justify-center items-center flex-grow " + (oc.inChoice ? "bg-blue-600" : "")}
                             key={oc.index}
