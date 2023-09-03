@@ -1,6 +1,6 @@
 import React, {useLayoutEffect, useRef} from "react";
 import {useConvStore} from "../state/conversation.tsx";
-import {QueAns} from "../ds/conversation.tsx";
+import {QueAns} from "../data-structure/conversation.tsx";
 import {Audio} from "./audio.tsx";
 import {AssistantText, SelfText} from "./text.tsx";
 import ErrorBoundary from "./error-boundary.tsx";

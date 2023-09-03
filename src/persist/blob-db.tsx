@@ -4,8 +4,8 @@ const dbName = 'audio';
 const storeName = 'blobs';
 
 export interface BlobEntry {
-  id: string;
-  blob: Blob;
+    id: string;
+    blob: Blob;
 }
 
 async function newDB() {
@@ -28,6 +28,14 @@ export async function addBlob(blogEntry: BlobEntry) {
     const tx = db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     await store.add(blogEntry);
+    await tx.done;
+}
+
+export async function clearBlob() {
+    const db = await newDB();
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    await store.clear()
     await tx.done;
 }
 

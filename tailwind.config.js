@@ -9,10 +9,6 @@ export default {
     ],
     theme: {
         extend: {
-            // backdropFilter: {
-            //     'none': 'none',
-            //     'blur': 'blur(px)',
-            // },
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
                 'equal-50': 'rgb(252,252,252)',

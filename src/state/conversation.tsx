@@ -1,16 +1,17 @@
 import {create} from 'zustand';
-import {Conversation, QueAns} from "../ds/conversation.tsx";
+import {Conversation, historyMessages, QueAns} from "../data-structure/conversation.tsx";
 import {createJSONStorage, devtools, persist} from "zustand/middleware";
-import {zustandStorage} from "../store/zustant-db.tsx"
-import {MyText} from "../ds/text.tsx";
-import {Audio} from "../ds/audio.tsx";
-import {defaultAbility} from "../ds/ability/defauts.ts";
-import {Ability, ChatGPTLLM} from "../ds/ability/client-ability.tsx";
+import {zustandStorage} from "../persist/zustant-db.tsx"
+import {MyText} from "../data-structure/text.tsx";
+import {Audio} from "../data-structure/audio.tsx";
+import {defaultAbility} from "../data-structure/ability/defauts.ts";
+import {Ability, ChatGPTLLM} from "../data-structure/ability/client-ability.tsx";
 
 export const useConvStore = create<Conversation>()(
     devtools(
         persist((set, get) => ({
             qaSlice: [],
+            clearQsSlice: () => set(() => ({qaSlice: []})),
             pushQueAns: (queAns: QueAns) => set((state) => ({qaSlice: [...state.qaSlice, queAns]})),
             removeQueAns: (queAns: QueAns) =>
                 set((state) => ({
@@ -77,9 +78,10 @@ export const useConvStore = create<Conversation>()(
                         }
                     }
                 })),
+            historyMessages: (amount: number) => historyMessages(get().qaSlice, amount)
         }), {
             name: 'conversation',
-            storage: createJSONStorage<string>(() => zustandStorage), // (optional) by default the 'localStorage' is used
+            storage: createJSONStorage<string>(() => zustandStorage,), // (optional) by default the 'localStorage' is used
         })
     )
 );

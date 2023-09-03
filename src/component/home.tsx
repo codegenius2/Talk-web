@@ -5,8 +5,8 @@ import {WallpaperWalkInGreen} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import {MessageList} from "./message-list.tsx";
 import Recorder from "./recorder.tsx";
-import {SSE} from "../sse.tsx";
 import {WindowListeners} from "./window-listeners.tsx";
+import {SSE} from "./network/sse.tsx";
 
 export default function Home() {
     return (

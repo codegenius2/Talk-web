@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Spin} from "./spin.tsx";
-import {MyText, onDelete} from "../ds/text.tsx";
+import {MyText, onDelete} from "../data-structure/text.tsx";
 import {RichOpText} from './rich-op-text.tsx';
 import {useConvStore} from "../state/conversation.tsx";
 

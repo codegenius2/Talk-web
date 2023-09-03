@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
-import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
+import {Choice, NumStr} from "../../../data-structure/ability/client-ability.tsx";
 import {joinClassNames} from "../../../util/util.tsx";
 
 // https://tailwindui.com/components/application-ui/forms/select-menus
@@ -59,7 +59,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                         <Listbox.Options
                             className="absolute w-full rounded-xl text-base
                             shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm
-                            bg-white bg-opacity-40 backdrop-blur overflow-auto max-h-96"
+                            bg-white bg-opacity-70 overflow-auto max-h-96 "
                         >
                             {choices.map((ch) => (
                                 <Listbox.Option
@@ -68,7 +68,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                                     className={({active}) =>
                                         joinClassNames(
                                             active ? 'bg-blue-600 text-white' : 'text-neutral-900',
-                                            'rounded-lg relative cursor-default select-none py-0.5 pl-3 pr-0.5'
+                                            'rounded-lg relative cursor-default select-none py-0.5 pl-3 pr-0.5 '
                                         )
                                     }
                                 >

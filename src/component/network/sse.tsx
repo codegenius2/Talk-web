@@ -3,24 +3,23 @@ import {
     AbilityEvent,
     Answer,
     Audio,
-    Trans,
     EventAbility,
     EventAnswer,
     EventAudio,
     EventTrans,
-} from "./api/sse/event.ts";
+    Trans,
+} from "../../api/sse/event.ts";
 import {v4 as uuidv4} from "uuid";
-import {useConvStore} from "./state/conversation.tsx";
-import {SSEEndpoint} from "./api/axios.ts";
-import {MyText, onError, onNewText} from "./ds/text.tsx";
-import {onError as errorAudio, onNewAudioId,} from "./ds/audio.tsx";
-import {base64ToBlob} from "./util/util.tsx";
-import {audioPlayerMimeType} from './config.ts';
-import {useAuthStore} from "./state/auth.tsx";
+import {useConvStore} from "../../state/conversation.tsx";
+import {base64ToBlob} from "../../util/util.tsx";
+import {audioPlayerMimeType, SSEEndpoint} from '../../config.ts';
+import {useAuthStore} from "../../state/auth.tsx";
 import {fetchEventSource} from '@microsoft/fetch-event-source';
-import {mergeAbility} from "./ds/ability/client-ability.tsx";
-import {addBlob} from "./store/blob-db.tsx";
-import {useSSEStore} from "./state/sse.tsx";
+import {useSSEStore} from "../../state/sse.tsx";
+import {MyText, onError, onNewText} from "../../data-structure/text.tsx";
+import {onError as errorAudio, onNewAudioId} from "../../data-structure/audio.tsx";
+import {addBlob} from "../../persist/blob-db.tsx";
+import {mergeAbility} from "../../data-structure/ability/client-ability.tsx";
 
 export const SSE = () => {
         const getQueText = useConvStore((state) => state.getQueText)
@@ -48,9 +47,6 @@ export const SSE = () => {
                 keepalive: true,
                 onopen: async (response: Response) => {
                     console.info("EventSource connected to server, response: ", response);
-                    if (200 <= response.status && response.status < 300) {
-                        setVerified(true)
-                    }
                 },
                 onmessage: (msg) => {
                     console.debug("received an msg from SSE server", msg.event, msg.data.slice(0, 100))
@@ -94,7 +90,7 @@ export const SSE = () => {
             return () => {
                 ctrl.abort("passwordHash changed")
             }
-        }, [getAnsAudio, streamId])
+        }, [streamId, passwordHash, getAnsAudio, getAnsText, getQueText, setAbility, setVerified, updateAnsAudio, updateAnsText, updateQueText])
         return null
     }
 ;

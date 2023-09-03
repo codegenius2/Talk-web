@@ -2,32 +2,31 @@ import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} f
 import {useInputStore, useSendingTextStore} from "../state/input.tsx";
 
 const TextArea: React.FC = () => {
-    const [inputAreaIsLarge,setInputAreaIsLarge] = useState(false)
+    const inputText = useInputStore((state) => state.inputText)
+    const setInputText = useInputStore((state) => state.setInputText)
+    const push = useSendingTextStore((state) => state.push)
+    const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
     const arrowButtonRef = useRef<HTMLButtonElement>(null);
     const sendButtonRef = useRef<HTMLButtonElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
-
-    const stopPropagation = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.debug('stopPropagation', event.code);
-        event.stopPropagation();
-    };
-
-    const inputText = useInputStore((state) => state.inputText)
-
     // if user is typing in a composing way
     const [isComposing, setIsComposing] = useState(false);
 
-    const sendAndClearText = () => {
+    const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        console.debug('stopPropagation', event.code);
+        event.stopPropagation();
+    }, []);
+
+    const sendAndClearText = useCallback(() => {
         if (sendButtonRef.current) {
             sendButtonRef.current.blur()
         }
-        const it = useInputStore.getState().inputText
-        if (it) {
-            useSendingTextStore.setState({sendingText: it})
+        if (inputText) {
+            push(inputText)
         }
-        useInputStore.setState({inputText: ""})
+        setInputText("")
         textAreaRef.current?.focus()
-    }
+    }, [inputText, push, setInputText])
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
         event.stopPropagation();
@@ -40,29 +39,32 @@ const TextArea: React.FC = () => {
                 textAreaRef.current!.blur()
             }
         }
-    }, [isComposing]);
+    }, [isComposing, sendAndClearText]);
 
-    const handleCompositionStart = () => {
+    const handleCompositionStart = useCallback(() => {
         console.debug("is composing")
         setIsComposing(true);
-    };
+    }, []);
 
-    const handleCompositionEnd = () => {
+    const handleCompositionEnd = useCallback(() => {
         console.debug("is not composing")
         setIsComposing(false);
-    };
+    }, []);
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         setInputAreaIsLarge(!inputAreaIsLarge)
         if (arrowButtonRef) {
             arrowButtonRef!.current!.blur();
         }
-    };
+    }, [inputAreaIsLarge]);
 
-    useEffect(() =>
-            inputAreaIsLarge ? textAreaRef.current?.focus() : textAreaRef.current?.blur()
-        , [inputAreaIsLarge]
-    )
+    useEffect(() => {
+        if (inputAreaIsLarge) {
+            textAreaRef.current?.focus()
+        } else {
+            textAreaRef.current?.blur()
+        }
+    }, [inputAreaIsLarge])
 
 
     return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
@@ -84,7 +86,7 @@ const TextArea: React.FC = () => {
                         rows={inputAreaIsLarge ? 8 : 2}
                         onKeyUp={stopPropagation}
                         value={inputText}
-                        onChange={(e) => useInputStore.setState({inputText: e.target.value})}
+                        onChange={(e) => setInputText(e.target.value)}
                         onKeyDown={handleKeyDown}
                         onCompositionStart={handleCompositionStart}
                         onCompositionEnd={handleCompositionEnd}

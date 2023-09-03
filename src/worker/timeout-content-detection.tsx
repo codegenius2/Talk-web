@@ -2,8 +2,8 @@ import {useConvStore} from "../state/conversation.tsx";
 import React, {useEffect} from "react";
 import {timeDiffSecond} from "../util/util.tsx";
 import {contentTimeoutSeconds} from "../config.ts";
-import {onError} from "../ds/text.tsx";
-import {onError as errorAudio} from "../ds/audio.tsx";
+import {onError} from "../data-structure/text.tsx";
+import {onError as errorAudio} from "../data-structure/audio.tsx";
 
 const timeoutCheckStatus = ['sending', 'receiving']
 

@@ -1,6 +1,6 @@
 import {create} from 'zustand';
-import {Ability} from "../ds/ability/client-ability.tsx";
-import {defaultAbility} from "../ds/ability/defauts.ts";
+import {Ability} from "../data-structure/ability/client-ability.tsx";
+import {defaultAbility} from "../data-structure/ability/defauts.ts";
 
 // todo preserved for session list
 export const useGlobalAbilityStore = create<Ability>(() => ({...defaultAbility()}))

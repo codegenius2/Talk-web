@@ -7,6 +7,7 @@ import {RecordingCtx} from "../other.ts";
 
 const Recorder = () => {
     const recorder = useRecorderStore<EnhancedRecorder<RecordingCtx>>((state) => state.recorder)
+    const push = useSendingAudioStore((state) => state.push)
 
     // These local variables monitor the recorder's state, updated through callbacks by the recorder itself.
     const [isRecording, setIsRecording] = useState(false)
@@ -21,7 +22,7 @@ const Recorder = () => {
         const doneListener = (blob: Blob, duration: number, ctx?: RecordingCtx) => {
             setContext(ctx)
             setIsRecording(false)
-            useSendingAudioStore.setState({sendingAudio: blob, duration: duration})
+            push({blob: blob, duration: duration})
         }
         const cancelListener = (_blob: Blob, _duration: number, ctx?: RecordingCtx) => {
             setContext(ctx)
@@ -35,7 +36,7 @@ const Recorder = () => {
             recorder.removeDoneListener(doneListener);
             recorder.removeCancelListener(cancelListener);
         }
-    }, [recorder, setIsRecording, setContext]);
+    }, [recorder, push, setIsRecording, setContext]);
 
     // create an interval to increase recording time
     useEffect(() => {

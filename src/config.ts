@@ -1,3 +1,5 @@
+import {currentProtocolHostPortPath, joinUrl} from "./util/util.tsx";
+
 export const StreamIdKey = "stream-id"
 export const streamIdLength = 32
 export const audioPlayerMimeType = 'audio/mpeg'
@@ -5,6 +7,21 @@ export const contentTimeoutSeconds = 30
 // a recoding which is less than minSpeakTimeMillis should be discarded
 export const minSpeakTimeMillis = 500
 
+export function SSEEndpoint(): string {
+    const ep = joinUrl(Endpoint(), "events")
+    console.debug("SSEEndpoint:", ep)
+    return ep
+}
+
+export function Endpoint(): string {
+    let ep = import.meta.env.VITE_REACT_APP_ENDPOINT
+    if (ep) {
+        return ep
+    }
+    ep = joinUrl(currentProtocolHostPortPath(), "api")
+    console.debug("RestfulEndpoint:", ep)
+    return ep
+}
 
 export type RecordingMimeType = {
     mimeType: string
@@ -17,3 +34,4 @@ export const popularMimeTypes: RecordingMimeType[] = [
     {mimeType: 'audio/webm', fileName: "audio.webm"},
     {mimeType: 'audio/mp4', fileName: "audio.mp4"},
 ]
+

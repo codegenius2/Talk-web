@@ -91,15 +91,13 @@ export const temperatureChoices: Choice[] = [
 
 export const presencePenaltyChoices: Choice[] = [
     {value: -2, name: "-2", tags: []},
-    {value: -1.75, name: "-1.75", tags: []},
     {value: -1.5, name: "-1.5", tags: []},
-    {value: -1.25, name: "-1.25", tags: []},
     {value: -1, name: "-1", tags: []},
+    {value: -0.5, name: "-0.5", tags: []},
     {value: 0, name: "0", tags: []},
+    {value: 0.5, name: "0.5", tags: []},
     {value: 1, name: "1", tags: []},
-    {value: 1.25, name: "1.25", tags: []},
     {value: 1.5, name: "1.5", tags: []},
-    {value: 1.75, name: "1.75", tags: []},
     {value: 2, name: "2", tags: []},
 ]
 

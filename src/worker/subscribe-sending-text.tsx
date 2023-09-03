@@ -1,13 +1,13 @@
 import {v4 as uuidv4} from "uuid"
 import {useConvStore} from "../state/conversation.tsx";
-import {historyMessages, newQueAns} from "../ds/conversation.tsx";
+import {newQueAns} from "../data-structure/conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingTextStore} from "../state/input.tsx";
-import {newMyText, onError, onSent} from "../ds/text.tsx";
+import {newMyText, onError, onSent} from "../data-structure/text.tsx";
 import {AxiosError} from "axios";
 import {Message, toTalkOption} from "../api/restful.ts";
-import {postConv} from "../api/axios.ts";
-import {maxHistory} from "../ds/ability/client-ability.tsx";
+import {maxHistory} from "../data-structure/ability/client-ability.tsx";
+import {useRestfulAPIStore} from "../state/axios.tsx";
 
 const systemMessage: Message = {
     role: "system",
@@ -16,25 +16,28 @@ const systemMessage: Message = {
 
 export const SubscriberSendingText: React.FC = () => {
 
-    const qaSlice = useConvStore((state) => state.qaSlice)
+    const historyMessages = useConvStore((state) => state.historyMessages)
     const pushQueAns = useConvStore((state) => (state.pushQueAns))
     const updateQueText = useConvStore((state) => (state.updateQueText))
     const getQueText = useConvStore((state) => (state.getQueText))
     const ability = useConvStore((state) => state.ability)
-    const sendingText = useSendingTextStore((state) => state.sendingText)
+    const pop = useSendingTextStore((state) => state.pop)
+    const sendingTexts = useSendingTextStore((state) => state.sendingTexts)
+    const restfulAPI = useRestfulAPIStore((state) => state.restfulAPI);
 
     useEffect(() => {
+        const sendingText = pop()
         if (!sendingText) {
             return
         }
-        let messages = historyMessages(qaSlice, maxHistory(ability.llm))
+        let messages = historyMessages(maxHistory(ability.llm))
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
         console.debug("sending conversation: ", messages)
 
         const id = uuidv4()
         const qa = newQueAns(id, true, newMyText('sending', sendingText))
         pushQueAns(qa)
-        postConv({id: id, ms: messages, talkOption: toTalkOption(ability)}).then((r) => {
+        restfulAPI.postConv({id: id, ms: messages, talkOption: toTalkOption(ability)}).then((r) => {
                 if (r.status >= 200 && r.status < 300) {
                     updateQueText(id, onSent(getQueText(id)))
                 } else {
@@ -45,7 +48,7 @@ export const SubscriberSendingText: React.FC = () => {
         ).catch((e: AxiosError) => {
             updateQueText(id, onError(getQueText(id), e.message))
         })
-    }, [sendingText]);
+    }, [sendingTexts, ability, pop, getQueText, pushQueAns, restfulAPI, updateQueText]);
     return null
 }
 

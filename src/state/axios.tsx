@@ -1,10 +1,15 @@
 import {create} from 'zustand';
-import {randomHash} from "../util/util.tsx";
-import {streamIdLength} from "../config.ts";
+import {defaultRestfulAPI, RestfulAPI} from "../api/restful.ts";
 
-export const useAxiosStore = create(() => (
+type Store = {
+    restfulAPI: RestfulAPI
+    setRestfulAPI: (api: RestfulAPI) => void
+}
+
+export const useRestfulAPIStore = create<Store>((set) => (
         {
-            instance: randomHash(streamIdLength)
+            restfulAPI: defaultRestfulAPI(),
+            setRestfulAPI: (api: RestfulAPI) => set(() => ({restfulAPI: api}))
         }
     )
 )

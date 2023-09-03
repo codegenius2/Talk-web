@@ -10,6 +10,7 @@ import {Message} from "../api/restful.ts";
 
 export type Conversation = {
     qaSlice: QueAns[]
+    clearQsSlice: ()=>void
     pushQueAns: (queAns: QueAns) => void
     removeQueAns: (queAns: QueAns) => void
     updateQueAns: (queAns: QueAns) => void
@@ -26,6 +27,7 @@ export type Conversation = {
     setAbility: (ability: Ability) => void
     getChatGPT: () => ChatGPTLLM
     setChatGPT: (chatGPT: ChatGPTLLM) => void
+    historyMessages: (amount: number)=> Message[]
 }
 
 // exactly one pair of Q&A

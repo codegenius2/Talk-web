@@ -1,19 +1,21 @@
 import './Wallpaper.css'
 import React, {useEffect, useRef} from "react";
-import {useThemeStore} from "../../state/theme.tsx";
 import Granim from "granim";
 import {compareSlices} from "../../util/util.tsx";
 
 export function WallpaperDefault() {
     return <div>
-        <div className="wp-default w-full h-full brightness-75 -z-10"/>
-        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-10"/>
+        <div className="wp-default w-full h-full brightness-75 -z-50"/>
+        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-50"/>
     </div>
 }
 
-export const WallpaperAuth: React.FC = () => {
+export type WallpaperAuthProps = {
+    setDark: (isDark: boolean) => void
+}
+
+export const WallpaperAuth: React.FC<WallpaperAuthProps> = ({setDark}) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const setAuthWallpaperDark = useThemeStore((state) => state.setAuthWallpaperDark)
     const dark = ["#000428", "#004e92"]
     useEffect(() => {
         let granim: Granim
@@ -37,7 +39,7 @@ export const WallpaperAuth: React.FC = () => {
                 },
                 onGradientChange: (e) => {
                     const isDark = compareSlices(e.colorsTo, dark)
-                    setAuthWallpaperDark(isDark)
+                    setDark(isDark)
                 }
             });
         }
@@ -51,7 +53,7 @@ export const WallpaperAuth: React.FC = () => {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute w-full h-full -z-10"
+            className="absolute w-full h-full -z-50"
             style={{position: 'fixed'}}
         />
     );
@@ -63,8 +65,8 @@ export function WallpaperSimultaneousCounter() {
     return <div>
         {/* to hide the white edge of blur*/}
         <div
-            className="bg-simultaneous-counter-composition-1930 bg-center bg-cover fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-10"/>
-        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-10"/>
+            className="bg-simultaneous-counter-composition-1930 bg-center bg-cover fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-50"/>
+        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-50"/>
     </div>
 }
 
@@ -96,8 +98,8 @@ export const wpStyleCyanPurple = {
 export function WallpaperBalloon() {
     return <div>
         {/* to hide the white edge of blur*/}
-        <div className="bg-balloon bg-cover fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-10"/>
-        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-10"/>
+        <div className="bg-balloon bg-cover fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-50"/>
+        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-50"/>
     </div>
 }
 
@@ -105,8 +107,8 @@ export function WallpaperWalkInGreen() {
     return <div>
         {/* to hide the white edge of blur*/}
         <div
-            className="bg-walk-in-green bg-cover bg-center fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-10"/>
-        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-10"/>
+            className="bg-walk-in-green bg-cover bg-center fixed -mt-5 -ml-5 w-screen-105 h-screen-105 blur-lg brightness-75 -z-50"/>
+        <div className="bg-noise opacity-80 fixed h-full w-full contrast-200 brightness-200 -z-50"/>
     </div>
 }
 

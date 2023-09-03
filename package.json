@@ -29,6 +29,7 @@
     "react-confetti": "^6.1.0",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
     "react-use": "^17.4.0",
     "uuid": "^9.0.0",
     "wavesurfer.js": "^7.2.0",

@@ -1,6 +1,6 @@
 import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
 import {useMouseStore} from "../../../state/mouse.tsx";
-import {Choice, NumStr} from "../../../ds/ability/client-ability.tsx";
+import {Choice, NumStr} from "../../../data-structure/ability/client-ability.tsx";
 
 type Props = {
     title: string

@@ -3,6 +3,7 @@ import Auth from "./component/auth/auth.tsx";
 import './App.css'
 
 import Home from "./component/home.tsx";
+import {RestfulAPIComponent} from "./component/network/restful-api.tsx";
 
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
                 className={`transition-opacity duration-1000 ${verified ? 'opacity-100' : 'opacity-20'}`}>
                 {verified && <Home/>}
             </div>
+            <RestfulAPIComponent/>
         </div>
     );
 }

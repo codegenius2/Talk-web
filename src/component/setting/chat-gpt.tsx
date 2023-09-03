@@ -8,9 +8,9 @@ import {
     presencePenaltyChoices,
     temperatureChoices,
     tokenChoices
-} from "../../ds/ability/defauts.ts";
+} from "../../data-structure/ability/defauts.ts";
 import {ListBox} from "./widget/list-box.tsx";
-import {NumStr} from "../../ds/ability/client-ability.tsx";
+import {NumStr} from "../../data-structure/ability/client-ability.tsx";
 
 
 const ChatGpt: React.FC = () => {
@@ -70,7 +70,8 @@ const ChatGpt: React.FC = () => {
         const gpt = getChatGPT()
 
         return <div
-            className="flex flex-col w-full items-center justify-between gap-2 px-3 py-4 rounded-xl bg-white bg-opacity-40 backdrop-blur">
+            className="flex flex-col w-full items-center justify-between gap-2 px-3 py-4 rounded-xl
+            bg-white bg-opacity-40 backdrop-blur z-10">
             <div className="flex justify-between items-center w-full px-3 ">
                 <p className="prose text-lg text-neutral-600">ChatGPT</p>
                 <MySwitch enabled={gpt.enabled} setEnabled={setEnabled}/>
@@ -110,7 +111,10 @@ const ChatGpt: React.FC = () => {
                                    value={gpt.presencePenalty.chosen ?? gpt.presencePenalty.default}
                                    showRange={false}
                                    fallbackValue={gpt.presencePenalty.default}
-                                   range={{rangeStart: gpt.presencePenalty.rangeStart, rangeEnd: gpt.presencePenalty.rangeEnd,}}
+                                   range={{
+                                       rangeStart: gpt.presencePenalty.rangeStart,
+                                       rangeEnd: gpt.presencePenalty.rangeEnd,
+                                   }}
                     />
                     <DiscreteRange choices={frequencyPenaltyChoices}
                                    title="Frequency Penalty"
@@ -118,7 +122,10 @@ const ChatGpt: React.FC = () => {
                                    value={gpt.frequencyPenalty.chosen ?? gpt.frequencyPenalty.default}
                                    showRange={false}
                                    fallbackValue={gpt.frequencyPenalty.default}
-                                   range={{rangeStart: gpt.frequencyPenalty.rangeStart, rangeEnd: gpt.frequencyPenalty.rangeEnd,}}
+                                   range={{
+                                       rangeStart: gpt.frequencyPenalty.rangeStart,
+                                       rangeEnd: gpt.frequencyPenalty.rangeEnd,
+                                   }}
                     />
                     <div className="flex justify-between items-center gap-2">
                         <p className="prose text-neutral-600">Model</p>
