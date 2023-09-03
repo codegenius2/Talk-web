@@ -1,7 +1,7 @@
 import TextArea from "./text-area.tsx";
 import {Workers} from "../worker/workers.tsx"
 import Setting from "./setting/setting.tsx";
-import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
+import {WallpaperWalkInGreen} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import {MessageList} from "./message-list.tsx";
 import Recorder from "./recorder.tsx";
@@ -11,7 +11,9 @@ import {WindowListeners} from "./window-listeners.tsx";
 export default function Home() {
     return (
         <div>
-            <WallpaperSimultaneousCounter/>
+            <WallpaperWalkInGreen/>
+            {/*<WallpaperBalloon/>*/}
+            {/*<WallpaperSimultaneousCounter/>*/}
             {/*<WallpaperDefault/>*/}
             <div
                 className="home flex items-center justify-center h-screen w-screen overflow-hidden gap-2 lg:p-3">
@@ -27,7 +29,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="h-full w-full max-w-1/4  hidden sm:block">
+                <div className="h-full w-full max-w-1/3 hidden sm:block">
                     <Setting/>
                 </div>
             </div>

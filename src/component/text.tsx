@@ -10,13 +10,13 @@ interface TextProps {
     qaId: string
 }
 
-export const AssistantText: React.FC<TextProps> = ({text, qaId}) => {
-    const updateAnsText = useConvStore(state => state.updateAnsText)
+export const AssistantText: React.FC<TextProps> = ({text}) => {
+    // const updateAnsText = useConvStore(state => state.updateAnsText)
 
-    const handleDelete = useCallback(() => {
-        const now = onDelete(text)
-        updateAnsText(qaId, now)
-    }, [qaId, text, updateAnsText])
+    // const handleDelete = useCallback(() => {
+    //     const now = onDelete(text)
+    //     updateAnsText(qaId, now)
+    // }, [qaId, text, updateAnsText])
 
     switch (text.status) {
         case 'sending':
