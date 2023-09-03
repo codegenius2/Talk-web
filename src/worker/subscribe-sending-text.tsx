@@ -1,9 +1,8 @@
 import {v4 as uuidv4} from "uuid"
 import {useConvStore} from "../state/conversation.tsx";
-import {newQueAns} from "../ds/conversation.tsx";
+import {historyMessages, newQueAns} from "../ds/conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingTextStore} from "../state/input.tsx";
-import {historyMessages} from "../util/util.tsx";
 import {newMyText, onError, onSent} from "../ds/text.tsx";
 import {AxiosError} from "axios";
 import {Message, toTalkOption} from "../api/restful.ts";
@@ -30,6 +29,8 @@ export const SubscriberSendingText: React.FC = () => {
         }
         let messages = historyMessages(qaSlice, maxHistory(ability.llm))
         messages = [systemMessage, ...messages, {role: "user", content: sendingText}]
+        console.debug("sending conversation: ", messages)
+
         const id = uuidv4()
         const qa = newQueAns(id, true, newMyText('sending', sendingText))
         pushQueAns(qa)

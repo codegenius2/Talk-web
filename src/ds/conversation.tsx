@@ -2,6 +2,7 @@ import {MyText, newMyText} from "./text.tsx";
 import {Audio, newAudio} from "./audio.tsx";
 import {formatISO} from "date-fns";
 import {Ability, ChatGPTLLM} from "./ability/client-ability.tsx";
+import {Message} from "../api/restful.ts";
 
 // Data structure that represents the conversation. Each "QueAns" constitutes a complete round trip.
 
@@ -61,4 +62,26 @@ export const newQueAns = (id: string, textFirst: boolean, queText: MyText, audio
         },
         createdAt: formatISO(new Date())
     }
+}
+
+export const historyMessages = (qaSlice: QueAns[], maxHistory: number): Message[] => {
+    if (maxHistory <= 0) {
+        return []
+    }
+    const messages: Message[] = []
+    for (const qa of qaSlice.slice().reverse()) {
+        if (messages.length === maxHistory) {
+            break
+        }
+        if (qa.ans.text.status === 'received') {
+            messages.push({role: "assistant", content: qa.ans.text.text})
+            if (messages.length === maxHistory) {
+                break
+            }
+        }
+        if (['received', 'sent'].includes(qa.que.text.status)) {
+            messages.push({role: "user", content: qa.que.text.text})
+        }
+    }
+    return messages.reverse()
 }

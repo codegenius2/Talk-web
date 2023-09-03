@@ -1,16 +1,15 @@
 import {v4 as uuidv4} from "uuid";
 import {useConvStore} from "../state/conversation.tsx";
-import {newQueAns} from "../ds/conversation.tsx";
+import {historyMessages, newQueAns} from "../ds/conversation.tsx";
 import React, {useEffect} from "react";
 import {useSendingAudioStore} from "../state/input.tsx";
-import {historyMessages, RecordingMimeType} from "../util/util.tsx"
 import {useRecorderStore} from "../state/recording.tsx";
 import {addBlob} from "../store/blob-db.tsx";
 import {newMyText} from "../ds/text.tsx";
 import {newAudio, onError, onNewAudioId, onSent} from "../ds/audio.tsx";
 import {Message, toTalkOption} from "../api/restful.ts";
 import {postAudioConv} from "../api/axios.ts";
-import {minSpeakTimeMillis} from "../config.ts";
+import {minSpeakTimeMillis, RecordingMimeType} from "../config.ts";
 import {AxiosError} from "axios";
 import {maxHistory} from "../ds/ability/client-ability.tsx";
 
@@ -43,6 +42,7 @@ export const SubscribeSendingAudio: React.FC = () => {
         const id = uuidv4()
         let messages = historyMessages(qaSlice, maxHistory(ability.llm))
         messages = [systemMessage, ...messages]
+        console.debug("sending conversation: ", messages)
 
         const qa = newQueAns(id, false, newMyText('receiving', ""), newAudio("sending"))
         pushQueAns(qa)

@@ -1,7 +1,6 @@
-import {QueAns} from "../ds/conversation.tsx";
-import {Message} from "../api/restful.ts";
 import {SHA256} from 'crypto-js';
 import {KeyboardEventHandler} from "react";
+import {RecordingMimeType} from "../config.ts";
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
@@ -42,21 +41,6 @@ const padZero = (num: number): string => {
     return num.toString().padStart(2, '0');
 };
 
-export const historyMessages = (qaSlice: QueAns[], maxHistory: number): Message[] => {
-    if (maxHistory <= 0) {
-        return []
-    }
-    let messages: Message[] = []
-    qaSlice.map(qa => qa.que.text)
-        .filter(t => t.status == "received")
-        .forEach(t => messages.push({role: "user", content: t.text}))
-    qaSlice.map(qa => qa.ans.text)
-        .filter(t => t.status == "received")
-        .forEach(t => messages.push({role: "assistant", content: t.text}))
-    messages = messages.slice(-maxHistory)
-    return messages
-}
-
 export function currentProtocolHostPortPath(): string {
     const protocol = window.location.protocol
     const hostname = window.location.hostname;
@@ -81,20 +65,8 @@ export function randomHash(length: number): string {
     return hash;
 }
 
-export type RecordingMimeType = {
-    mimeType: string
-    fileName: string
-}
-
-const popularMimeTypes: RecordingMimeType[] = [
-    {mimeType: 'audio/webm; codecs=vp9', fileName: "audio.webm"},
-    {mimeType: 'audio/webm; codecs=opus', fileName: "audio.webm"},
-    {mimeType: 'audio/webm', fileName: "audio.webm"},
-    {mimeType: 'audio/mp4', fileName: "audio.mp4"},
-]
-
-export function chooseAudioMimeType(): RecordingMimeType | undefined {
-    const find = popularMimeTypes.find(m => MediaRecorder.isTypeSupported(m.mimeType));
+export function chooseAudioMimeType(mimeTypes:RecordingMimeType[]): RecordingMimeType | undefined {
+    const find = mimeTypes.find(m => MediaRecorder.isTypeSupported(m.mimeType));
     console.debug("found mimeType: ", find)
     return find
 }
