@@ -37,7 +37,7 @@ export const useSendingTextStore = create<SendingTextStore>(
         pop: () => {
             const [first, ...rest] = get().sendingTexts
             if (first !== undefined) {
-                set((state) => ({...state, sendingAudios: rest}))
+                set((state) => ({...state, sendingTexts: rest}))
             }
             return first
         },

@@ -38,6 +38,9 @@ export default {
             height: {
                 'screen-105': '105vh',
             },
+            minHeight: {
+                '24': '6rem',
+            },
             transitionDuration: {
                 '1500': '1500ms',
                 '2500': '2500ms',
