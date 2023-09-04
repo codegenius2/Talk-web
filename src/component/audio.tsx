@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import Hover from 'wavesurfer.js/plugins/hover'
 import {Audio as _Audio} from "../data-structure/audio.tsx"
@@ -15,33 +15,44 @@ interface WaveSurferProps {
 interface AudioProps {
     audio?: _Audio
     self: boolean
+    delay: number // ms, delay rendering of audios not in window
 }
 
-export const Audio: React.FC<AudioProps> = ({audio, self}) => {
+export const Audio: React.FC<AudioProps> = ({audio, self, delay}) => {
     const [audioUrl, setAudioUrl] = useState<string>("")
 
+    const update = useCallback((id: string) => getBlob(id).then(r => {
+        if (r) {
+            const url = URL.createObjectURL(r.blob)
+            setAudioUrl(url)
+        } else {
+            console.error("audio blob not found")
+        }
+    }).catch(e => {
+        console.error("failed to get audio blob", id, e)
+    }), [])
+
     useEffect(() => {
-        if (!audio) {
-            return
-        }
-        if (audioUrl) {
-            return;
-        }
-        if (['sent', 'received'].includes(audio.status)) {
-            if (audio.audioId) {
-                getBlob(audio.audioId).then(r => {
-                    if (r) {
-                        const url = URL.createObjectURL(r.blob)
-                        setAudioUrl(url)
-                    } else {
-                        console.error("audio blob not found")
-                    }
-                }).catch(e => {
-                    console.error("failed to get audio blob", audio.audioId, e)
-                })
+            if (!audio) {
+                return
             }
-        }
-    }, [audio]);
+            if (audioUrl) {
+                return;
+            }
+            let timeout: NodeJS.Timeout
+            if (['sent', 'received'].includes(audio.status)) {
+                if (audio.audioId) {
+                    const id = audio.audioId
+                    if (delay == 0) {
+                        update(id)
+                    } else {
+                        timeout = setTimeout(()=>update(id),delay)
+                    }
+                }
+            }
+            return () => clearTimeout(timeout)
+        }, [audio, audioUrl]
+    )
 
     if (!audio) {
         return <></>
