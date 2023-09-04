@@ -32,14 +32,14 @@ const Other: React.FC = () => {
                 <p className="prose text-lg text-neutral-600">Other</p>
             </div>
             <div
-                className="flex justify-start items-center gap-2 py-2 border-2 border-neutral-500 border-dashed rounded-lg w-full px-3">
+                className="flex flex-wrap justify-start items-center gap-2 py-2 border-2 border-neutral-500 border-dashed rounded-lg w-full px-3">
                 <div className="flex items-center border border-red-600 rounded-lg gap-1 px-2 py-0.5
                 text-red-600 bg-white bg-opacity-60 hover:bg-red-600  hover:text-neutral-100 hover:border-transparent hover:scale-110
                 transition duration-300"
                      onClick={clearQsSlice}
                 >
                     <BsTrash3 className="text-lg"/>
-                    <p className="font-light">Clear Message</p>
+                    <p className="font-light whitespace-nowrap">Clear Message</p>
                 </div>
                 <div className="flex items-center border border-black rounded-lg gap-1 px-2 py-0.5
                 text-black bg-white bg-opacity-60 hover:bg-black  hover:text-white hover:border-transparent hover:scale-110
@@ -47,7 +47,7 @@ const Other: React.FC = () => {
                      onClick={reset}
                 >
                     <BsBootstrapReboot className="text-lg"/>
-                    <p className="">Reset All</p>
+                    <p className="whitespace-nowrap">Reset All</p>
                 </div>
             </div>
         </div>

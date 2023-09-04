@@ -1,29 +1,29 @@
-import React, {useLayoutEffect, useRef} from "react";
+import React, {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {useConvStore} from "../state/conversation.tsx";
 import {QueAns} from "../data-structure/conversation.tsx";
 import {Audio} from "./audio.tsx";
 import {AssistantText, SelfText} from "./text.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 
+// Now you can use <List {...props} />
 export const MessageList: React.FC = () => {
     const qaSlice: QueAns[] = useConvStore((state) => state.qaSlice)
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    useLayoutEffect(() => {
-        if (scrollRef.current) {
-            const {scrollHeight} = scrollRef.current;
-            scrollRef.current.scrollTop = scrollHeight;
-        }
-    }, [qaSlice]);
+    useEffect(() => {
+        scrollRef.current!.scrollIntoView({behavior: 'instant'});
+    }); // run once on mount
+
     return (<div
             className="overflow-y-auto overflow-x-hidden w-full hide-scrollbar hover:show-scrollbar"
-            ref={scrollRef}>
+        >
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
                 {qaSlice.map((qa) =>
                     <Qa key={qa.id} qa={qa}/>
                 )}
             </div>
+            <div ref={scrollRef}/>
         </div>
     )
 };

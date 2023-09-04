@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^1.7.17",
@@ -31,6 +30,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
     "react-use": "^17.4.0",
+    "react-virtualized": "9.22.4",
     "uuid": "^9.0.0",
     "wavesurfer.js": "^7.2.0",
     "zustand": "^4.4.1"
@@ -44,6 +44,8 @@
     "@types/react": "^18.2.15",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.2.7",
+    "@types/react-virtualized": "^9.21.22",
+    "@types/react-window": "^1.8.5",
     "@types/uuid": "^9.0.2",
     "@types/wavesurfer.js": "^6.0.6",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
