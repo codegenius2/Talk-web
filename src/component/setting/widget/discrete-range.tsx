@@ -32,10 +32,10 @@ export const DiscreteRange: React.FC<Props> = ({
 
     const [choiceColor, setChoiceColors] = useState<ChoiceColor[]>([])
     const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
-    const textareaBoxRef = useRef<HTMLTextAreaElement>(null);
+    const inputBoxRef = useRef<HTMLInputElement>(null);
     const [valueUpdated, setValueUpdated] = useState(0)
 
-    const onBlur = (e: React.FocusEvent<HTMLTextAreaElement>) => {
+    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const target = e.target.value
         const found = choices.find((c) => c.name === target)?.value
         let res: NumStr
@@ -63,14 +63,16 @@ export const DiscreteRange: React.FC<Props> = ({
     }
 
     useEffect(() => {
-        if (!textareaBoxRef.current) {
+        if (!inputBoxRef.current) {
             return
         }
         const found = choices.find((c) => c.value === value)?.name
         if (found !== undefined) {
-            textareaBoxRef.current.value = found
+            inputBoxRef.current.value = found
+            inputBoxRef.current.size = found.length + 1
         } else {
-            textareaBoxRef.current.value = value.toString()
+            inputBoxRef.current.value = value.toString()
+            inputBoxRef.current.size = value.toString().length + 1
         }
     }, [value, choices, valueUpdated]);
 
@@ -115,26 +117,26 @@ export const DiscreteRange: React.FC<Props> = ({
 
     const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.code == 'Escape') {
-            textareaBoxRef.current?.blur()
+            inputBoxRef.current?.blur()
         }
     }
 
     return (
         <div className="flex flex-col gap-y-0.5">
-            <div className="flex justify-between items-center max-h-10 ring-transparent ">
+            <div className="flex justify-between items-center max-h-10">
                 <p className="text-neutral-600">{title}</p>
-                <textarea
-                    ref={textareaBoxRef}
-                    className={"w-11 max-h-6 outline-0 overflow-hidden text-center align-middle border border-neutral-500 rounded-xl resize-none "
+                <input
+                    ref={inputBoxRef}
+                    className={"min-w-11 max-h-6 text-center px-1 align-middle outline-0 overflow-hidden border border-neutral-500 rounded-xl resize-none "
                         + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
-                    rows={1}
                     onBlur={onBlur}
+                    onInput={(e) => e.currentTarget.size = e.currentTarget.value.length + 1}
                     onFocus={(e) => {
                         e.target.select()
                     }}
                     onKeyDown={handleKeyDown}
                 >
-            </textarea>
+                </input>
             </div>
 
             <div
@@ -144,14 +146,14 @@ export const DiscreteRange: React.FC<Props> = ({
                     {choiceColor.map((oc: ChoiceColor) =>
                         <div
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")
-                                 + (showRange? '': ' rounded-full')}
+                                + (showRange ? '' : ' rounded-full')}
                             key={oc.index}
                             onMouseLeave={oc.index == 0 ? handleMouseLeaveFirstElement : () => {
                             }}
                             onMouseDown={() => handleMouseDownChild(oc)}
                             onMouseEnter={() => handleMouseEnterChild(oc)}
                         >
-                            <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100 " : "text-neutral-800 ") }>
+                            <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100 " : "text-neutral-800 ")}>
                                 {oc.choice.name}
                             </p>
                         </div>

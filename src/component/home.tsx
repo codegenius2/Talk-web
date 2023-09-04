@@ -18,6 +18,9 @@ export default function Home() {
             <ErrorBoundary>
                 <div
                     className="home flex items-center justify-center h-screen w-screen overflow-hidden gap-2 p-1 lg:p-3">
+                    <div className="h-full max-w-md hidden sm:block">
+                        <Setting/>
+                    </div>
                     <div
                         className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2
                     bg-white bg-opacity-40 backdrop-blur">
@@ -29,9 +32,6 @@ export default function Home() {
                                 <Recorder/>
                             </div>
                         </div>
-                    </div>
-                    <div className="h-full w-full max-w-1/3 hidden sm:block">
-                        <Setting/>
                     </div>
                 </div>
                 <SSE/>

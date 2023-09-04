@@ -27,7 +27,7 @@ export const RichOpText: React.FC<TextProps> = ({text,deleteFunc}) => {
     return <div
         onMouseOver={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-        className="relative rounded-lg self-end max-w-3/4 whitespace-pre-wrap text-violet-100 bg-blue-600 px-2 py-1.5">
+        className="relative rounded-2xl self-end max-w-3/4 whitespace-pre-wrap text-violet-100 bg-blue-600 px-2 py-1.5">
         <p>{text.text}</p>
         {confettiCount === 0 ? null : <Confetti numberOfPieces={500} wind={0.02} key={confettiCount} recycle={false}/>}
         {hovering && <div
