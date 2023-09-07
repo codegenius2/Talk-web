@@ -1,6 +1,7 @@
 import {ServerElevenlabs} from "../../api/sse/server-ability.ts";
 import {ChooseOne, FloatRange, mergeChoice} from "./types.ts";
 import {ElevenlabsTTSOption} from "../../api/option.ts";
+import {produce} from "immer";
 
 export type ClientElevenlabs = {
     enabled: boolean
@@ -10,16 +11,16 @@ export type ClientElevenlabs = {
     clarity: FloatRange
 }
 
-export function mergeElevenlabs(c: ClientElevenlabs, s: ServerElevenlabs): ClientElevenlabs {
-    return {
-        ...c,
-        available: s.available,
-        voice: {
-            choices: s.voices.map((v) => ({name: v.name, value: v.id, tags: v.tags})),
-            chosen: mergeChoice(c.voice, s.voices.map(it => it.id))
+export const mergeElevenlabs = (c: ClientElevenlabs, s: ServerElevenlabs): ClientElevenlabs =>
+    produce(c, draft => {
+            draft.available = s.available
+            if (s.available) {
+                draft.voice.choices = s.voices?.map((v) => ({name: v.name, value: v.id, tags: v.tags ?? []})) ?? []
+                draft.voice.chosen = mergeChoice(c.voice, s.voices?.map(it => it.id) ?? [])
+            }
         }
-    }
-}
+    )
+
 
 export const toElevenlabsTTSOption = (elevenlabs: ClientElevenlabs): ElevenlabsTTSOption | undefined => {
     if (!elevenlabs.enabled || !elevenlabs.available) {

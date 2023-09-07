@@ -1,6 +1,6 @@
 import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
-import {useMouseStore} from "../../../state/mouse.tsx";
-import {Choice} from "../../../data-structure/ability/types.ts";
+import {useMouseStore} from "../../../../state/mouse.tsx";
+import {Choice} from "../../../../data-structure/ability/types.ts";
 
 type Props<T extends number | string> = {
     title: string

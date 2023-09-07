@@ -26,8 +26,8 @@ export const mergeAbility = (c: ClientAbility, s: ServerAbility): ClientAbility 
 
 export const toTalkOption = (ability: ClientAbility): TalkOption => {
     return {
-        toText: false, // not for now
-        toSpeech: true,
+        toText: true,
+        toSpeech: false,// not for now
         completion: true,
         completionToSpeech: true,
         llmOption: toLLMOption(ability.llm),

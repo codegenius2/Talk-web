@@ -1,6 +1,4 @@
 import React, {useCallback} from 'react';
-import {DiscreteRange} from "./widget/discrete-range.tsx";
-import {MySwitch} from "./widget/switch.tsx";
 import {
     ClientChatGPT,
     frequencyPenaltyChoices,
@@ -8,9 +6,11 @@ import {
     presencePenaltyChoices,
     temperatureChoices,
     tokenChoices
-} from "../../data-structure/ability/chat-gpt.ts";
-import {ListBox} from "./widget/list-box.tsx";
+} from "../../../../data-structure/ability/chat-gpt.ts";
 import {produce} from "immer";
+import {MySwitch} from "../widget/switch.tsx";
+import {DiscreteRange} from "../widget/discrete-range.tsx";
+import {ListBox} from "../widget/list-box.tsx";
 
 type Props = {
     chatGPT: ClientChatGPT

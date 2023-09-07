@@ -6,11 +6,21 @@ import Recorder from "./recorder.tsx";
 import {WindowListeners} from "./window-listeners.tsx";
 import {SSE} from "./network/sse.tsx";
 import {MessageList} from "./message/message-list.tsx";
-import {Panel} from "./setting/panel.tsx";
-import {useChatStore} from "../state/convs.tsx";
+import {Chat, useChatStore} from "../state/chat.tsx";
+import {Panel} from "./panel/panel.tsx";
+import {useEffect, useState} from "react";
 
 export default function Home() {
     const currentChatId = useChatStore(state => state.currentChatId)
+    const getCurrentChat = useChatStore(state => state.getCurrentChat)
+    const lastUpdate = useChatStore(state => state.lastUpdate)
+
+    const [chat, setChat] = useState<Chat | undefined>(undefined)
+
+    useEffect(() => {
+        setChat(getCurrentChat())
+    }, [getCurrentChat, currentChatId, lastUpdate]);
+
     return (
         <div>
             <WallpaperWalkInGreen/>
@@ -23,13 +33,13 @@ export default function Home() {
                     <div className="flex flex-col items-center h-full min-w-80">
                         <Panel/>
                     </div>
-                    {currentChatId === undefined &&
+                    {chat === undefined &&
                         <div
                             className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2
                     bg-white bg-opacity-40 backdrop-blur">
                         </div>
                     }
-                    {currentChatId !== undefined &&
+                    {chat !== undefined &&
                         <div
                             className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2
                     bg-white bg-opacity-40 backdrop-blur">

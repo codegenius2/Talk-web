@@ -1,10 +1,10 @@
 import {useCallback} from "react";
 import {PiPlusLight} from "react-icons/pi";
-import {useSettingStore} from "../../state/setting.ts";
-import {randomHash} from "../../util/util.tsx";
 import {CiSearch} from "react-icons/ci";
-import {useChatStore} from "../../state/convs.tsx";
 import {ChatComponent} from "./chat-component.tsx";
+import {useSettingStore} from "../../../state/setting.ts";
+import {useChatStore} from "../../../state/chat.tsx";
+import {randomHash} from "../../../util/util.tsx";
 
 export const ChatList = () => {
     const ability = useSettingStore(state => state.ability)
@@ -26,23 +26,23 @@ export const ChatList = () => {
     }, [ability, pushChat, setCurrentChatId])
 
     return (
-        <div className="flex flex-col w-full h-full gap-4">
-            <div className="flex justify-between items-center gap-2">
+        <div className="flex h-full w-full flex-col gap-4">
+            <div className="flex items-center justify-between gap-2">
                 <div
-                    className="flex justify-center items-center gap-2 rounded-xl w-full mr-auto bg-white bg-opacity-40 backdrop-blur">
+                    className="mr-auto flex w-full items-center justify-center gap-2 rounded-xl bg-white bg-opacity-40 backdrop-blur">
                     <CiSearch/>
-                    <p className="prose text-neutral-600">Search</p>
+                    <p className="text-neutral-600 prose">Search</p>
                 </div>
                 <div
-                    className="flex justify-center items-center rounded-xl stroke-white text-neutral-600
+                    className="flex justify-center items-center rounded-xl stroke-white text-neutral-500
                  bg-white bg-opacity-80 backdrop-blur cursor-pointer"
                     onClick={newChat}>
                     <PiPlusLight size={24}/>
                 </div>
             </div>
-            <div className="w-full h-full pr-1 overflow-y-auto rounded-xl overflow-hidden scrollbar-hide hover:scrollbar-show ">
+            <div className="h-full w-full overflow-hidden overflow-y-auto rounded-xl pr-1 scrollbar-hide hover:scrollbar-show">
                 <div
-                    className="flex flex-col gap-1 cursor-pointer">
+                    className="flex cursor-pointer flex-col gap-1">
                     {Object.entries(cs).map(([key, c]) =>
                         <ChatComponent chat={c} key={key}/>
                     )}

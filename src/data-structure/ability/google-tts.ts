@@ -1,6 +1,7 @@
 import {ServerGoogleTTS} from "../../api/sse/server-ability.ts";
 import {ChooseOne, FloatRange, getOrDefault, mergeChoice} from "./types.ts";
 import {GoogleTTSGender, GoogleTTSOption} from "../../api/option.ts";
+import {produce} from "immer";
 
 export type ClientGoogleTTS = {
     enabled: boolean // represents user's choice to disable ChatGPT, irrespective of its availability - preventing use of TTS.
@@ -13,16 +14,15 @@ export type ClientGoogleTTS = {
     volumeGainDb: FloatRange
 }
 
-export function mergeGoogleTTS(c: ClientGoogleTTS, s: ServerGoogleTTS): ClientGoogleTTS {
-    return {
-        ...c,
-        available: s.available,
-        voice: {
-            choices: s.voices.map((v) => ({name: v.name, value: v.id, tags: v.tags})),
-            chosen: mergeChoice(c.voice, s.voices.map(it => it.id))
+export const mergeGoogleTTS = (c: ClientGoogleTTS, s: ServerGoogleTTS): ClientGoogleTTS =>
+    produce(c, draft => {
+            draft.available = s.available
+            if (s.available) {
+                draft.voice.choices = s.voices?.map((v) => ({name: v.name, value: v.id, tags: v.tags ?? []})) ?? []
+                draft.voice.chosen = mergeChoice(c.voice, s.voices?.map(it => it.id) ?? [])
+            }
         }
-    }
-}
+    )
 
 export const toGoogleTTSOption = (google: ClientGoogleTTS): GoogleTTSOption | undefined => {
     if (!google.enabled || !google.available) {

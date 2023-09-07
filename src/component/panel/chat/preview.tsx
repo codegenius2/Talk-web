@@ -1,7 +1,7 @@
 import React from "react";
-import {Spin} from "../message/widget/spin.tsx";
 import {BsEmojiExpressionless, BsSoundwave} from "react-icons/bs";
-import {Chat} from "../../state/convs.tsx";
+import {Chat} from "../../../state/chat.tsx";
+import {Spin} from "../../message/widget/spin.tsx";
 
 type Props = {
     chat: Chat
@@ -11,7 +11,8 @@ export const Preview: React.FC<Props> = ({chat}) => {
     if (chat.ms.length === 0) {
         return null
     }
-    const message = chat.ms[-1]
+    const message = chat.ms[chat.ms.length - 1]
+
     const who = message.role == "user" ? "You" : "Assistant"
     let content = null
     switch (message.status) {
@@ -23,17 +24,17 @@ export const Preview: React.FC<Props> = ({chat}) => {
         case "typing":
         case "received":
             if (message.audio) {
-                content = <BsSoundwave/>
+                content = <div className="text-blue-600"><BsSoundwave/></div>
             } else {
-                content = message.text.slice(12)
+                content = <p className="truncate ... ">{message.text}</p>
             }
             break;
         case "error":
-            content = <BsEmojiExpressionless/>
+            content = <div className=""><BsEmojiExpressionless/></div>
             break;
     }
-    return <div>
-        {who}: {content}
+    return <div className="flex items-center gap-2">
+        <p>{who}:</p> {content}
     </div>
 }
 

@@ -9,7 +9,8 @@ export type Message = {
 }
 
 export type ChatReq = {
-    id: string; // unique ID for every chat
+    chatId: string; // unique ID for every chat
+    ticketId: string; // A distinctive ID for each request, utilised by the client to associate messages.
     ms: Message[];
     talkOption: TalkOption
 }
@@ -27,8 +28,8 @@ export class RestfulAPI {
 
     async postAudioChat(audio: Blob, fileName: string, chat: ChatReq) {
         const formData = new FormData();
-        formData.append('audio', audio, fileName);
         formData.append('chat', JSON.stringify(chat));
+        formData.append('audio', audio, fileName);
 
         return this.axios.postForm("audio-chat", formData);
     }

@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
 import {errorIfTimeout} from "../data-structure/message.tsx";
-import {useChatStore} from "../state/convs.tsx";
+import {useChatStore} from "../state/chat.tsx";
 
 // if content stays at 'sending' or 'receiving' status for over contentTimeoutSeconds, mark it as timeout
 export const TimeoutContentDetection: React.FC = () => {
 
-    const updateMessage = useChatStore((state) => (state.updateMessage))
+    const replaceMessageOr = useChatStore((state) => (state.replaceMessageOr))
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -15,7 +15,7 @@ export const TimeoutContentDetection: React.FC = () => {
                 for (const m of chat.ms.slice(-60)) {
                     const [now, timeout] = errorIfTimeout(m)
                     if (timeout) {
-                        updateMessage(chatId, now)
+                        replaceMessageOr(chatId, now, "ignore")
                     }
                 }
             }
@@ -26,7 +26,7 @@ export const TimeoutContentDetection: React.FC = () => {
                 clearInterval(interval)
             }
         };
-    }, [updateMessage]);
+    }, [replaceMessageOr]);
     return null
 }
 

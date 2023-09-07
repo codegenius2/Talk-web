@@ -18,7 +18,7 @@ export interface ChooseOne<T extends number | string> {
 }
 
 export const getOrDefault = <T extends string | number>(c: ChooseOne<T>, dft: T): T => {
-    return c.chosen ?? c.choices?.[0].value ?? dft
+    return c.chosen ?? c.choices?.[0]?.value ?? dft
 }
 
 export const mergeChoice = <T extends string | number>(c: ChooseOne<T>, pool: T[]): T|undefined => {

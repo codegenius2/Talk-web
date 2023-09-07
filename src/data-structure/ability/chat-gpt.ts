@@ -1,6 +1,7 @@
 import {Choice, mergeChoice, ChooseOne, FloatRange, IntRange} from "./types.ts";
 import {ServerChatGPT} from "../../api/sse/server-ability.ts";
 import {ChatGPTOption} from "../../api/option.ts";
+import {produce} from "immer";
 
 export type ClientChatGPT = {
     // there is diff between 'enabled' and 'available'
@@ -14,17 +15,15 @@ export type ClientChatGPT = {
     frequencyPenalty: FloatRange;
 }
 
-export const mergeChatGPT = (c: ClientChatGPT, s: ServerChatGPT): ClientChatGPT => {
-    return {
-        ...c,
-        available: s.available,
-        models: {
-            ...c.models,
-            choices: s.models.map((m) => ({name: m, value: m, tags: []})),
-            chosen: mergeChoice(c.models, s.models)
+export const mergeChatGPT = (c: ClientChatGPT, s: ServerChatGPT): ClientChatGPT =>
+    produce(c, draft => {
+        draft.available = s.available
+        if (s.available) {
+            draft.models.choices = s.models?.map((m) => ({name: m, value: m, tags: []})) ?? []
+            draft.models.chosen = mergeChoice(c.models, s.models ?? [])
         }
-    }
-}
+    })
+
 
 export const toChatGPTOption = (chatGPT: ClientChatGPT): ChatGPTOption | undefined => {
     if (!chatGPT.enabled || !chatGPT.available) {

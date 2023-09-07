@@ -10,7 +10,7 @@ import {randomHash} from "../util/util.tsx";
 import {maxHistory} from "../data-structure/ability/llm.ts";
 import {toTalkOption} from "../data-structure/ability/client-ability.tsx";
 import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx";
-import {historyMessages, useChatStore} from "../state/convs.tsx";
+import {historyMessages, useChatStore} from "../state/chat.tsx";
 
 const systemMessage: Message = {
     role: "system",
@@ -21,8 +21,8 @@ export const SubscribeSendingMessage: React.FC = () => {
 
     const getChat = useChatStore((state) => state.getChat)
     const getMessage = useChatStore((state) => state.getMessage)
-    const pushMessage = useChatStore((state) => state.pushMessage)
-    const updateMessage = useChatStore((state) => state.updateMessage)
+    const pushMessageOr = useChatStore((state) => state.pushMessageOr)
+    const replaceMessageOr = useChatStore((state) => state.replaceMessageOr)
     const pop = useSendingMessageStore((state) => state.pop)
     const sendingMessages = useSendingMessageStore((state) => state.sendingMessages)
     const recordingMimeType: RecordingMimeType | undefined = useRecorderStore((state) => state.recordingMimeType)
@@ -54,64 +54,66 @@ export const SubscribeSendingMessage: React.FC = () => {
         let messages = historyMessages(chat, maxHistory(ability.llm))
         messages = [systemMessage, ...messages]
 
-        const id = randomHash()
-        const message = newSending(id)
+        const message = newSending()
         let promise
         if (sm.audioBlob) {
             console.debug("sending audio and chat: ", messages)
             message.audio = {id: ""}
-            pushMessage(chat.id, message)
+            pushMessageOr(chat.id, message, "throw")
             promise = restfulAPI.postAudioChat(sm.audioBlob, recordingMimeType?.fileName ?? "audio.webm", {
-                id: id,
+                chatId: chat.id,
+                ticketId: randomHash(),
                 ms: messages,
                 talkOption: toTalkOption(ability)
             });
         } else {
             messages.push({role: "user", content: sm.text})
             console.debug("sending chat: ", messages)
+            pushMessageOr(chat.id, message, "throw")
             promise = restfulAPI.postChat({
-                id: id,
+                chatId: chat.id,
+                ticketId: randomHash(),
                 ms: messages,
                 talkOption: toTalkOption(ability)
             });
         }
 
         promise.then((r) => {
-                const prev = getMessage(chat.id, id)
+                const prev = getMessage(chat.id, message.id)
                 if (!prev) {
-                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, id)
+                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
                     return
                 }
                 if (r.status >= 200 && r.status < 300) {
                     const now = onSent(prev)
-                    updateMessage(chat.id, now)
+                    replaceMessageOr(chat.id, now, "ignore")
                 } else {
                     const now = onError(prev, "Failed to send, reason:" + r.statusText)
-                    updateMessage(chat.id, now)
+                    replaceMessageOr(chat.id, now, "ignore")
                 }
             }
         ).catch((e: AxiosError) => {
-            const prev = getMessage(chat.id, id)
+            const prev = getMessage(chat.id, message.id)
             if (!prev) {
-                console.error("cannot get a message from chat, chatId,messageId:", chat.id, id)
+                console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
                 return
             }
             const now = onError(prev, "Failed to send, reason:" + e.message)
-            updateMessage(chat.id, now)
+            replaceMessageOr(chat.id, now, "ignore")
         })
 
         if (sm.audioBlob) {
             const audioId = randomHash()
             addBlob({id: audioId, blob: sm.audioBlob}).then(() => {
-                const prev = getMessage(chat.id, id)
+                const prev = getMessage(chat.id, message.id)
                 if (!prev) {
-                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, id)
+                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
                     return
                 }
                 const now = onAudio(prev, {id: audioId})
-                updateMessage(chat.id, now)
+                replaceMessageOr(chat.id, now, "ignore")
             }).catch((e) => {
-                console.error("failed to save audio blob, audioId:", id, e.message)
+                console.error("failed to save audio blob, audioId:", message.id, e.message)
             })
         }
     }, [sendingMessages]);

@@ -2,6 +2,7 @@
 
 import {Role} from "../api/sse/event.ts";
 import {messageTimeoutSeconds} from "../config.ts";
+import {randomHash} from "../util/util.tsx";
 
 export type MessageStatus =
     'sending'
@@ -10,6 +11,7 @@ export type MessageStatus =
     | 'typing'
     | 'received'
     | 'error'
+    | 'deleted'
 
 export type MessageAudio = {
     id: string
@@ -36,8 +38,8 @@ export const newThinking = (id: string): Message => ({
     lastUpdatedAt: Date.now()
 })
 
-export const newSending = (id: string): Message => ({
-    id: id,
+export const newSending = (): Message => ({
+    id: randomHash(),
     role: 'user',
     status: "sending",
     text: "",
@@ -56,6 +58,8 @@ export const onSent = (prev: Message): Message => {
         case "error":
             console.error("onSent is invalid, prev status:", prev.status);
             return {...prev}
+        case "deleted":
+            return prev
     }
 }
 
@@ -63,41 +67,48 @@ export const onTyping = (prev: Message, text: string): Message => {
     switch (prev.status) {
         case "thinking":
         case "typing":
-            return {...prev, status: "typing", text: prev.text + text, lastUpdatedAt: Date.now()}
+            return {...prev, status: "typing", text: prev.text + text}
         case "sending":
         case "sent":
         case "received":
         case "error":
             console.error("onTyping is invalid, prev status:", prev.status, text);
             return {...prev}
+        case "deleted":
+            return prev
     }
 }
 
-export const onEOF = (prev: Message): Message => {
+export const onEOF = (prev: Message, text: string): Message => {
     switch (prev.status) {
         case "thinking":
         case "typing":
-            return {...prev, status: "received", lastUpdatedAt: Date.now()}
+            return {...prev, text: prev.text + text, status: "received", lastUpdatedAt: Date.now()}
         case "sending":
         case "sent":
         case "received":
         case "error":
             console.error("onEOF is invalid, prev status:", prev.status);
             return {...prev}
+        case "deleted":
+            return prev
     }
 }
 
 export const onAudio = (prev: Message, audio: MessageAudio): Message => {
     switch (prev.status) {
-        case "thinking":
-            return {...prev, status: "received", audio: audio, lastUpdatedAt: Date.now()}
-        case "typing":
         case "sending":
         case "sent":
+            return {...prev, status: "sent", audio: audio, lastUpdatedAt: Date.now()}
+        case "thinking":
+            return {...prev, status: "received", audio: audio, lastUpdatedAt: Date.now()}
         case "received":
+        case "typing":
         case "error":
             console.error("onAudio is invalid, prev status:", prev.status);
             return {...prev}
+        case "deleted":
+            return prev
     }
 }
 
@@ -112,8 +123,26 @@ export const onError = (prev: Message, errMsg: string): Message => {
         case "received":
             console.error("onError is invalid, prev status:" + prev.status)
             return {...prev,}
+        case "deleted":
+            return prev
     }
 }
+
+export const onDelete = (prev: Message): Message => {
+    switch (prev.status) {
+        case "sending":
+        case "sent":
+        case "thinking":
+        case "typing":
+        case "received":
+        case "error":
+            return {...prev, status: "deleted", audio: undefined, text: "", errorMessage: ""}
+        case "deleted":
+            console.error("onDelete is invalid, prev status:", prev.status)
+            return prev
+    }
+}
+
 
 const pending: MessageStatus[] = ["sending", "thinking", "typing"]
 export const errorIfTimeout = (prev: Message): [Message, boolean] => {

@@ -1,33 +1,49 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import ErrorBoundary from ".././error-boundary.tsx";
-import {isInHistory, Message} from "../../data-structure/message.tsx";
+import {isInHistory, Message, onDelete} from "../../data-structure/message.tsx";
 import {maxHistory} from "../../data-structure/ability/llm.ts";
 import {maxLoadedVoice} from "../../config.ts";
 import {RichOpText} from "./rich-op-text.tsx";
 import {Audio as MyAudio} from "./audio.tsx"
-import {useChatStore} from "../../state/convs.tsx";
+import {Chat, useChatStore} from "../../state/chat.tsx";
 
 export const MessageList: React.FC = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const getCurrentChat = useChatStore(state => state.getCurrentChat)
+    const currentChatId = useChatStore(state => state.currentChatId)
+    const lastUpdate = useChatStore(state => state.lastUpdate)
     const [mh, setMh] = useState(0)
     const [inHistory, setInHistory] = useState<Set<number>>(new Set())
     const [loadVoice, setLoadVoice] = useState<Set<number>>(new Set())
 
-    // if MessageList shows up, there must be a chat
-    const chat = getCurrentChat()!;
+    const [chat, setChat] = useState<Chat | undefined>(undefined)
 
     useEffect(() => {
-        scrollRef.current!.scrollIntoView({behavior: 'instant'});
+        setChat(getCurrentChat())
+    }, [getCurrentChat, lastUpdate, currentChatId]);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current!.scrollIntoView({behavior: 'instant'})
+        }
     }); // run once on mount
 
     useEffect(() => {
+        if (!chat) {
+            return
+        }
         setMh(maxHistory(chat.ability.llm))
-    }, [chat.ability])
+    }, [chat])
 
     useEffect(() => {
+        if (!chat) {
+            return
+        }
         const ms = chat.ms
         for (let i = ms.length - 1; i >= 0; i--) {
+            if (ms[i].status === 'deleted') {
+                continue
+            }
             if (inHistory.size >= mh && loadVoice.size >= maxLoadedVoice) {
                 break
             }
@@ -44,22 +60,26 @@ export const MessageList: React.FC = () => {
         }
         setInHistory(inHistory)
         setLoadVoice(loadVoice)
-    }, [chat.ms, mh])
+    }, [chat, inHistory, loadVoice, mh])
+
+    if (!chat) {
+        return <div/>
+    }
 
     return (
         <div className="overflow-y-auto overflow-x-hidden w-full scrollbar-hide hover:scrollbar-show">
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above, or sc*/}
-                {chat.ms.map((m, index) =>
-                    <div className="flex flex-col gap-1 mr-2">
-                        <Row key={m.id}
-                             chatId={chat.id}
-                             message={m}
-                             inHistory={inHistory.has(index)}
-                             loadAudio={loadVoice.has(index)}
-                        />
-                    </div>
-                )}
+                {chat.ms.filter(it => it.status !== 'deleted')
+                    .map((m, index) =>
+                        <div className="flex flex-col gap-1 mr-2" key={m.id}>
+                            <Row chatId={chat.id}
+                                 message={m}
+                                 inHistory={inHistory.has(index)}
+                                 loadAudio={loadVoice.has(index)}
+                            />
+                        </div>
+                    )}
             </div>
             <div ref={scrollRef}/>
         </div>
@@ -74,11 +94,18 @@ type Props = {
 }
 
 const Row: React.FC<Props> = ({chatId, message, inHistory, loadAudio}) => {
-    const removeMessage = useChatStore(state => state.removeMessage)
+    const getMessage = useChatStore(state => state.getMessage)
+    const replaceMessageOr = useChatStore(state => state.replaceMessageOr)
 
     const handleDelete = useCallback(() => {
-        removeMessage(chatId, message.id)
-    }, [chatId, message.id, removeMessage])
+        const prev = getMessage(chatId, message.id);
+        if (!prev) {
+            console.warn("failed to delete message, chatId,messageId:", chatId, message.id)
+            return
+        }
+        const now = onDelete(prev)
+        replaceMessageOr(chatId, now, "ignore")
+    }, [chatId, getMessage, message.id, replaceMessageOr])
 
     switch (message.status) {
         case "sending":
@@ -101,7 +128,7 @@ const Row: React.FC<Props> = ({chatId, message, inHistory, loadAudio}) => {
         </div>
     } else {
         m = <div className={inHistory ? "border border-neutral-500 border-dashed" : ""}>
-            m = <RichOpText deleteFunc={handleDelete} text={message.text}/>
+            <RichOpText deleteFunc={handleDelete} text={message.text}/>
         </div>
     }
     return <ErrorBoundary>

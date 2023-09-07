@@ -1,12 +1,12 @@
 import React from 'react';
 import {ClearMessageButton} from "./widget/button.tsx";
-import {useChatStore} from "../../state/convs.tsx";
+import {useChatStore} from "../../../state/chat.tsx";
 
 type Props = {
     chatId: string
 }
 
-export const ChatSetting: React.FC<Props> = ({chatId}) => {
+export const CurrentSetting: React.FC<Props> = ({chatId}) => {
     const clearMessages = useChatStore(state => state.clearMessages)
     return <div
         className="flex flex-col w-full items-center justify-between gap-2 rounded-xl bg-white

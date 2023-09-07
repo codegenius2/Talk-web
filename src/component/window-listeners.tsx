@@ -5,7 +5,6 @@ import {useRecorderStore} from "../state/recording.tsx";
 export const WindowListeners: React.FC = () => {
     const setMouseDown = useMouseStore(state => state.setMouseDown)
     const recorder = useRecorderStore(state => state.recorder)
-
     useEffect(() => {
 
             // spacebar has the lowest priority on starting/ending a recording
@@ -62,7 +61,7 @@ export const WindowListeners: React.FC = () => {
                 window.removeEventListener("blur", handleBrowserBlur);
             }
         },
-        [setMouseDown, recorder]
+        [ setMouseDown, recorder]
     )
     return null
 }

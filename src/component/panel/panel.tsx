@@ -1,15 +1,14 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ClientAbility} from "../../data-structure/ability/client-ability.tsx";
 import {useSettingStore} from "../../state/setting.ts";
-import {AbilitySetting} from "./ability-setting.tsx";
-import {GlobalSetting} from "./global-setting.tsx";
 import {escapeSpaceKey, joinClasses} from "../../util/util.tsx";
-import {useChatStore} from "../../state/convs.tsx";
-import {ChatSetting} from "./chat-setting.tsx";
+import {Chat, useChatStore} from "../../state/chat.tsx";
 import {useLayoutStore} from "../../state/layout.ts";
-import {ChatList} from "../chat/chat-list.tsx";
 import {useMouseStore} from "../../state/mouse.tsx";
-
+import {ChatList} from "./chat/chat-list.tsx";
+import {AbilitySetting} from "./setting/ability/ability-setting.tsx";
+import {GlobalSetting} from "./setting/global-setting.tsx";
+import {CurrentSetting} from "./setting/current-setting.tsx";
 
 export const Panel: React.FC = () => {
 
@@ -21,10 +20,19 @@ export const Panel: React.FC = () => {
     const setGlobalAbility = useSettingStore(state => state.setAbility)
 
     const currentChatId = useChatStore(state => state.currentChatId)
+    const getCurrentChat = useChatStore(state => state.getCurrentChat)
+    const lastUpdate = useChatStore(state => state.lastUpdate)
     const getChatAbility = useChatStore(state => state.getAbility)
     const setChatAbility = useChatStore(state => state.setAbility)
     // the above const values don't observe on chatAbility, use chatAbilityChanged to trigger re-render
     const [chatAbilityChanged, setChatAbilityChanged] = useState(0)
+
+
+    const [currentChat, setCurrentChat] = useState<Chat | undefined>(undefined)
+
+    useEffect(() => {
+        setCurrentChat(getCurrentChat())
+    }, [getCurrentChat, lastUpdate, currentChatId]);
 
     const setChatAbility_ = useCallback((ability: ClientAbility) => {
         setChatAbility(currentChatId!, ability)
@@ -56,7 +64,7 @@ export const Panel: React.FC = () => {
             panelContent = (
                 <>
                     <AbilitySetting setAbility={setChatAbility_} ability={chatAbility}/>
-                    <ChatSetting chatId={currentChatId!}/>
+                    <CurrentSetting chatId={currentChatId!}/>
                 </>
             )
             break;
@@ -87,17 +95,17 @@ export const Panel: React.FC = () => {
                 <div className={
                     joinClasses(
                         "flex w-1/3 justify-center items-center h-full rounded-lg",
-                        currentChatId === undefined ? "hidden" : "",
+                        currentChat === undefined ? "hidden" : "",
                         panel === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
                      onMouseDown={() => setPanel("current")}
                      onMouseUp={() => setPanel("current")}
-                    onMouseEnter={() => isMouseDown && setPanel("current")}
+                     onMouseEnter={() => isMouseDown && setPanel("current")}
                 >
                     <p className="text-center">Current</p>
                 </div>
             </div>
-            <div className="flex flex-col w-full h-full items-center justify-between gap-2"
+            <div className="flex flex-col w-full h-full items-center gap-2"
                  onKeyDown={escapeSpaceKey}
             >
                 {panelContent}
