@@ -44,16 +44,22 @@ export const WindowListeners: React.FC = () => {
                 setMouseDown(false)
             }
 
+            const handleBrowserBlur = () => {
+                setMouseDown(false)
+            }
+
             window.addEventListener("keydown", handleKeyDown);
             window.addEventListener("keyup", handleKeyUp);
             window.addEventListener("mousedown", handleMouseDown);
             window.addEventListener("mouseup", handleMouseUp);
+            window.addEventListener("blur", handleBrowserBlur);
 
             return () => {
                 window.removeEventListener("keydown", handleKeyDown);
                 window.removeEventListener("keyup", handleKeyUp);
                 window.removeEventListener("mousedown", handleMouseDown);
                 window.removeEventListener("mouseup", handleMouseUp);
+                window.removeEventListener("blur", handleBrowserBlur);
             }
         },
         [setMouseDown, recorder]

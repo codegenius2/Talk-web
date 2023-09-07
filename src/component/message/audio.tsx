@@ -1,81 +1,44 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import Hover from 'wavesurfer.js/plugins/hover'
-import {Audio as _Audio} from "../data-structure/audio.tsx"
-import {Spin} from "./spin.tsx";
-import {usePlayingStore} from "../state/playing.tsx";
-import {getBlob} from "../persist/blob-db.tsx";
+import {usePlayingStore} from "../../state/playing.tsx";
+import {MessageAudio} from "../../data-structure/message.tsx";
+import {getBlob} from "../../persist/blob-db.tsx";
+
+
+interface AudioProps {
+    audio: MessageAudio
+    loadAudio: boolean
+    self: boolean
+}
+
+export const Audio: React.FC<AudioProps> = ({audio, loadAudio, self}) => {
+    const [audioUrl, setAudioUrl] = useState<string>("")
+    useEffect(() => {
+        if (loadAudio) {
+            getBlob(audio.id).then(r => {
+                if (r) {
+                    const url = URL.createObjectURL(r.blob)
+                    setAudioUrl(url)
+                } else {
+                    console.error("audio blob not found")
+                }
+            }).catch(e => {
+                console.error("failed to get audio blob", audio.id, e)
+            })
+        }
+    }, [audio.id, loadAudio])
+
+    return <Wave url={audioUrl} audioId={audio.id} self={self}></Wave>
+}
 
 interface WaveSurferProps {
     url: string;
-    audioIndex: string;
+    audioId: string;
     self: boolean;
 }
 
-interface AudioProps {
-    audio?: _Audio
-    self: boolean
-    delay: number // ms, delay rendering of audios not in window
-}
-
-export const Audio: React.FC<AudioProps> = ({audio, self, delay}) => {
-    const [audioUrl, setAudioUrl] = useState<string>("")
-
-    const update = useCallback((id: string) => getBlob(id).then(r => {
-        if (r) {
-            const url = URL.createObjectURL(r.blob)
-            setAudioUrl(url)
-        } else {
-            console.error("audio blob not found")
-        }
-    }).catch(e => {
-        console.error("failed to get audio blob", id, e)
-    }), [])
-
-    useEffect(() => {
-            if (!audio) {
-                return
-            }
-            if (audioUrl) {
-                return;
-            }
-            let timeout: NodeJS.Timeout
-            if (['sent', 'received'].includes(audio.status)) {
-                if (audio.audioId) {
-                    const id = audio.audioId
-                    if (delay == 0) {
-                        update(id)
-                    } else {
-                        timeout = setTimeout(()=>update(id),delay)
-                    }
-                }
-            }
-            return () => clearTimeout(timeout)
-        }, [audio, audioUrl]
-    )
-
-    if (!audio) {
-        return <></>
-    }
-
-    switch (audio.status) {
-        case 'sending':
-        case 'receiving':
-            return <div className="w-auto px-2 py-1.5">
-                <Spin/>
-            </div>
-        case 'sent':
-        case 'received':
-            return <Wave url={audioUrl} audioIndex={audio.audioId!} self={self}></Wave>
-        case 'error':
-            return <div> {audio.errorMessage}</div>
-        default:
-            console.log('impossible audio status', audio.status)
-            break;
-    }
-}
-
-const Wave: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
+const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
     const waveformRef = useRef(null);
     const wavesurfer = useRef<WaveSurfer>();
     const playingAudioIndex = usePlayingStore((state) => state.playingAudioIndex)
@@ -108,51 +71,51 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioIndex, self}) => {
 
         wavesurfer.current!.on('interaction', () => {
             wavesurfer.current!.play().then(() => {
-                forceLock(audioIndex)
+                forceLock(audioId)
             }).catch((e) => {
                 console.error("can't play", e)
             })
         })
 
         wavesurfer.current.on('finish', () => {
-            unLock(audioIndex)
+            unLock(audioId)
         })
 
         // wavesurfer.current!
         return () => {
             wavesurfer.current && wavesurfer.current.destroy();
         };
-    }, [url, audioIndex]);
+    }, [url, audioId, color.wave, color.progress, color.hoverLine, color.labelBg, color.label, forceLock, unLock]);
 
     const playPause = () => {
         if (wavesurfer.current!.isPlaying()) {
             wavesurfer.current!.pause()
-            unLock(audioIndex)
+            unLock(audioId)
         } else {
             wavesurfer.current!.play().catch((e) => {
                 console.error("can't play", e)
             })
-            forceLock(audioIndex)
+            forceLock(audioId)
         }
     };
 
     useEffect(() => {
-        if (playingAudioIndex !== audioIndex && wavesurfer.current?.isPlaying()) {
+        if (playingAudioIndex !== audioId && wavesurfer.current?.isPlaying()) {
             wavesurfer.current!.pause()
         }
-    }, [playingAudioIndex, audioIndex]);
+    }, [playingAudioIndex, audioId]);
 
     return <div className={"flex rounded-2xl items-center p-1 gap-2 " + color.boxBg}>
         <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + color.playBg}
              onClick={playPause}>
-            <div hidden={playingAudioIndex === audioIndex}>
+            <div hidden={playingAudioIndex === audioId}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill={color.play} viewBox="0 0 24 24"
                      className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round"
                           d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
                 </svg>
             </div>
-            <div hidden={playingAudioIndex !== audioIndex}>
+            <div hidden={playingAudioIndex !== audioId}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={4}
                      stroke="currentColor" className={"w-6 h-6 " + color.pause}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/>

@@ -4,6 +4,7 @@ import './App.css'
 
 import Home from "./component/home.tsx";
 import {RestfulAPIComponent} from "./component/network/restful-api.tsx";
+import {Fragment} from "react";
 
 
 export default function App() {
@@ -11,7 +12,7 @@ export default function App() {
     const verified = useAuthStore((state) => state.verified);
 
     return (
-        <div>
+        <Fragment>
             {(!verified) && <Auth/>}
             {/*home page fades in*/}
             <div
@@ -19,6 +20,6 @@ export default function App() {
                 {verified && <Home/>}
             </div>
             <RestfulAPIComponent/>
-        </div>
+        </Fragment>
     );
 }

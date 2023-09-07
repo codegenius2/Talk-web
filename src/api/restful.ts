@@ -1,25 +1,17 @@
-import {ChatGPTOption, TalkOption} from "../data-structure/ability/option.ts";
-import {Ability, ChatGPTLLM} from "../data-structure/ability/client-ability.tsx";
 import axios, {AxiosError, AxiosInstance} from "axios";
 import {generateHash} from "../util/util.tsx";
+import {TalkOption} from "./option.ts";
+import {Role} from "./sse/event.ts";
 
 export type Message = {
-    role: string;
+    role: Role;
     content: string;
 }
 
-export type ConversationReq = {
-    id: string; // unique ID for every conversation
+export type ChatReq = {
+    id: string; // unique ID for every chat
     ms: Message[];
     talkOption: TalkOption
-}
-
-export const toTalkOption = (ability: Ability): TalkOption => {
-    return {
-        llm: ability.llm.available ? {
-            chatGPT: toChatGPTOption(ability.llm.chatGPT)
-        } : undefined
-    }
 }
 
 export class RestfulAPI {
@@ -29,16 +21,16 @@ export class RestfulAPI {
         this.axios = axiosInstance
     }
 
-    async postConv(conv: ConversationReq) {
-        return this.axios.post("conversation", conv)
+    async postChat(chat: ChatReq) {
+        return this.axios.post("chat", chat)
     }
 
-    async postAudioConv(audio: Blob, fileName: string, conv: ConversationReq) {
+    async postAudioChat(audio: Blob, fileName: string, chat: ChatReq) {
         const formData = new FormData();
         formData.append('audio', audio, fileName);
-        formData.append('conversation', JSON.stringify(conv));
+        formData.append('chat', JSON.stringify(chat));
 
-        return this.axios.postForm("audio-conversation", formData);
+        return this.axios.postForm("audio-chat", formData);
     }
 
     async getHealth(password?: string) {
@@ -64,24 +56,4 @@ export const defaultRestfulAPI = (): RestfulAPI => {
     );
 
     return new RestfulAPI(axiosInstance)
-}
-
-export const toChatGPTOption = (chatGPT: ChatGPTLLM): ChatGPTOption | undefined => {
-    if (chatGPT.enabled && chatGPT.available) {
-        let model = ""
-        if (chatGPT.models.chosen !== undefined) {
-            model = chatGPT.models.chosen as string
-        } else if (chatGPT.models.choices.length != 0) {
-            model = chatGPT.models.choices[0].value as string
-        } else {
-            console.warn("model not found")
-        }
-        return {
-            model: model,
-            maxTokens: chatGPT.maxTokens.chosen ?? chatGPT.maxTokens.default,
-            temperature: chatGPT.temperature.chosen ?? chatGPT.temperature.default,
-            presencePenalty: chatGPT.presencePenalty.chosen ?? chatGPT.presencePenalty.default,
-            frequencyPenalty: chatGPT.frequencyPenalty.chosen ?? chatGPT.frequencyPenalty.default,
-        }
-    }
 }

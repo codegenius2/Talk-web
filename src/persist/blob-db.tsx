@@ -31,6 +31,18 @@ export async function addBlob(blogEntry: BlobEntry) {
     await tx.done;
 }
 
+export async function deleteBlobs(ids: string[]) {
+    const db = await newDB();
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    for (const id of ids) {
+        store.delete(id).catch((e) => {
+            console.error("failed to delete audio blob, id,e:", id, e)
+        })
+    }
+    return
+}
+
 export async function clearBlob() {
     const db = await newDB();
     const tx = db.transaction(storeName, 'readwrite');

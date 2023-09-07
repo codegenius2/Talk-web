@@ -1,19 +1,19 @@
-import React, {Fragment, useEffect} from 'react'
+import {Fragment, useEffect} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
-import {Choice, NumStr} from "../../../data-structure/ability/client-ability.tsx";
-import {joinClassNames} from "../../../util/util.tsx";
+import {joinClasses} from "../../../util/util.tsx";
+import {Choice} from "../../../data-structure/ability/types.ts";
 
 // https://tailwindui.com/components/application-ui/forms/select-menus
 
-type Props = {
-    choices: Choice[]
-    value?: NumStr
-    setValue: (value?: NumStr) => void
+type Props<T extends number | string> = {
+    choices: Choice<T>[]
+    value?: T
+    setValue: (value?: T) => void
     mostEffort: boolean  // as long as there is at least on choice, set it to value
 }
 
-export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort}) => {
+export function ListBox<T extends number | string>({choices, value, setValue, mostEffort}: Props<T>) {
     useEffect(() => {
             if (choices.length === 0) {
                 setValue(undefined)
@@ -22,8 +22,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                     setValue(choices[0].value)
                 }
             }
-        },
-        [choices, setValue, mostEffort]
+        }, [choices, setValue, mostEffort]
     )
 
     if (choices.length === 0) {
@@ -66,7 +65,7 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                                     key={ch.value}
                                     value={ch.value}
                                     className={({active}) =>
-                                        joinClassNames(
+                                        joinClasses(
                                             active ? 'bg-blue-600 text-white' : 'text-neutral-900',
                                             'rounded-lg relative cursor-default select-none py-0.5 pl-3 pr-0.5 '
                                         )
@@ -75,12 +74,12 @@ export const ListBox: React.FC<Props> = ({choices, value, setValue, mostEffort})
                                     {({selected, active}) => (
                                         <>
                                             {selected ? (
-                                                <CheckIcon className={joinClassNames(
+                                                <CheckIcon className={joinClasses(
                                                     active ? 'text-white' : 'text-neutral-900', 'absolute inset-x-0 left-0 h-5 w-5'
                                                 )} aria-hidden="true"/>) : null}
                                             <div className="flex items-center w-full ">
                                                     <span
-                                                        className={joinClassNames(selected ? 'font-semibold' : 'font-normal', 'flex flex-wrap justify-between items-center w-full ml-3')}
+                                                        className={joinClasses(selected ? 'font-semibold' : 'font-normal', 'flex flex-wrap justify-between items-center w-full ml-3')}
                                                     >
                                                     <p className="m-0">{ch.name}</p>
                                                     <div className='flex justify-between items-center gap-1 '>

@@ -13,6 +13,7 @@ export const zustandStorage: StateStorage&Clearable = {
     },
     setItem: async (name: string, value: string): Promise<void> => {
         console.debug("[Persist]", 'saving value(truncated to 100)', value.slice(0, 100), 'to', name)
+        // console.debug("[Persist]", 'saving value ', value, 'to', name)
         await set(name, value)
     },
     removeItem: async (name: string): Promise<void> => {

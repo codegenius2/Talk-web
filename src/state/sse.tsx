@@ -1,6 +1,5 @@
 import {create} from 'zustand';
 import {randomHash} from "../util/util.tsx"
-import {streamIdLength} from "../config.ts";
 
 
 interface SSE {
@@ -9,7 +8,7 @@ interface SSE {
 
 export const useSSEStore = create<SSE>()(
     (() => ({
-            streamId: randomHash(streamIdLength),
+            streamId: randomHash(),
         })
     )
 );

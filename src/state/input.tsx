@@ -21,53 +21,32 @@ export const useInputStore = create<InputStore>()(
     )
 )
 
-type SendingTextStore = {
-    sendingTexts: string[]
-    push: (e: string) => void,
-    pop: () => string | undefined,
+export type SendingMessage = {
+    chatId: string
+    text: string
+    // if message
+    audioBlob?: Blob
+    durationMs?: number
 }
 
-export const useSendingTextStore = create<SendingTextStore>(
+type SendingMessageStore = {
+    sendingMessages: SendingMessage[]
+    push: (sm: SendingMessage) => void,
+    pop: () => SendingMessage | undefined,
+
+}
+
+export const useSendingMessageStore = create<SendingMessageStore>(
     (set, get) => ({
-        sendingTexts: [],
-        push: (audio: string) => set((state) => ({
+        sendingMessages: [],
+        push: (sm: SendingMessage) => set((state) => ({
             ...state,
-            sendingTexts: [...state.sendingTexts, audio]
+            sendingMessages: [...state.sendingMessages, sm]
         })),
         pop: () => {
-            const [first, ...rest] = get().sendingTexts
+            const [first, ...rest] = get().sendingMessages
             if (first !== undefined) {
-                set((state) => ({...state, sendingTexts: rest}))
-            }
-            return first
-        },
-    })
-)
-
-export type SendingAudio = {
-    blob: Blob
-    // duration is in ms
-    duration: number
-}
-
-type SendingAudioStore = {
-    sendingAudios: SendingAudio[]
-    push: (audio: SendingAudio) => void,
-    pop: () => SendingAudio | undefined,
-
-}
-
-export const useSendingAudioStore = create<SendingAudioStore>(
-    (set, get) => ({
-        sendingAudios: [],
-        push: (audio: SendingAudio) => set((state) => ({
-            ...state,
-            sendingAudios: [...state.sendingAudios, audio]
-        })),
-        pop: () => {
-            const [first, ...rest] = get().sendingAudios
-            if (first !== undefined) {
-                set((state) => ({...state, sendingAudios: rest}))
+                set((state) => ({...state, sendingMessages: rest}))
             }
             return first
         },

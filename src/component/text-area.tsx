@@ -5,12 +5,16 @@ import React, {
     useRef,
     useState
 } from "react";
-import {useInputStore, useSendingTextStore} from "../state/input.tsx";
+import {useInputStore, useSendingMessageStore} from "../state/input.tsx";
 
-const TextArea: React.FC = () => {
+type Props={
+    chatId:string
+}
+
+const TextArea: React.FC<Props> = ({chatId}) => {
         const inputText = useInputStore((state) => state.inputText)
         const setInputText = useInputStore((state) => state.setInputText)
-        const push = useSendingTextStore((state) => state.push)
+        const push = useSendingMessageStore((state) => state.push)
         const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
         const arrowButtonRef = useRef<HTMLButtonElement>(null);
         const sendButtonRef = useRef<HTMLButtonElement>(null);
@@ -28,11 +32,11 @@ const TextArea: React.FC = () => {
                 sendButtonRef.current.blur()
             }
             if (inputText) {
-                push(inputText)
+                push({chatId:chatId,text:inputText})
             }
             setInputText("")
             textAreaRef.current?.focus()
-        }, [inputText, push, setInputText])
+        }, [chatId, inputText, push, setInputText])
 
         const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
             event.stopPropagation();

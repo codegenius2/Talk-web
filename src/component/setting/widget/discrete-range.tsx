@@ -1,36 +1,36 @@
 import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
 import {useMouseStore} from "../../../state/mouse.tsx";
-import {Choice, NumStr} from "../../../data-structure/ability/client-ability.tsx";
+import {Choice} from "../../../data-structure/ability/types.ts";
 
-type Props = {
+type Props<T extends number | string> = {
     title: string
-    choices: Choice[]
-    value: NumStr
-    setValue: (value: NumStr) => void
-    fallbackValue: NumStr,
+    choices: Choice<T>[]
+    value: T
+    setValue: (value: T) => void
+    fallbackValue: T,
     showRange: boolean, // show range or single point
-    range?: { rangeStart: NumStr, rangeEnd: NumStr }
-    outOfLeftBoundary?: NumStr // whether set value to this as mouse moves out of left-most element, usually as zero
+    range?: { rangeStart: T, rangeEnd: T }
+    outOfLeftBoundary?: T // whether set value to this as mouse moves out of left-most element, usually as zero
 }
 
-type ChoiceColor = {
+type ChoiceColor<T extends number | string> = {
     index: number
-    choice: Choice
+    choice: Choice<T>
     inRange: boolean
 }
 
-export const DiscreteRange: React.FC<Props> = ({
-                                                   title,
-                                                   choices,
-                                                   value,
-                                                   setValue,
-                                                   fallbackValue,
-                                                   showRange,
-                                                   outOfLeftBoundary,
-                                                   range
-                                               }) => {
+export function DiscreteRange<T extends string | number>({
+                                                             title,
+                                                             choices,
+                                                             value,
+                                                             setValue,
+                                                             fallbackValue,
+                                                             showRange,
+                                                             outOfLeftBoundary,
+                                                             range
+                                                         }: Props<T>) {
 
-    const [choiceColor, setChoiceColors] = useState<ChoiceColor[]>([])
+    const [choiceColor, setChoiceColors] = useState<ChoiceColor<T>[]>([])
     const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
     const inputBoxRef = useRef<HTMLInputElement>(null);
     const [valueUpdated, setValueUpdated] = useState(0)
@@ -38,19 +38,19 @@ export const DiscreteRange: React.FC<Props> = ({
     const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
         const target = e.target.value
         const found = choices.find((c) => c.name === target)?.value
-        let res: NumStr
+        let res: T
         if (found !== undefined) {
             res = found
         } else if (typeof value === 'string' && range && range.rangeStart <= target && target <= range.rangeEnd) {
-            res = target
+            res = target as T
         } else if (typeof value === 'number') {
             if (range && range.rangeStart <= target && target <= range.rangeEnd) {
                 if (!target.match(/^-?\d+(\.\d+)?$/)) {
                     res = fallbackValue
                 } else if (target.includes(".")) {
-                    res = Number.parseFloat(target)
+                    res = Number.parseFloat(target) as T
                 } else {
-                    res = Number.parseInt(target)
+                    res = Number.parseInt(target) as T
                 }
             } else {
                 res = fallbackValue
@@ -77,7 +77,7 @@ export const DiscreteRange: React.FC<Props> = ({
     }, [value, choices, valueUpdated]);
 
     useEffect(() => {
-        const res: ChoiceColor[] = []
+        const res: ChoiceColor<T>[] = []
         const contain = choices.find(it => it.value == value) !== undefined
         for (let i = 0; i < choices.length; i++) {
             res.push({
@@ -105,13 +105,13 @@ export const DiscreteRange: React.FC<Props> = ({
         }
     }
 
-    const handleMouseEnterChild = (oc: ChoiceColor) => {
+    const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
         if (useMouseStore.getState().isMouseDown) {
             setValue(oc.choice.value)
         }
     }
 
-    const handleMouseDownChild = (oc: ChoiceColor) => {
+    const handleMouseDownChild = (oc: ChoiceColor<T>) => {
         setValue(oc.choice.value)
     }
 
@@ -143,7 +143,7 @@ export const DiscreteRange: React.FC<Props> = ({
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
                 <div
                     className={"flex  justify-start items-center  w-full overflow-auto "}>
-                    {choiceColor.map((oc: ChoiceColor) =>
+                    {choiceColor.map((oc: ChoiceColor<T>) =>
                         <div
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")
                                 + (showRange ? '' : ' rounded-full')}

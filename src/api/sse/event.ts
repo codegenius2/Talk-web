@@ -1,31 +1,33 @@
-import {LLM, STT, TTS} from "./ability.ts";
+export const EventMessageThinking = "message/thinking"
+export const EventMessageTextTyping = "message/text/typing"
+export const EventMessageTextEOF = "message/text/EOF"
+export const EventMessageAudio = "message/audio"
+export const EventMessageError = "message/error"
+export const EventSystemAbility = "system/ability"
+export const EventSystemNotification = "system/notification"
 
-export const EventAudio = "audio"
-export const EventAnswer = "answer"
-export const EventTrans = "trans"
-export const EventAbility = "ability"
+export type Role = 'user' | 'assistant' | 'system'
 
-export type EventMeta = {
-    convId: string; // unique ID for every Q&A
-    eMsg: string;
+export type MessageMeta = {
+    // unique ID for the whole chat(contains maybe hundreds of messages)
+    chatId: string;
+    // unique ID for each request
+    ticketId: string;
+    // unique ID for each message
+    messageID: string;
+    role: Role;
 }
 
-export type Answer = EventMeta & {
+export type Text = MessageMeta & {
     text: string;
-    eof: boolean; // whether it is the last piece of content
 }
 
-export type Audio = EventMeta & {
+export type Audio = MessageMeta & {
     audio: string; // base64 of byte array
+    durationMs?: number
 }
 
-export type Trans = EventMeta & {
-    text: string;
+export type Error = MessageMeta & {
+    eMessage: string;
 }
 
-// Ability guide clients in adjusting all parameters.
-export type AbilityEvent = {
-    llm: LLM
-    tts: TTS
-    stt: STT
-}

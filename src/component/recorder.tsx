@@ -1,13 +1,17 @@
-import {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useRecorderStore} from "../state/recording.tsx"
 import {EnhancedRecorder} from "../util/enhanced-recorder.ts"
-import {useSendingAudioStore} from "../state/input.tsx";
-import {joinClassNames, timeElapsedMMSS} from "../util/util.tsx"
+import {useSendingMessageStore} from "../state/input.tsx";
+import {joinClasses, timeElapsedMMSS} from "../util/util.tsx"
 import {RecordingCtx} from "../other.ts";
 
-const Recorder = () => {
+type Props = {
+    chatId: string
+}
+
+const Recorder: React.FC<Props> = ({chatId}) => {
     const recorder = useRecorderStore<EnhancedRecorder<RecordingCtx>>((state) => state.recorder)
-    const push = useSendingAudioStore((state) => state.push)
+    const push = useSendingMessageStore((state) => state.push)
 
     // These local variables monitor the recorder's state, updated through callbacks by the recorder itself.
     const [isRecording, setIsRecording] = useState(false)
@@ -22,7 +26,7 @@ const Recorder = () => {
         const doneListener = (blob: Blob, duration: number, ctx?: RecordingCtx) => {
             setContext(ctx)
             setIsRecording(false)
-            push({blob: blob, duration: duration})
+            push({chatId: chatId, text: "", audioBlob: blob, durationMs: duration})
         }
         const cancelListener = (_blob: Blob, _duration: number, ctx?: RecordingCtx) => {
             setContext(ctx)
@@ -36,7 +40,7 @@ const Recorder = () => {
             recorder.removeDoneListener(doneListener);
             recorder.removeCancelListener(cancelListener);
         }
-    }, [recorder, push, setIsRecording, setContext]);
+    }, [recorder, push, setIsRecording, setContext, chatId]);
 
     // create an interval to increase recording time
     useEffect(() => {
@@ -102,7 +106,7 @@ const Recorder = () => {
         {/* when not recording*/}
         <div
             onClick={handleClickStart}
-            className={joinClassNames("flex gap-3 justify-center items-center", isRecording ? "hidden" : "")}>
+            className={joinClasses("flex gap-3 justify-center items-center", isRecording ? "hidden" : "")}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                  stroke="currentColor" className="w-7 h-7 text-neutral-600">
                 <path strokeLinecap="round" strokeLinejoin="round"
@@ -116,7 +120,7 @@ const Recorder = () => {
         {/* when recording*/}
         <div
             onClick={handleClickDone}
-            className={joinClassNames("flex justify-evenly items-center", isRecording ? "" : "hidden")}>
+            className={joinClasses("flex justify-evenly items-center", isRecording ? "" : "hidden")}>
             <div
                 className={"text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
                 Press any key to <div className="inline text-red-400">cancel</div>
