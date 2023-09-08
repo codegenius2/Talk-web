@@ -75,7 +75,7 @@ export const Panel: React.FC = () => {
             <div className="flex items-center rounded-xl font-medium min-h-12
             p-1 gap-1 bg-white bg-opacity-40">
                 <div
-                    className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg",
+                    className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         panel === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseDown={() => setPanel("chats")}
                     onMouseUp={() => setPanel("chats")}
@@ -84,7 +84,7 @@ export const Panel: React.FC = () => {
                     <p className="text-center">Chats</p>
                 </div>
                 <div
-                    className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg",
+                    className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         panel === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseDown={() => setPanel("global")}
                     onMouseUp={() => setPanel("global")}
@@ -94,7 +94,7 @@ export const Panel: React.FC = () => {
                 </div>
                 <div className={
                     joinClasses(
-                        "flex w-1/3 justify-center items-center h-full rounded-lg",
+                        "flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         currentChat === undefined ? "hidden" : "",
                         panel === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}

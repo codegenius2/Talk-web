@@ -38,6 +38,7 @@ export const ChatComponent: React.FC<Props> = ({chat}) => {
         >
             <div
                 className={`w-full pl-3 pr-10 py-1 gap-y-0.5 flex-col h-14 font-medium text-neutral-800 rounded-lg 
+                transition-all duration-100
              ${selected ? " bg-white bg-opacity-90" : "bg-white bg-opacity-40 hover:bg-neutral-100 hover:bg-opacity-70 "}`}
             >
                 <div className="">

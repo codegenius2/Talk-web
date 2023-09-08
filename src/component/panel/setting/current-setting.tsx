@@ -10,7 +10,7 @@ export const CurrentSetting: React.FC<Props> = ({chatId}) => {
     const clearMessages = useChatStore(state => state.clearMessages)
     return <div
         className="flex flex-col w-full items-center justify-between gap-2 rounded-xl bg-white
-            bg-opacity-40 backdrop-blur">
+            bg-opacity-40 backdrop-blur pt-1 pb-3 px-3 ">
         <div className="flex justify-between items-center w-full px-3 ">
             <p className="prose text-lg text-neutral-600">Other</p>
         </div>

@@ -1,6 +1,6 @@
 import TextArea from "./text-area.tsx";
 import {Workers} from "../worker/workers.tsx"
-import {WallpaperWalkInGreen} from "./wallpaper/wallpaper.tsx";
+import {WallpaperSimultaneousCounter} from "./wallpaper/wallpaper.tsx";
 import ErrorBoundary from "./error-boundary.tsx";
 import Recorder from "./recorder.tsx";
 import {WindowListeners} from "./window-listeners.tsx";
@@ -23,9 +23,9 @@ export default function Home() {
 
     return (
         <div>
-            <WallpaperWalkInGreen/>
+            {/*<WallpaperWalkInGreen/>*/}
             {/*<WallpaperBalloon/>*/}
-            {/*<WallpaperSimultaneousCounter/>*/}
+            <WallpaperSimultaneousCounter/>
             {/*<WallpaperDefault/>*/}
             <ErrorBoundary>
                 <div
