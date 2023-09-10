@@ -2,8 +2,8 @@ import React, {useCallback, useEffect} from "react";
 import {controlState} from "./state/control-state.ts";
 
 export const WindowListeners: React.FC = () => {
-    const setMouseDown = useCallback((isMouseDown: boolean) => {
-        controlState.isMouseDown = isMouseDown
+    const setMouseDown = useCallback((isMouseLeftDown: boolean) => {
+        controlState.isMouseLeftDown = isMouseLeftDown
     }, []);
 
     const recorder = controlState.recorder
@@ -12,13 +12,13 @@ export const WindowListeners: React.FC = () => {
             // spacebar has the lowest priority on starting/ending a recording
 
             const handleKeyUp = (event: KeyboardEvent) => {
-                if (event.code == 'Space' && recorder.currentContext()?.triggeredBy === 'spacebar') {
+                if (event.key == ' ' && recorder.currentContext()?.triggeredBy === 'spacebar') {
                     recorder.done()
                 }
             }
 
             const handleKeyDown = (event: KeyboardEvent) => {
-                if (event.code === 'Space') {
+                if (event.key === ' ') {
                     if (event.repeat) {
                         console.debug('handleKeyDown skip repeated space');
                         return
@@ -37,14 +37,18 @@ export const WindowListeners: React.FC = () => {
                 }
             };
 
-            const handleMouseDown = () => {
-                setMouseDown(true)
-                console.debug("mouse is down")
+            const handleMouseDown = (event: MouseEvent) => {
+                if (event.button === 0) {
+                    setMouseDown(true)
+                    console.debug("mouse left is down")
+                }
             }
 
-            const handleMouseUp = () => {
-                setMouseDown(false)
-                console.debug("mouse is up")
+            const handleMouseUp = (event: MouseEvent) => {
+                if (event.button === 0) {
+                    setMouseDown(false)
+                    console.debug("mouse left is up")
+                }
             }
 
             const handleBrowserBlur = () => {

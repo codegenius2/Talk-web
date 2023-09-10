@@ -98,7 +98,7 @@ export function DiscreteRange<T extends string | number>({
         if (outOfLeftBoundary === undefined) {
             return
         }
-        if (controlSnp.isMouseDown) {
+        if (controlSnp.isMouseLeftDown) {
             const {clientY} = event;
             const {right} = event.currentTarget.getBoundingClientRect();
             // if mouse doesn't leave from right side
@@ -139,13 +139,13 @@ export function DiscreteRange<T extends string | number>({
             } else {
                 pos = (relativeX - visibleWidth / 2) / (visibleWidth / 2) * totalWidth
             }
-            inputBoxRef.current.scrollTo(49, 0);
+            inputBoxRef.current.scrollTo(pos, 0);
         }
     }, []);
 
 
     const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
-        if (controlSnp.isMouseDown) {
+        if (controlSnp.isMouseLeftDown) {
             setValue(oc.choice.value)
         }
     }
@@ -181,7 +181,7 @@ export function DiscreteRange<T extends string | number>({
             <div
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
                 <div
-                    className={"flex  justify-start items-center  w-full overflow-auto scrollbar-hide hover:scrollbar-show"}>
+                    className={"flex  justify-start items-center w-full overflow-auto scrollbar-hide hover:scrollbar-show"}>
                     {choiceColor.map((oc: ChoiceColor<T>) =>
                         <div
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")

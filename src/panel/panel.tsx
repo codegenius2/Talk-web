@@ -21,7 +21,7 @@ export const Panel: React.FC = () => {
     }, [])
 
     const onMouseEnter = useCallback((p: PanelSelection) => {
-        if (controlSnp.isMouseDown) {
+        if (controlSnp.isMouseLeftDown) {
             appState.panelSelection = p
         }
     }, [controlSnp])
@@ -56,9 +56,11 @@ export const Panel: React.FC = () => {
     }
 
     return (
-        <div className="flex h-full select-none flex-col gap-3">
-            <div className="flex items-center rounded-xl font-medium min-h-12
-            p-1 gap-1 bg-white bg-opacity-40">
+        <div className="flex h-full select-none flex-col gap-3"
+             onKeyDown={escapeSpaceKey}
+        >
+            <div className="flex items-center rounded-xl font-medium min-h-12  gap-y-2
+            p-1 bg-white bg-opacity-40">
                 <div
                     className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         appState.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
@@ -80,7 +82,7 @@ export const Panel: React.FC = () => {
                 <div className={
                     joinClasses(
                         "flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appState.currentChatId==="" ? "hidden" : "",
+                        appState.currentChatId === "" ? "hidden" : "",
                         appState.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
                      onMouseUp={() => onMouseUp("current")}
@@ -90,9 +92,7 @@ export const Panel: React.FC = () => {
                     <p className="text-center">Current</p>
                 </div>
             </div>
-            <div className="overflow-hidden"
-                 onKeyDown={escapeSpaceKey}
-            >
+            <div className="flex flex-col gap-y-3 items-center overflow-hidden">
                 {panelContent}
             </div>
         </div>

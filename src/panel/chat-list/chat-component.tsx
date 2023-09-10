@@ -19,10 +19,10 @@ export const ChatComponent: React.FC<Props> = ({chatSnp}) => {
     }, [chatSnp.id])
 
     const onMouseEnter = useCallback(() => {
-        if (controlSnp.isMouseDown) {
+        if (controlSnp.isMouseLeftDown) {
             appState.currentChatId = chatSnp.id
         }
-    }, [chatSnp.id, controlSnp.isMouseDown])
+    }, [chatSnp.id, controlSnp.isMouseLeftDown])
 
     const removeChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()

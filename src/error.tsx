@@ -37,7 +37,6 @@ export default function Error() {
                          navigate("/auth", { replace: true })
                     }}
                     countDownMs={1000}
-                    width={"w-28"}
                 />
                 <ResetButton countDownMs={1000}/>
             </div>

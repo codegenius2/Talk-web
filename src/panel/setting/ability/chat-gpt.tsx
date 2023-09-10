@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {MySwitch} from "../widget/switch.tsx";
 import {
     ClientChatGPT,
@@ -11,6 +11,7 @@ import {DiscreteRange} from "../widget/discrete-range.tsx";
 import {ListBox} from "../widget/list-box.tsx";
 import {useSnapshot} from "valtio/react";
 import {Choice} from "../../../state/data-structure/client-ability/types.ts";
+import {SliderRange} from "../widget/slider-range.tsx";
 
 type Props = {
     chatGPTProxy: ClientChatGPT
@@ -47,6 +48,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
             chatGPTProxy.presencePenalty.chosen = frequencyPenalty
         }, [chatGPTProxy])
 
+        const [myValue, setMyValue] = useState(0)
         return <div
             className="flex flex-col w-full items-center justify-between gap-2 pt-1 pb-3 px-3 rounded-xl
             bg-white bg-opacity-40 backdrop-blur z-10 ">
@@ -114,6 +116,10 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
                                        rangeEnd: chatGPTSnp.frequencyPenalty.rangeEnd,
                                    }}
                     />
+
+                    <SliderRange defaultValue={0} range={({start: -1, end: 1})} setValue={setMyValue}
+                                 title="Frequency Panelty" value={myValue}/>
+
                     <div className="flex justify-between items-center gap-2">
                         <p className="prose text-neutral-600">Model</p>
                         <div className="rounded-xl w-full md:ml-3 py-1">

@@ -28,7 +28,7 @@ export default function ChatHome() {
             {/*<WallpaperDefault/>*/}
             <div
                 className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 home lg:gap-5">
-                <div className="h-full min-w-80">
+                <div className="h-full min-w-60">
                     <Panel/>
                 </div>
                 {chatProxy === undefined &&

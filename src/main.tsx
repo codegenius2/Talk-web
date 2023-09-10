@@ -10,6 +10,11 @@ import ChatHome from "./chat/page.tsx";
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <ChatHome/>,
+        errorElement: <Error/>,
+    },
+    {
+        path: "/auth",
         element: <Auth/>,
         errorElement: <Error/>,
     },

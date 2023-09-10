@@ -15,7 +15,6 @@ export const GlobalOtherSetting: React.FC = () => {
             className="flex flex-wrap justify-start items-center gap-2 py-2 border-2 border-neutral-500 border-dashed rounded-lg w-full px-3">
             <ClearButton text={"Clear All Chats"}
                          countDownMs={1000}
-                         width={"w-28"}
                          action={clearChats}
             />
             <ResetButton countDownMs={2000}/>
