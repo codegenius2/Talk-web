@@ -33,3 +33,9 @@ https://benborgers.com/posts/tailwind-h-screen
     }
 }
 
+@font-face {
+    font-family: 'borel';
+    src: url('assets/font/Borel/Borel-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}

@@ -1,41 +1,37 @@
 import React, {useEffect} from "react";
-import {useSendingMessageStore} from "../state/input.tsx";
-import {useRecorderStore} from "../state/recording.tsx";
-import {addBlob} from "../persist/blob-db.tsx";
-import {Message} from "../api/restful.ts";
-import {minSpeakTimeMillis, RecordingMimeType} from "../config.ts";
+import {useSnapshot} from "valtio/react";
+import {snapshot} from "valtio";
 import {AxiosError} from "axios";
-import {useRestfulAPIStore} from "../state/axios.tsx";
-import {randomHash} from "../util/util.tsx";
-import {maxHistory} from "../data-structure/ability/llm.ts";
-import {toTalkOption} from "../data-structure/ability/client-ability.tsx";
-import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx";
-import {historyMessages, useChatStore} from "../state/chat.tsx";
+import {controlState} from "../state/control-state.ts";
+import {appState} from "../state/app-state.ts";
+import {historyMessages} from "../api/restful/util.ts";
+import {ClientLLM, maxHistory} from "../state/data-structure/client-ability/llm.ts";
+import {newSending, onError, onSent} from "../state/data-structure/message.tsx";
+import {ClientAbility, toTalkOption} from "../state/data-structure/client-ability/client-ability.tsx";
+import {postAudioChat, postChat} from "../api/restful/api.ts";
+import {randomHash16Char} from "../util/util.tsx";
+import {audioDb} from "../state/db.ts";
+import {LLMMessage} from "../shared-types.ts";
+import {minSpeakTimeMillis} from "../config.ts";
 
-const systemMessage: Message = {
+const systemMessage: LLMMessage = {
     role: "system",
     content: "You are a helpful assistant!"
 }
 
 export const SubscribeSendingMessage: React.FC = () => {
 
-    const getChat = useChatStore((state) => state.getChat)
-    const getMessage = useChatStore((state) => state.getMessage)
-    const pushMessageOr = useChatStore((state) => state.pushMessageOr)
-    const replaceMessageOr = useChatStore((state) => state.replaceMessageOr)
-    const pop = useSendingMessageStore((state) => state.pop)
-    const sendingMessages = useSendingMessageStore((state) => state.sendingMessages)
-    const recordingMimeType: RecordingMimeType | undefined = useRecorderStore((state) => state.recordingMimeType)
-    const restfulAPI = useRestfulAPIStore((state) => state.restfulAPI);
-
+    const controlSnp = useSnapshot(controlState)
     useEffect(() => {
-        if (sendingMessages.length === 0) {
+        if (controlState.sendingMessages.length === 0) {
             return;
         }
-        const sm = pop();
+        const [sm] = controlState.sendingMessages.splice(0, 1)
         if (!sm) {
             return
         }
+        controlState.sendingMessageSignal++
+
         if (sm.audioBlob) {
             if (sm.durationMs! < minSpeakTimeMillis) {
                 console.info("audio is less than ms", minSpeakTimeMillis)
@@ -43,79 +39,58 @@ export const SubscribeSendingMessage: React.FC = () => {
             }
         }
 
-        const chat = getChat(sm.chatId)
-        if (!chat) {
-            console.error("cannot get a chat from chats, chatId:")
+        const chatProxy = appState.chats[sm.chatId]
+        if (!chatProxy) {
+            console.warn("chat does exist any more, chatId:", sm.chatId)
             return
         }
 
-        const ability = chat.ability
+        const ability = snapshot(chatProxy.ability)
 
-        let messages = historyMessages(chat, maxHistory(ability.llm))
+        let messages = historyMessages(chatProxy, maxHistory(ability.llm as ClientLLM))
         messages = [systemMessage, ...messages]
 
         const message = newSending()
-        let promise
+        const talkOption = toTalkOption(ability as ClientAbility)
+        let postPromise
         if (sm.audioBlob) {
-            console.debug("sending audio and chat: ", messages)
+            console.debug("sending audio and chat: ", message)
             message.audio = {id: ""}
-            pushMessageOr(chat.id, message, "throw")
-            promise = restfulAPI.postAudioChat(sm.audioBlob, recordingMimeType?.fileName ?? "audio.webm", {
-                chatId: chat.id,
-                ticketId: randomHash(),
+            chatProxy.messages.push(message)
+
+            postPromise = postAudioChat(sm.audioBlob as Blob, controlSnp.recordingMimeType?.fileName ?? "audio.webm", {
+                chatId: chatProxy.id,
+                ticketId: randomHash16Char(),
                 ms: messages,
-                talkOption: toTalkOption(ability)
+                talkOption: talkOption
             });
         } else {
             messages.push({role: "user", content: sm.text})
             console.debug("sending chat: ", messages)
-            pushMessageOr(chat.id, message, "throw")
-            promise = restfulAPI.postChat({
-                chatId: chat.id,
-                ticketId: randomHash(),
+            chatProxy.messages.push(message)
+            postPromise = postChat({
+                chatId: chatProxy.id,
+                ticketId: randomHash16Char(),
                 ms: messages,
-                talkOption: toTalkOption(ability)
+                talkOption: talkOption
             });
         }
 
-        promise.then((r) => {
-                const prev = getMessage(chat.id, message.id)
-                if (!prev) {
-                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
-                    return
-                }
+        postPromise.then((r) => {
                 if (r.status >= 200 && r.status < 300) {
-                    const now = onSent(prev)
-                    replaceMessageOr(chat.id, now, "ignore")
+                    onSent(message)
                 } else {
-                    const now = onError(prev, "Failed to send, reason:" + r.statusText)
-                    replaceMessageOr(chat.id, now, "ignore")
+                    onError(message, "Failed to send, reason:" + r.statusText)
                 }
             }
         ).catch((e: AxiosError) => {
-            const prev = getMessage(chat.id, message.id)
-            if (!prev) {
-                console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
-                return
-            }
-            const now = onError(prev, "Failed to send, reason:" + e.message)
-            replaceMessageOr(chat.id, now, "ignore")
+            onError(message, "Failed to send, reason:" + e.message)
         })
 
         if (sm.audioBlob) {
-            const audioId = randomHash()
-            addBlob({id: audioId, blob: sm.audioBlob}).then(() => {
-                const prev = getMessage(chat.id, message.id)
-                if (!prev) {
-                    console.error("cannot get a message from chat, chatId,messageId:", chat.id, message.id)
-                    return
-                }
-                const now = onAudio(prev, {id: audioId})
-                replaceMessageOr(chat.id, now, "ignore")
-            }).catch((e) => {
-                console.error("failed to save audio blob, audioId:", message.id, e.message)
-            })
+            const audioId = randomHash16Char()
+            audioDb.setItem<Blob>(audioId, sm.audioBlob as Blob, () => console.debug("saved audio blob, audioId:", audioId))
         }
-    }, [sendingMessages]);
+    }, [controlSnp.recordingMimeType?.fileName, controlSnp.sendingMessageSignal]);
     return null
 }

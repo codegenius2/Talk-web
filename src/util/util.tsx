@@ -1,9 +1,8 @@
 import {SHA256} from 'crypto-js';
 import {KeyboardEventHandler} from "react";
-import {RecordingMimeType} from "../config.ts";
 import {v4 as uuidv4} from 'uuid';
-import {MD5} from 'crypto-js';
 import {format} from 'date-fns'
+import {RecordingMimeType} from "../config.ts";
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
@@ -53,8 +52,7 @@ export function currentProtocolHostPortPath(): string {
     const protocol = window.location.protocol
     const hostname = window.location.hostname;
     const port = window.location.port;
-    const path = window.location.pathname;
-    return `${protocol}//${hostname}:${port}/${path}`;
+    return `${protocol}//${hostname}:${port}/`;
 }
 
 export function joinUrl(...parts: string[]): string {
@@ -62,17 +60,18 @@ export function joinUrl(...parts: string[]): string {
 }
 
 export function chooseAudioMimeType(mimeTypes: RecordingMimeType[]): RecordingMimeType | undefined {
-    const find = mimeTypes.find(m => MediaRecorder.isTypeSupported(m.mimeType));
-    console.debug("found mimeType: ", find)
-    return find
+    if (MediaRecorder) {
+        const found = mimeTypes.find(m => MediaRecorder.isTypeSupported(m.mimeType));
+        if (found) {
+            return found
+        }
+    }
+    console.error("cannot find mimeType for recorder")
+    return undefined
 }
 
 export function joinClasses(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
-}
-
-export function generateHash(input: string): string {
-    return SHA256(input).toString();
 }
 
 export function getRandomElement<T>(arr: T[]): T | undefined {
@@ -97,10 +96,17 @@ export const escapeSpaceKey: KeyboardEventHandler<HTMLElement> = (event) => {
     }
 }
 
-// return a string contains 32 chars
-export const randomHash = (): string => {
+// return a string contains 16 chars
+export const randomHash16Char = (): string => {
     const str = uuidv4() + randomString(10);
-    return md5Hash(str);
+    // 256**16>3.4e38, it's not likely to cause collision, but save more bytes to speed up state management
+    return SHA256(str).toString().slice(0, 16);
+}
+
+// return a string contains 16 chars
+export const randomHash32Char = (): string => {
+    const str = uuidv4() + randomString(10);
+    return SHA256(str).toString().slice(0, 32);
 }
 
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -113,7 +119,6 @@ function randomString(length: number): string {
     return result;
 }
 
-function md5Hash(input: string): string {
-    return MD5(input).toString();
+export function generateHash(input: string): string {
+    return SHA256(input).toString();
 }
-

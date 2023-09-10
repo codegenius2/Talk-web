@@ -1,6 +1,6 @@
 import React from "react";
-import {SubscribeSendingMessage} from "./subscribe-sending-message.tsx";
-import {TimeoutContentDetection} from "./timeout-content-detection.tsx";
+import {SubscribeSendingMessage} from "./subscribe-sending-message";
+import {TimeoutContentDetection} from "./timeout-content-detection";
 
 export const Workers: React.FC = () => {
     return <>

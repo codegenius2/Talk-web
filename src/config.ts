@@ -8,12 +8,12 @@ export const messageTimeoutSeconds = 30
 export const minSpeakTimeMillis = 500
 
 export function SSEEndpoint(): string {
-    const ep = joinUrl(Endpoint(), "events")
+    const ep = joinUrl(APIEndpoint(), "events")
     console.debug("SSEEndpoint:", ep)
     return ep
 }
 
-export function Endpoint(): string {
+export function APIEndpoint(): string {
     let ep = import.meta.env.VITE_REACT_APP_ENDPOINT
     if (ep) {
         return ep
