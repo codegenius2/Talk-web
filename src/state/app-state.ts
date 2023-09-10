@@ -57,6 +57,7 @@ export const resetAppState = () => {
     appState.auth = dft.auth
     appState.ability = dft.ability
     appState.chats = dft.chats
+    appState.currentChatId = dft.currentChatId
     appState.panelSelection = dft.panelSelection
 }
 
@@ -111,7 +112,7 @@ export const deleteMessage = (chatId: string, messageId: string): void => {
 }
 
 // password hash will be embedded within the header of subsequent requests
-export const savePassword = (password: string) => {
+export const savePassAsHash = (password: string) => {
     appState.auth.passwordHash = password
 }
 

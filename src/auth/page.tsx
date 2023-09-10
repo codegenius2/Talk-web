@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {AxiosError, AxiosResponse} from "axios";
 import {useNavigate} from "react-router-dom";
 import {login} from "../api/restful/api.ts";
-import {savePassword, setLoggedIn} from "../state/app-state.ts";
+import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
 import {WallpaperAuth} from "../wallpaper/wallpaper.tsx";
 
 const detectDelay = 1000
@@ -32,7 +32,7 @@ export default function Auth() {
         login(password).then((r: AxiosResponse) => {
             console.info("login is successful", r.status, r.data)
             if (password) {
-                savePassword(password)
+                savePassAsHash(password)
             }
             setLoggedIn(true)
             setStartFadeOut(true);

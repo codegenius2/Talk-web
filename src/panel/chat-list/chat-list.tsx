@@ -1,4 +1,4 @@
-import {useCallback} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useSnapshot} from "valtio/react";
 import {proxy} from "valtio";
 import _ from "lodash"
@@ -11,6 +11,8 @@ import {ChatComponent} from "./chat-component.tsx";
 
 export const ChatList = () => {
     const appSnp = useSnapshot(appState)
+    const chatRef = useRef<HTMLDivElement>(null)
+    const [autoScrolled, setAutoScrolled] = useState(false)
 
     const newChat = useCallback((): void => {
         const abilityClone = _.cloneDeep(appSnp.ability) as ClientAbility
@@ -25,6 +27,16 @@ export const ChatList = () => {
         appState.chats[chat.id] = chat
         appState.currentChatId = chat.id
     }, [appSnp.ability])
+
+    useEffect(() => {
+        if (!autoScrolled && chatRef.current) {
+            chatRef.current.scrollIntoView({
+                behavior: "smooth",
+                block: "nearest"
+            })
+            setAutoScrolled(true)
+        }
+    }, [autoScrolled, appSnp.currentChatId, chatRef])
 
     return (
         <div className="flex h-full w-full flex-col gap-4">
@@ -46,7 +58,10 @@ export const ChatList = () => {
                 <div
                     className="flex cursor-pointer flex-col gap-1">
                     {Object.entries(appSnp.chats).map(([key, chatSnp]) =>
-                        <ChatComponent chatSnp={chatSnp as Chat} key={key}/>
+                        <div ref={chatSnp.id === appSnp.currentChatId ? chatRef : undefined}
+                             key={key}>
+                            <ChatComponent chatSnp={chatSnp as Chat}/>
+                        </div>
                     )}
                 </div>
             </div>

@@ -37,13 +37,15 @@ export const ChatComponent: React.FC<Props> = ({chatSnp}) => {
         setSelected(appSnp.currentChatId === chatSnp.id)
     }, [appSnp, chatSnp]);
 
+
     return (
-        <div className="relative flex gap-1 justify-between items-center"
-             onMouseOver={() => setMouseOver(true)}
-             onMouseLeave={() => setMouseOver(false)}
-             onMouseDown={onContainerMouseDownOrUp}
-             onMouseUp={onContainerMouseDownOrUp}
-             onMouseEnter={onMouseEnter}
+        <div
+            className="relative flex gap-1 justify-between items-center"
+            onMouseOver={() => setMouseOver(true)}
+            onMouseLeave={() => setMouseOver(false)}
+            onMouseDown={onContainerMouseDownOrUp}
+            onMouseUp={onContainerMouseDownOrUp}
+            onMouseEnter={onMouseEnter}
         >
             <div
                 className={`w-full pl-3 pr-10 py-1 gap-y-0.5 flex-col h-14 font-medium text-neutral-800 rounded-lg 

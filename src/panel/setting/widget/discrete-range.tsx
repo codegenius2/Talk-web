@@ -1,4 +1,4 @@
-import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
+import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
 import {useSnapshot} from "valtio/react";
 import {Choice} from "../../../state/data-structure/client-ability/types.ts";
 import {controlState} from "../../../state/control-state.ts";
@@ -106,7 +106,43 @@ export function DiscreteRange<T extends string | number>({
                 setValue(outOfLeftBoundary)
             }
         }
+        if (inputBoxRef.current) {
+            const scrollWidth = inputBoxRef.current.scrollWidth;
+            const clientWidth = inputBoxRef.current.clientWidth;
+            const mouseX = event.clientX;
+            const scrollPosition = (mouseX / window.innerWidth) * (scrollWidth - clientWidth);
+
+            inputBoxRef.current.scrollTo(scrollPosition, 0);
+        }
+
     }
+
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        // move to top if mouse is in between start and 1/4 position of visible area
+        // move to end if mouse is in between 3/4 and end position of visible area
+        if (inputBoxRef.current) {
+            // total length of content
+            const totalWidth = inputBoxRef.current.scrollWidth;
+
+            // length of visible content
+            const visibleWidth = inputBoxRef.current.clientWidth;
+
+
+            const mouseX = e.clientX;
+            const relativeX = mouseX - inputBoxRef.current.getBoundingClientRect().left;
+
+            let pos
+            if (relativeX <= visibleWidth / 4) {
+                pos = 0
+            } else if (relativeX >= visibleWidth * 3 / 4) {
+                pos = totalWidth
+            } else {
+                pos = (relativeX - visibleWidth / 2) / (visibleWidth / 2) * totalWidth
+            }
+            inputBoxRef.current.scrollTo(49, 0);
+        }
+    }, []);
+
 
     const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
         if (controlSnp.isMouseDown) {
@@ -155,6 +191,7 @@ export function DiscreteRange<T extends string | number>({
                             }}
                             onMouseDown={() => handleMouseDownChild(oc)}
                             onMouseEnter={() => handleMouseEnterChild(oc)}
+                            onMouseMove={handleMouseMove}
                         >
                             <p className={"prose text-center px-0.5 " + (oc.inRange ? "text-neutral-100 " : "text-neutral-800 ")}>
                                 {oc.choice.name}

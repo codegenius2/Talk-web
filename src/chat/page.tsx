@@ -18,7 +18,7 @@ export default function ChatHome() {
     useEffect(() => {
         const cp = appState.chats[appSnp.currentChatId]
         setChatProxy(cp)
-    }, [appSnp.currentChatId])
+    }, [appSnp])
 
     return (
         <div>
@@ -29,7 +29,7 @@ export default function ChatHome() {
             <div
                 className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 home lg:gap-5">
                 <div className="h-full min-w-80">
-                    <Panel chatProxy={chatProxy}/>
+                    <Panel/>
                 </div>
                 {chatProxy === undefined &&
                     <div

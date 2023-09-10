@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {useSnapshot} from "valtio/react";
-import {appState, Chat, PanelSelection} from "../state/app-state.ts";
+import {appState, PanelSelection} from "../state/app-state.ts";
 import {controlState} from "../state/control-state.ts";
 import {ChatList} from "./chat-list/chat-list.tsx";
 import {AbilitySetting} from "./setting/ability/ability-setting.tsx";
@@ -8,14 +8,9 @@ import {GlobalOtherSetting} from "./setting/global-other-setting.tsx";
 import {CurrentOtherSetting} from "./setting/current-other-setting.tsx";
 import {escapeSpaceKey, joinClasses} from "../util/util.tsx";
 
-type Props = {
-    chatProxy?: Chat
-}
-
-export const Panel: React.FC<Props> = ({chatProxy}) => {
+export const Panel: React.FC = () => {
 
     const controlSnp = useSnapshot(controlState)
-    const appSnp = useSnapshot(appState)
 
     const onMouseUp = useCallback((p: PanelSelection) => {
         appState.panelSelection = p
@@ -32,7 +27,7 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
     }, [controlSnp])
 
     let panelContent = <div/>
-    switch (appSnp.panelSelection) {
+    switch (appState.panelSelection) {
         case "chats":
             panelContent = <ChatList/>
             break;
@@ -43,11 +38,12 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
             </>)
             break;
         case "current":
-            if (chatProxy) {
+            // panelContent
+            if (appState.chats[appState.currentChatId]) {
                 panelContent = (
                     <>
-                        <AbilitySetting abilityProxy={chatProxy.ability}/>
-                        <CurrentOtherSetting chatProxy={chatProxy}/>
+                        <AbilitySetting abilityProxy={appState.chats[appState.currentChatId].ability}/>
+                        <CurrentOtherSetting chatProxy={appState.chats[appState.currentChatId]}/>
                     </>
                 )
             } else {
@@ -65,7 +61,7 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
             p-1 gap-1 bg-white bg-opacity-40">
                 <div
                     className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnp.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        appState.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUp("chats")}
                     onMouseDown={() => onMouseDown("chats")}
                     onMouseEnter={() => onMouseEnter("chats")}
@@ -74,7 +70,7 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
                 </div>
                 <div
                     className={joinClasses("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnp.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        appState.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUp("global")}
                     onMouseDown={() => onMouseDown("global")}
                     onMouseEnter={() => onMouseEnter("global")}
@@ -84,8 +80,8 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
                 <div className={
                     joinClasses(
                         "flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        chatProxy === undefined ? "hidden" : "",
-                        appSnp.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
+                        appState.currentChatId==="" ? "hidden" : "",
+                        appState.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
                      onMouseUp={() => onMouseUp("current")}
                      onMouseDown={() => onMouseDown("current")}
