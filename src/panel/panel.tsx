@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react';
 import {useSnapshot} from "valtio/react";
-import {appState, Chat, PanelSelection} from "../../../state/app-state.ts";
-import {controlState} from "../../../state/control-state.ts";
-import {ChatList} from "./chat/chat-list.tsx";
+import {appState, Chat, PanelSelection} from "../state/app-state.ts";
+import {controlState} from "../state/control-state.ts";
+import {ChatList} from "./chat-list/chat-list.tsx";
 import {AbilitySetting} from "./setting/ability/ability-setting.tsx";
 import {GlobalOtherSetting} from "./setting/global-other-setting.tsx";
 import {CurrentOtherSetting} from "./setting/current-other-setting.tsx";
-import {escapeSpaceKey, joinClasses} from "../../../util/util.tsx";
+import {escapeSpaceKey, joinClasses} from "../util/util.tsx";
 
 type Props = {
     chatProxy?: Chat
@@ -60,7 +60,7 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
     }
 
     return (
-        <div className="flex flex-col gap-3 w-full h-full overflow-y-hidden select-none">
+        <div className="flex h-full select-none flex-col gap-3">
             <div className="flex items-center rounded-xl font-medium min-h-12
             p-1 gap-1 bg-white bg-opacity-40">
                 <div
@@ -94,7 +94,7 @@ export const Panel: React.FC<Props> = ({chatProxy}) => {
                     <p className="text-center">Current</p>
                 </div>
             </div>
-            <div className="flex flex-col w-full h-full items-center gap-2"
+            <div className="overflow-hidden"
                  onKeyDown={escapeSpaceKey}
             >
                 {panelContent}

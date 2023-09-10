@@ -1,7 +1,7 @@
 import React, {KeyboardEventHandler, useEffect, useRef, useState} from "react";
 import {useSnapshot} from "valtio/react";
-import {Choice} from "../../../../../state/data-structure/client-ability/types.ts";
-import {controlState} from "../../../../../state/control-state.ts";
+import {Choice} from "../../../state/data-structure/client-ability/types.ts";
+import {controlState} from "../../../state/control-state.ts";
 
 type Props<T extends number | string> = {
     title: string
@@ -145,7 +145,7 @@ export function DiscreteRange<T extends string | number>({
             <div
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
                 <div
-                    className={"flex  justify-start items-center  w-full overflow-auto "}>
+                    className={"flex  justify-start items-center  w-full overflow-auto scrollbar-hide hover:scrollbar-show"}>
                     {choiceColor.map((oc: ChoiceColor<T>) =>
                         <div
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")

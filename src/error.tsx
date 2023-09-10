@@ -1,7 +1,7 @@
 import  {useState} from 'react'
 import {useLocation, useNavigate} from "react-router-dom";
 import {WallpaperAuth} from "./wallpaper/wallpaper.tsx";
-import {ClearButton, RefreshButton, ResetButton} from "./chat/component/panel/setting/widget/button.tsx";
+import {ClearButton, RefreshButton, ResetButton} from "./panel/setting/widget/button.tsx";
 import {appState} from "./state/app-state.ts";
 
 export default function Error() {

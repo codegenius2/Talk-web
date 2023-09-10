@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {useSnapshot} from "valtio/react";
 import {appState, Chat} from "../state/app-state.ts";
-import {Panel} from "./component/panel/panel.tsx";
+import {Panel} from "../panel/panel.tsx";
 import TextArea from "./component/text-area.tsx";
 import Recorder from "./component/recorder.tsx";
 import {SSE} from "../api/sse/sse.tsx";
@@ -28,7 +28,7 @@ export default function ChatHome() {
             {/*<WallpaperDefault/>*/}
             <div
                 className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 home lg:gap-5">
-                <div className="flex h-full flex-col items-center min-w-80">
+                <div className="h-full min-w-80">
                     <Panel chatProxy={chatProxy}/>
                 </div>
                 {chatProxy === undefined &&

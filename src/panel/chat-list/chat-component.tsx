@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {useSnapshot} from "valtio/react";
-import {appState, Chat, deleteChat} from "../../../../state/app-state.ts";
-import {controlState} from "../../../../state/control-state.ts";
+import {appState, Chat, deleteChat} from "../../state/app-state.ts";
+import {controlState} from "../../state/control-state.ts";
 import {Preview} from "./preview.tsx";
 
 type Props = {
@@ -38,7 +38,7 @@ export const ChatComponent: React.FC<Props> = ({chatSnp}) => {
     }, [appSnp, chatSnp]);
 
     return (
-        <div className="relative w-full h-full flex gap-1 justify-between items-center"
+        <div className="relative flex gap-1 justify-between items-center"
              onMouseOver={() => setMouseOver(true)}
              onMouseLeave={() => setMouseOver(false)}
              onMouseDown={onContainerMouseDownOrUp}

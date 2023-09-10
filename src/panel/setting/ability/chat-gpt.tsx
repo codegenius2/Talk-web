@@ -6,11 +6,11 @@ import {
     historyChoices, presencePenaltyChoices,
     temperatureChoices,
     tokenChoices
-} from "../../../../../state/data-structure/client-ability/chat-gpt.ts";
+} from "../../../state/data-structure/client-ability/chat-gpt.ts";
 import {DiscreteRange} from "../widget/discrete-range.tsx";
 import {ListBox} from "../widget/list-box.tsx";
 import {useSnapshot} from "valtio/react";
-import {Choice} from "../../../../../state/data-structure/client-ability/types.ts";
+import {Choice} from "../../../state/data-structure/client-ability/types.ts";
 
 type Props = {
     chatGPTProxy: ClientChatGPT

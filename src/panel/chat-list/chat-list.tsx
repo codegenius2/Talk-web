@@ -4,9 +4,9 @@ import {proxy} from "valtio";
 import _ from "lodash"
 import {PiPlusLight} from "react-icons/pi";
 import {CiSearch} from "react-icons/ci";
-import {appState, Chat} from "../../../../state/app-state.ts";
-import {ClientAbility} from "../../../../state/data-structure/client-ability/client-ability.tsx";
-import {randomHash16Char} from "../../../../util/util.tsx";
+import {appState, Chat} from "../../state/app-state.ts";
+import {ClientAbility} from "../../state/data-structure/client-ability/client-ability.tsx";
+import {randomHash16Char} from "../../util/util.tsx";
 import {ChatComponent} from "./chat-component.tsx";
 
 export const ChatList = () => {
@@ -17,6 +17,7 @@ export const ChatList = () => {
         const chat = proxy<Chat>({
             id: randomHash16Char(),
             name: randomHash16Char(),
+            // name: "New Chat",
             messages: [],
             ability: abilityClone,
             inputText: ""
@@ -41,7 +42,7 @@ export const ChatList = () => {
                 </div>
             </div>
             <div
-                className="h-full w-full overflow-hidden overflow-y-auto rounded-xl pr-1 scrollbar-hide hover:scrollbar-show">
+                className="h-full w-full overflow-y-auto pr-1 scrollbar-hide hover:scrollbar-show">
                 <div
                     className="flex cursor-pointer flex-col gap-1">
                     {Object.entries(appSnp.chats).map(([key, chatSnp]) =>

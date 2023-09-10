@@ -3,8 +3,8 @@ import React, {useCallback, useState} from "react";
 import Countdown from "react-countdown";
 import {IoRefreshSharp} from "react-icons/io5";
 import {useNavigate} from "react-router-dom";
-import {audioDb} from "../../../../../state/db.ts";
-import {resetAppState} from "../../../../../state/app-state.ts";
+import {audioDb} from "../../../state/db.ts";
+import {resetAppState} from "../../../state/app-state.ts";
 
 type Props = {
     countDownMs: number

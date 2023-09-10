@@ -147,9 +147,8 @@ export const deleteChat = (id: string) => {
         } else {
             // in this branch, currentChatId is ensured to be in the chat list and chat list size is >= 2
 
-            // 1. select the chat in front of current chat if this chat is at the tail
-            // 2. select the chat behind current chat if this chat is not at the tail
-            // 3. select no chat if current chat is the only chat in list
+            // 1. select the chat behind current chat if this chat is not at the tail
+            // 2. select the chat in front of current chat if this chat is at the tail
 
             let i = keys.length - 1
             for (; i >= 0; i--) {

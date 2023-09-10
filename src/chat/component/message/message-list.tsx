@@ -53,7 +53,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     return (
         <div className="overflow-y-auto overflow-x-hidden w-full scrollbar-hide hover:scrollbar-show">
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
-                {/*crucial; don't merge the 2 divs above, or sc*/}
+                {/*crucial; don't merge the 2 divs above*/}
                 {chatSnp.messages.filter(msg => msg.status !== 'deleted')
                     .map((msg, index) =>
                         <div className="flex flex-col gap-1 mr-2" key={msg.id}>
