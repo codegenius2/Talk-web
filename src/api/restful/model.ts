@@ -30,6 +30,7 @@ export type ChatGPTOption = {
     model: string
     maxTokens: number
     temperature: number
+    topP: number
     presencePenalty: number
     frequencyPenalty: number
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useCallback} from 'react';
 import {MySwitch} from "../widget/switch.tsx";
 import {ClientChatGPT, historyChoices, tokenChoices} from "../../../state/data-structure/client-ability/chat-gpt.ts";
@@ -16,31 +17,31 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
 
         const setEnabled = useCallback((enabled: boolean) => {
             chatGPTProxy.enabled = enabled
-        }, [chatGPTProxy])
+        }, [])
 
         const setMaxHistory = useCallback((hist: number) => {
             chatGPTProxy.maxHistory.chosen = hist
-        }, [chatGPTProxy])
+        }, [])
 
         const setModel = useCallback((model?: string) => {
             chatGPTProxy.models.chosen = model
-        }, [chatGPTProxy])
+        }, [])
 
         const setMaxTokens = useCallback((token: number) => {
             chatGPTProxy.maxTokens.chosen = token
-        }, [chatGPTProxy])
+        }, [])
 
         const setTemperature = useCallback((temperature: number) => {
             chatGPTProxy.temperature.chosen = temperature
-        }, [chatGPTProxy])
+        }, [])
 
         const setPresencePenalty = useCallback((presencePenalty: number) => {
             chatGPTProxy.presencePenalty.chosen = presencePenalty
-        }, [chatGPTProxy])
+        }, [])
 
         const setFrequencyPenalty = useCallback((frequencyPenalty: number) => {
             chatGPTProxy.frequencyPenalty.chosen = frequencyPenalty
-        }, [chatGPTProxy])
+        }, [])
 
         return <div
             className="flex flex-col w-full items-center justify-between gap-2 pt-1 pb-3 px-3 rounded-xl
@@ -84,6 +85,15 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
                                  })}
                                  setValue={setTemperature}
                                  value={chatGPTSnp.temperature.chosen ?? chatGPTSnp.temperature.default}/>
+
+                    <SliderRange title="TopP"
+                                 defaultValue={chatGPTSnp.topP.default}
+                                 range={({
+                                     start: chatGPTSnp.topP.rangeStart,
+                                     end: chatGPTSnp.topP.rangeEnd
+                                 })}
+                                 setValue={setTemperature}
+                                 value={chatGPTSnp.topP.chosen ?? chatGPTSnp.topP.default}/>
 
                     <SliderRange title="Presence Panelty"
                                  defaultValue={chatGPTSnp.presencePenalty.default}

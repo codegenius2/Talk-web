@@ -161,7 +161,7 @@ export const SliderRange: React.FC<Props> = ({
     const [showDivider, setShowDivider] = useState(false);
 
     useEffect(() => {
-        if (leftCapacity === 100 || leftCapacity === 0 || leftWidth !== 0 || rightWidth !== 0) {
+        if (leftWidth !== 0 || rightWidth !== 0) {
             setShowDivider(false)
         } else {
             setShowDivider(true)
@@ -193,28 +193,28 @@ export const SliderRange: React.FC<Props> = ({
                 className="relative flex w-full gap-0.5 justify-center overflow-hidden rounded-xl"
                 ref={sliderRef}
                 onMouseDown={e => handleMouseAction(e, true)}
-                 // https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+                // https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
                 // todo support onWheel, onScroll, onTouchMove
                 onMouseMove={handleMouseAction}
                 onMouseLeave={handleMouseAction}
                 onContextMenu={onContextMenu}
             >
                 {/*slider color block*/}
-                <div style={{width: leftCapacity + "%"}}
-                     className="flex justify-end text-transparent prose h-full">
+                {leftCapacity !== 0 && <div style={{width: leftCapacity + "%"}}
+                                            className="flex justify-end text-transparent prose h-full">
                     <div
                         style={{width: leftWidth + "%"}}
                         className="h-full bg-slider-pink  brightness-125 text-transparent">x
                     </div>
-                </div>
+                </div>}
 
-                <div style={{width: rightCapacity + "%"}}
-                     className="flex justify-start text-transparent prose h-full">
+                {rightCapacity !== 0 && <div style={{width: rightCapacity + "%"}}
+                                             className="flex justify-start text-transparent prose h-full">
                     <div
                         style={{width: rightWidth + "%"}}
                         className="h-full bg-blue-600 brightness-125 text-transparent">x
                     </div>
-                </div>
+                </div>}
 
                 {/*noise background*/}
                 <div
@@ -235,9 +235,11 @@ export const SliderRange: React.FC<Props> = ({
                 </div>
 
                 {showDivider && <div
-                    style={{left: leftCapacity + "%"}}
-                    className="absolute top-1/2 -translate-y-1/2 h-full w-[1px] bg-neutral-400">
-                </div>}
+                    // if divider is at start or end, move it px towards center to avoid overflow-hidden
+                    style={{left: leftCapacity - leftCapacity / 100 * 0.6 + rightCapacity / 100 * 0.6 + "%"}}
+                    className="absolute top-1/2 -translate-y-1/2 h-full w-[1px] bg-neutral-500">
+                </div>
+                }
             </div>
         </div>
     )

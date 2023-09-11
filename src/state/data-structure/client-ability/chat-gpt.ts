@@ -10,6 +10,7 @@ export type ClientChatGPT = {
     maxHistory: IntRange
     maxTokens: IntRange;
     temperature: FloatRange;
+    topP: FloatRange;
     presencePenalty: FloatRange;
     frequencyPenalty: FloatRange;
 }
@@ -34,10 +35,12 @@ export const toChatGPTOption = (chatGPT: ClientChatGPT): ChatGPTOption | undefin
     } else {
         console.warn("model not found")
     }
+
     return {
         model: model,
         maxTokens: chatGPT.maxTokens.chosen ?? chatGPT.maxTokens.default,
         temperature: chatGPT.temperature.chosen ?? chatGPT.temperature.default,
+        topP: chatGPT.topP.chosen ?? chatGPT.topP.default,
         presencePenalty: chatGPT.presencePenalty.chosen ?? chatGPT.presencePenalty.default,
         frequencyPenalty: chatGPT.frequencyPenalty.chosen ?? chatGPT.frequencyPenalty.default,
     }
@@ -63,6 +66,11 @@ export const defaultClientChatGPT = (): ClientChatGPT => ({
     temperature: {
         rangeStart: 0,
         rangeEnd: 2,
+        default: 1,
+    },
+    topP: {
+        rangeStart: 0,
+        rangeEnd: 1,
         default: 1,
     },
     presencePenalty: {

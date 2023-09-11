@@ -1,6 +1,7 @@
 import {ChooseOne, FloatRange, getOrDefault, mergeChoice} from "./types.ts";
 import {ServerGoogleTTS} from "../../../api/sse/server-ability.ts";
 import {GoogleTTSGender, GoogleTTSOption} from "../../../api/restful/model.ts";
+import {googleTTSLanguageStrings} from "../../../data/google-tts-language.ts";
 
 export type ClientGoogleTTS = {
     enabled: boolean // represents user's choice to disable ChatGPT, irrespective of its availability - preventing use of TTS.
@@ -43,7 +44,8 @@ export const defaultClientGoogleTTS = (): ClientGoogleTTS => {
             choices: [],
         },
         language: {
-            choices: [],
+            choices: googleTTSLanguageStrings,
+            chosen: "en-US"
         },
         gender: {
             choices: [

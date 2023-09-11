@@ -1,4 +1,4 @@
-import {Fragment, useEffect} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {Listbox, Transition} from '@headlessui/react'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/react/20/solid'
 import _ from "lodash";
@@ -15,15 +15,22 @@ type Props<T extends number | string> = {
 }
 
 export function ListBox<T extends number | string>({choices, value, setValue, mostEffort}: Props<T>) {
+
+    const [item, setItem] = useState<Choice<T> | undefined>(undefined)
+
+    useEffect(() => {
+        setValue(item?.value)
+    }, [item, setValue]);
+
     useEffect(() => {
             if (choices.length === 0) {
-                setValue(undefined)
+                setItem(undefined)
             } else {
-                if (mostEffort && (value === undefined || !choices.map(it => it.value).includes(value))) {
-                    setValue(choices[0].value)
+                if (mostEffort && (item === undefined || !choices.find(c => c.value === value))) {
+                    setItem(choices[0])
                 }
             }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [choices, setValue, mostEffort]
     )
 
@@ -34,7 +41,9 @@ export function ListBox<T extends number | string>({choices, value, setValue, mo
     }
 
     return (
-        <Listbox value={value} onChange={setValue}>
+        <Listbox value={item}
+                 onChange={setItem}
+        >
             {({open}) => (
                 <div className="relative">
                     <Listbox.Button
@@ -42,7 +51,7 @@ export function ListBox<T extends number | string>({choices, value, setValue, mo
                           py-0.5 pl-3 pr-10 text-left text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300
                           focus:outline-none focus:ring-2 focus:ring-blue-400">
                           <span className="flex items-center ">
-                            <span className="ml-3">{value ?? ""}</span>
+                            <span className="ml-3">{item?.name ?? ""}</span>
                           </span>
                         <span
                             className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
@@ -65,7 +74,7 @@ export function ListBox<T extends number | string>({choices, value, setValue, mo
                             {choices.map((ch) => (
                                 <Listbox.Option
                                     key={ch.value}
-                                    value={ch.value}
+                                    value={ch}
                                     className={({active}) =>
                                         joinClasses(
                                             active ? 'bg-blue-600 text-white' : 'text-neutral-900',
@@ -87,7 +96,7 @@ export function ListBox<T extends number | string>({choices, value, setValue, mo
                                                     <div className='flex justify-between items-center gap-1 '>
                                                          {_.uniq(ch.tags).map(tag =>
                                                              <span key={tag}
-                                                                 className="bg-neutral-400 text-white rounded-md px-1 text-xs">{tag}</span>
+                                                                   className="bg-neutral-400 text-white rounded-md px-1 text-xs">{tag}</span>
                                                          )}
                                                         </div>
                                                   </span>
