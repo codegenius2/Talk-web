@@ -1,4 +1,3 @@
-import {produce} from "immer";
 import {Choice, ChooseOne, FloatRange, IntRange, mergeChoice} from "./types.ts";
 import {ServerChatGPT} from "../../../api/sse/server-ability.ts";
 import {ChatGPTOption} from "../../../api/restful/model.ts";
@@ -15,15 +14,13 @@ export type ClientChatGPT = {
     frequencyPenalty: FloatRange;
 }
 
-export const mergeChatGPT = (c: ClientChatGPT, s: ServerChatGPT): ClientChatGPT =>
-    produce(c, draft => {
-        draft.available = s.available
-        if (s.available) {
-            draft.models.choices = s.models?.map((m) => ({name: m, value: m, tags: []})) ?? []
-            draft.models.chosen = mergeChoice(c.models, s.models ?? [])
-        }
-    })
-
+export const adjustChatGPT = (c: ClientChatGPT, s: ServerChatGPT): void => {
+    c.available = s.available
+    if (s.available) {
+        c.models.choices = s.models?.map((m) => ({name: m, value: m, tags: []})) ?? []
+        c.models.chosen = mergeChoice(c.models, s.models ?? [])
+    }
+}
 
 export const toChatGPTOption = (chatGPT: ClientChatGPT): ChatGPTOption | undefined => {
     if (!chatGPT.enabled || !chatGPT.available) {
@@ -111,31 +108,3 @@ export const tokenChoices: Choice<number>[] = [
     {value: 32000, name: "32k", tags: []},
     {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []},
 ]
-
-export const temperatureChoices: Choice<number>[] = [
-    {value: 0, name: "0", tags: []},
-    {value: 0.2, name: "0.2", tags: []},
-    {value: 0.4, name: "0.4", tags: []},
-    {value: 0.6, name: "0.6", tags: []},
-    {value: 0.8, name: "0.8", tags: []},
-    {value: 1, name: "1", tags: []},
-    {value: 1.2, name: "1.2", tags: []},
-    {value: 1.4, name: "1.4", tags: []},
-    {value: 1.6, name: "1.6", tags: []},
-    {value: 1.8, name: "1.8", tags: []},
-    {value: 2, name: "2", tags: []},
-]
-
-export const presencePenaltyChoices: Choice<number>[] = [
-    {value: -2, name: "-2", tags: []},
-    {value: -1.5, name: "-1.5", tags: []},
-    {value: -1, name: "-1", tags: []},
-    {value: -0.5, name: "-0.5", tags: []},
-    {value: 0, name: "0", tags: []},
-    {value: 0.5, name: "0.5", tags: []},
-    {value: 1, name: "1", tags: []},
-    {value: 1.5, name: "1.5", tags: []},
-    {value: 2, name: "2", tags: []},
-]
-
-export const frequencyPenaltyChoices = presencePenaltyChoices

@@ -1,6 +1,6 @@
-import {ClientLLM, defaultClientLLM, mergeLLM, toLLMOption} from "./llm.ts";
-import {ClientTTS, defaultClientTTS, mergeTTS, toTTSOption} from "./tts.ts";
-import {ClientSTT, defaultClientSTT, mergeSTT, toSTTOption} from "./stt.ts";
+import {ClientLLM, defaultClientLLM, adjustLLM, toLLMOption} from "./llm.ts";
+import {ClientTTS, defaultClientTTS, adjustTTS, toTTSOption} from "./tts.ts";
+import {ClientSTT, defaultClientSTT, applySTT, toSTTOption} from "./stt.ts";
 import {ServerAbility} from "../../../api/sse/server-ability.ts";
 import {TalkOption} from "../../../api/restful/model.ts";
 
@@ -16,12 +16,10 @@ export type ClientAbility = {
 }
 
 // server tells client what models, languages and other parameters it supports
-export const mergeAbility = (c: ClientAbility, s: ServerAbility): ClientAbility => {
-    return {
-        llm: mergeLLM(c.llm, s.llm),
-        tts: mergeTTS(c.tts, s.tts),
-        stt: mergeSTT(c.stt, s.stt)
-    }
+export const adjustAbility = (c: ClientAbility, s: ServerAbility): void => {
+    adjustLLM(c.llm, s.llm)
+    adjustTTS(c.tts, s.tts)
+    applySTT(c.stt, s.stt)
 }
 
 export const toTalkOption = (ability: ClientAbility): TalkOption => {

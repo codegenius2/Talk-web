@@ -1,21 +1,23 @@
 import {useEffect} from 'react';
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {useSnapshot} from "valtio/react";
-import {snapshot} from "valtio";
 import {networkState} from "../../state/network-state.ts";
 import {appState, Chat, findMessage} from "../../state/app-state.ts";
 import {ServerAbility} from "./server-ability.ts";
 import {newThinking, onAudio, onEOF, onError, onTyping} from "../../state/data-structure/message.tsx";
 import {
-    EventMessageAudio, EventMessageError,
+    EventMessageAudio,
+    EventMessageError,
     EventMessageTextEOF,
     EventMessageTextTyping,
     EventMessageThinking,
-    EventSystemAbility, SSEMsgAudio, SSEMsgError,
+    EventSystemAbility,
+    SSEMsgAudio,
+    SSEMsgError,
     SSEMsgMeta,
     SSEMsgText
 } from "./event.ts";
-import {ClientAbility, mergeAbility} from "../../state/data-structure/client-ability/client-ability.tsx";
+import {adjustAbility} from "../../state/data-structure/client-ability/client-ability.tsx";
 import {base64ToBlob, formatNow, randomHash16Char} from "../../util/util.tsx";
 import {audioDb} from "../../state/db.ts";
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts";
@@ -45,7 +47,7 @@ export const SSE = () => {
                 if (msg.event === EventSystemAbility) {
                     const sa = data as ServerAbility
                     // important! todo rewrite merge logics using by simply updating appState.ability
-                    appState.ability = mergeAbility(snapshot(appState.ability) as ClientAbility, sa)
+                    adjustAbility(appState.ability, sa)
                     return;
                 }
 
@@ -65,7 +67,7 @@ export const SSE = () => {
                 } else if (msg.event == EventMessageTextTyping) {
                     const found = findMessage(chatProxy, meta.messageID);
                     if (!found) {
-                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId,meta.messageID)
+                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId, meta.messageID)
                         return
                     }
                     const text: SSEMsgText = data
@@ -73,15 +75,15 @@ export const SSE = () => {
                 } else if (msg.event == EventMessageTextEOF) {
                     const found = findMessage(chatProxy, meta.messageID);
                     if (!found) {
-                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId,meta.messageID)
+                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId, meta.messageID)
                         return
                     }
                     const text: SSEMsgText = data
-                    onEOF(found, text.text??"")
+                    onEOF(found, text.text ?? "")
                 } else if (msg.event == EventMessageAudio) {
                     const found = findMessage(chatProxy, meta.messageID);
                     if (!found) {
-                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId,meta.messageID)
+                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId, meta.messageID)
                         return
                     }
                     const audio: SSEMsgAudio = data
@@ -93,7 +95,7 @@ export const SSE = () => {
                 } else if (msg.event === EventMessageError) {
                     const found = findMessage(chatProxy, meta.messageID);
                     if (!found) {
-                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId,meta.messageID)
+                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId, meta.messageID)
                         return
                     }
                     const error = data as SSEMsgError

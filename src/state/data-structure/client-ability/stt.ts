@@ -1,9 +1,4 @@
-import {
-    ClientWhisper,
-    defaultClientWhisper,
-    mergeWhisper,
-} from "./whisper.ts";
-import {toWhisperOption} from "./whisper.ts";
+import {adjustWhisper, ClientWhisper, defaultClientWhisper, toWhisperOption,} from "./whisper.ts";
 import {ServerSTT} from "../../../api/sse/server-ability.ts";
 import {STTOption} from "../../../api/restful/model.ts";
 
@@ -12,12 +7,9 @@ export type ClientSTT = {
     whisper: ClientWhisper
 }
 
-export const mergeSTT = (c: ClientSTT, s: ServerSTT): ClientSTT => {
-    return {
-        ...c,
-        available: s.available,
-        whisper: mergeWhisper(c.whisper, s.whisper)
-    }
+export const applySTT = (c: ClientSTT, s: ServerSTT): void => {
+    c.available = s.available
+    adjustWhisper(c.whisper, s.whisper)
 }
 
 export const toSTTOption = (tts: ClientSTT): STTOption | undefined => {

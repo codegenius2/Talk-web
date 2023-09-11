@@ -8,7 +8,7 @@ type Props<T extends number | string> = {
     choices: Choice<T>[]
     value: T
     setValue: (value: T) => void
-    fallbackValue: T,
+    defaultValue: T,
     showRange: boolean, // show range or single point
     range?: { rangeStart: T, rangeEnd: T }
     outOfLeftBoundary?: T // whether set value to this as mouse moves out of left-most element, usually as zero
@@ -25,7 +25,7 @@ export function DiscreteRange<T extends string | number>({
                                                              choices,
                                                              value,
                                                              setValue,
-                                                             fallbackValue,
+                                                             defaultValue,
                                                              showRange,
                                                              outOfLeftBoundary,
                                                              range
@@ -49,17 +49,17 @@ export function DiscreteRange<T extends string | number>({
         } else if (typeof value === 'number') {
             if (range && range.rangeStart <= target && target <= range.rangeEnd) {
                 if (!target.match(/^-?\d+(\.\d+)?$/)) {
-                    res = fallbackValue
+                    res = defaultValue
                 } else if (target.includes(".")) {
                     res = Number.parseFloat(target) as T
                 } else {
                     res = Number.parseInt(target) as T
                 }
             } else {
-                res = fallbackValue
+                res = defaultValue
             }
         } else {
-            res = fallbackValue
+            res = defaultValue
         }
         setValue(res)
         setValueUpdated(valueUpdated + 1)
@@ -143,6 +143,13 @@ export function DiscreteRange<T extends string | number>({
         }
     }, []);
 
+    const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
+            e.preventDefault()
+            setValue(defaultValue)
+            setValueUpdated(valueUpdated + 1)
+        }, [defaultValue, setValue, valueUpdated]
+    )
+
 
     const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
         if (controlSnp.isMouseLeftDown) {
@@ -179,7 +186,9 @@ export function DiscreteRange<T extends string | number>({
             </div>
 
             <div
-                className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden">
+                className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden"
+                onContextMenu={onContextMenu}
+            >
                 <div
                     className={"flex  justify-start items-center w-full overflow-auto scrollbar-hide hover:scrollbar-show"}>
                     {choiceColor.map((oc: ChoiceColor<T>) =>

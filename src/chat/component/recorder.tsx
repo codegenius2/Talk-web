@@ -119,7 +119,7 @@ const Recorder: React.FC<Props> = ({chatId}) => {
                       d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
             </svg>
             <div className="prose text-lg text-neutral-600">
-                Hold <div className="inline rounded-md text-neutral-700 bg-white opacity-70 px-1.5">Spacebar</div> to
+                Hold <span className="hidden sm:inline rounded-md text-neutral-700 bg-white opacity-70 px-1.5">Spacebar</span> to
                 speak
             </div>
         </div>
@@ -128,7 +128,7 @@ const Recorder: React.FC<Props> = ({chatId}) => {
             onClick={handleClickDone}
             className={joinClasses("flex justify-evenly items-center", isRecording ? "" : "hidden")}>
             <div
-                className={"text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
+                className={"hidden sm:block overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
                 Press any key to <div className="inline text-red-400">cancel</div>
             </div>
             <div className="flex justify-center items-center">
@@ -145,7 +145,7 @@ const Recorder: React.FC<Props> = ({chatId}) => {
                 </p>
             </div>
             <div
-                className={"text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
+                className={"hidden sm:block overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
                 Release to <div className="inline text-blue-500">send</div>
             </div>
         </div>

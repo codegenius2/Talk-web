@@ -6,6 +6,7 @@ import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import Auth from "./auth/page.tsx";
 import Error from "./error.tsx";
 import ChatHome from "./chat/page.tsx";
+import {Experiment} from "./experiment/experiment.tsx";
 
 const router = createBrowserRouter([
     {
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
     {
         path: "/chat",
         element: <ChatHome/>,
+        errorElement: <Error/>,
+    },
+    {
+        path: "/experiment",
+        element: <Experiment/>,
         errorElement: <Error/>,
     },
 

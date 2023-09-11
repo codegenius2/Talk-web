@@ -1,4 +1,3 @@
-import {produce} from "immer";
 import {ChooseOne, FloatRange, getOrDefault, mergeChoice} from "./types.ts";
 import {ServerGoogleTTS} from "../../../api/sse/server-ability.ts";
 import {GoogleTTSGender, GoogleTTSOption} from "../../../api/restful/model.ts";
@@ -14,16 +13,13 @@ export type ClientGoogleTTS = {
     volumeGainDb: FloatRange
 }
 
-export const mergeGoogleTTS = (c: ClientGoogleTTS, s: ServerGoogleTTS): ClientGoogleTTS =>
-    produce(c, draft => {
-            draft.available = s.available
-            if (s.available) {
-                draft.voice.choices = s.voices?.map((v) => ({name: v.name, value: v.id, tags: v.tags ?? []})) ?? []
-                draft.voice.chosen = mergeChoice(c.voice, s.voices?.map(it => it.id) ?? [])
-            }
-        }
-    )
-
+export const adjustGoogleTTS = (c: ClientGoogleTTS, s: ServerGoogleTTS): void => {
+    c.available = s.available
+    if (s.available) {
+        c.voice.choices = s.voices?.map((v) => ({name: v.name, value: v.id, tags: v.tags ?? []})) ?? []
+        c.voice.chosen = mergeChoice(c.voice, s.voices?.map(it => it.id) ?? [])
+    }
+}
 export const toGoogleTTSOption = (google: ClientGoogleTTS): GoogleTTSOption | undefined => {
     if (!google.enabled || !google.available) {
         return undefined

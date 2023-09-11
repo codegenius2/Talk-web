@@ -92,7 +92,8 @@ export const Panel: React.FC = () => {
                     <p className="text-center">Current</p>
                 </div>
             </div>
-            <div className="flex flex-col gap-y-3 items-center overflow-hidden">
+            <div className="flex flex-col gap-y-3 items-center overflow-auto pr-1"
+            >
                 {panelContent}
             </div>
         </div>

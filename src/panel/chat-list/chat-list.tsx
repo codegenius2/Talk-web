@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef} from "react";
 import {useSnapshot} from "valtio/react";
 import {proxy} from "valtio";
 import _ from "lodash"
@@ -12,7 +12,6 @@ import {ChatComponent} from "./chat-component.tsx";
 export const ChatList = () => {
     const appSnp = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
-    const [autoScrolled, setAutoScrolled] = useState(false)
 
     const newChat = useCallback((): void => {
         const abilityClone = _.cloneDeep(appSnp.ability) as ClientAbility
@@ -28,15 +27,15 @@ export const ChatList = () => {
         appState.currentChatId = chat.id
     }, [appSnp.ability])
 
+    // delete a chat should not trigger auto scrolling
     useEffect(() => {
-        if (!autoScrolled && chatRef.current) {
+        if (chatRef.current) {
             chatRef.current.scrollIntoView({
                 behavior: "smooth",
                 block: "nearest"
             })
-            setAutoScrolled(true)
         }
-    }, [autoScrolled, appSnp.currentChatId, chatRef])
+    }, [appSnp.currentChatId])
 
     return (
         <div className="flex h-full w-full flex-col gap-4">

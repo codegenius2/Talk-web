@@ -15,14 +15,13 @@ export const SliderRange: React.FC<Props> = ({
                                                  value,
                                                  setValue,
                                                  defaultValue,
-                                                 range
+                                                 range,
                                              }) => {
 
     const controlSnp = useSnapshot(controlState)
 
     const inputBoxRef = useRef<HTMLInputElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
-    const [width, setWidth] = useState("0px")
     const [longValue, setLongValue] = useState(0)
 
     // init
@@ -59,7 +58,12 @@ export const SliderRange: React.FC<Props> = ({
                     }
                     res = range.start + (range.end - range.start) * percent
                     setLongValue(res)
-                    const str = e.shiftKey ? res.toFixed(2) : res.toFixed(1)
+                    let precision = 1
+                    e.shiftKey && precision++
+                    e.altKey && precision++
+                    e.ctrlKey && precision++
+                    e.metaKey && precision++
+                    const str = res.toFixed(precision)
                     res = Number.parseFloat(str)
                     setValue(res)
                 }
@@ -82,26 +86,6 @@ export const SliderRange: React.FC<Props> = ({
         setLongValue(res)
     }, [defaultValue, range.end, range.start, setValue])
 
-
-    useEffect(() => {
-            if (!sliderRef.current) {
-                return
-            }
-            let w
-            if (longValue <= range.start) {
-                w = "0px"
-            } else if (longValue >= range.end) {
-                w = "100%"
-            } else {
-                const clientWidth = sliderRef.current.clientWidth
-                const percent = (longValue - range.start) / (range.end - range.start)
-                const pixel = clientWidth * percent
-                w = `${pixel}px`
-            }
-            setWidth(w)
-        }, [range.end, range.start, longValue]
-    )
-
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
             e.preventDefault()
             setValue(defaultValue)
@@ -123,9 +107,73 @@ export const SliderRange: React.FC<Props> = ({
         }
     }, [value]);
 
+    const [leftCapacity, setLeftCapacity] = useState(50)
+    const [rightCapacity, setRightCapacity] = useState(50)
+
+    useEffect(() => {
+            const percent = (defaultValue - range.start) / (range.end - range.start) * 100
+            setLeftCapacity(percent)
+            setRightCapacity(100 - percent)
+        }, [range.end, range.start, longValue, defaultValue]
+    )
+
+    const [leftWidth, setLeftWidth] = useState(50)
+    const [rightWidth, setRightWidth] = useState(50)
+
+    useEffect(() => {
+            if (defaultValue === range.start || longValue >= defaultValue) {
+                setLeftWidth(0)
+            } else {
+                const percent = (defaultValue - longValue) / (defaultValue - range.start) * 100
+                setLeftWidth(percent)
+            }
+
+            if (defaultValue === range.end || longValue <= defaultValue) {
+                setRightWidth(0)
+            } else {
+                const percent = (longValue - defaultValue) / (range.end - defaultValue) * 100
+                setRightWidth(percent)
+            }
+        }, [range.end, range.start, longValue, defaultValue]
+    )
+
+    const [isTransparent, setIsTransparent] = useState(false);
+    const [timer, setTimer] = useState<NodeJS.Timeout>();
+
+    useEffect(() => {
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [timer]);
+
+    const handleMouseOver = () => {
+        clearTimeout(timer);
+        setIsTransparent(false);
+    };
+
+    const handleMouseLeave = () => {
+        const newTimer = setTimeout(() => {
+            setIsTransparent(true);
+        }, 2000);
+        setTimer(newTimer);
+    };
+
+    const [showDivider, setShowDivider] = useState(false);
+
+    useEffect(() => {
+        if (leftCapacity === 100 || leftCapacity === 0 || leftWidth !== 0 || rightWidth !== 0) {
+            setShowDivider(false)
+        } else {
+            setShowDivider(true)
+        }
+    }, [leftCapacity, leftWidth, rightWidth]);
+
     return (
-        <div className="flex flex-col gap-y-0.5">
-            <div className="flex justify-between items-center max-h-10">
+        <div className="flex flex-col gap-y-0.5"
+             onMouseOver={handleMouseOver}
+             onMouseLeave={handleMouseLeave}
+        >
+            <div className="flex max-h-10 items-center justify-between">
                 <p className="text-neutral-600">{title}</p>
                 <input
                     ref={inputBoxRef}
@@ -142,23 +190,55 @@ export const SliderRange: React.FC<Props> = ({
             </div>
 
             <div
-                className="relative flex justify-center items-center w-full rounded-xl overflow-hidden"
+                className="relative flex w-full gap-0.5 justify-center overflow-hidden rounded-xl"
                 ref={sliderRef}
                 onMouseDown={e => handleMouseAction(e, true)}
+                 // https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
+                // todo support onWheel, onScroll, onTouchMove
                 onMouseMove={handleMouseAction}
                 onMouseLeave={handleMouseAction}
                 onContextMenu={onContextMenu}
             >
-                <div className="flex w-full justify-start items-start bg-neutral-200 bg-opacity-30"
-                >
-                    <p style={{width: `${width}`}}
-                       className="prose bg-blue-600 text-transparent"> x </p>
+                {/*slider color block*/}
+                <div style={{width: leftCapacity + "%"}}
+                     className="flex justify-end text-transparent prose h-full">
+                    <div
+                        style={{width: leftWidth + "%"}}
+                        className="h-full bg-slider-pink  brightness-125 text-transparent">x
+                    </div>
                 </div>
-                <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-neutral-800">{value}</div>
+
+                <div style={{width: rightCapacity + "%"}}
+                     className="flex justify-start text-transparent prose h-full">
+                    <div
+                        style={{width: rightWidth + "%"}}
+                        className="h-full bg-blue-600 brightness-125 text-transparent">x
+                    </div>
                 </div>
+
+                {/*noise background*/}
+                <div
+                    className="absolute top-1/2 left-0 h-full w-full -translate-y-1/2 bg-cover opacity-100 brightness-200 contrast-200 bg-noise">
+                    <div className="h-full w-1/2 text-transparent brightness-125 prose">{value}</div>
+                </div>
+
+                {/*text and divider*/}
+                <div
+                    className={"absolute top-1/2 left-1 -translate-y-1/2 text-neutral-800 font-md text-md " +
+                        "transition duration-200 " + (isTransparent ? "text-opacity-0" : "text-opacity-100")}>
+                    {range.start}
+                </div>
+                <div
+                    className={"absolute top-1/2 right-1 -translate-y-1/2 text-neutral-800 font-md text-md " +
+                        "transition duration-200 " + (isTransparent ? "text-opacity-0" : "text-opacity-100")}>
+                    {range.end}
+                </div>
+
+                {showDivider && <div
+                    style={{left: leftCapacity + "%"}}
+                    className="absolute top-1/2 -translate-y-1/2 h-full w-[1px] bg-neutral-400">
+                </div>}
             </div>
         </div>
-    );
-
+    )
 }

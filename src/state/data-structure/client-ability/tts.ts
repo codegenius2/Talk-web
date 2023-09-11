@@ -1,8 +1,8 @@
 // TTS
 
 
-import {ClientGoogleTTS, defaultClientGoogleTTS, mergeGoogleTTS, toGoogleTTSOption} from "./google-tts.ts";
-import {ClientElevenlabs, defaultClientElevenlabs, mergeElevenlabs, toElevenlabsTTSOption} from "./elevenlabs-tts.ts";
+import {adjustGoogleTTS, ClientGoogleTTS, defaultClientGoogleTTS, toGoogleTTSOption} from "./google-tts.ts";
+import {adjustElevenlabs, ClientElevenlabs, defaultClientElevenlabs, toElevenlabsTTSOption} from "./elevenlabs-tts.ts";
 import {ServerTTS} from "../../../api/sse/server-ability.ts";
 import {TTSOption} from "../../../api/restful/model.ts";
 
@@ -12,17 +12,14 @@ export type ClientTTS = {
     elevenlabs: ClientElevenlabs
 }
 
-export const mergeTTS = (c: ClientTTS, s: ServerTTS): ClientTTS => {
-    return {
-        ...c,
-        available: s.available,
-        google: mergeGoogleTTS(c.google, s.google),
-        elevenlabs: mergeElevenlabs(c.elevenlabs, s.elevenlabs)
-    }
+export const adjustTTS = (c: ClientTTS, s: ServerTTS): void => {
+    c.available = s.available
+    adjustGoogleTTS(c.google, s.google)
+    adjustElevenlabs(c.elevenlabs, s.elevenlabs)
 }
 
-export const toTTSOption = (tts: ClientTTS): TTSOption|undefined => {
-    return  tts.available ? {
+export const toTTSOption = (tts: ClientTTS): TTSOption | undefined => {
+    return tts.available ? {
         google: toGoogleTTSOption(tts.google),
         elevenlabs: toElevenlabsTTSOption(tts.elevenlabs)
     } : undefined

@@ -11,8 +11,12 @@ export default {
         extend: {
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
-                'slider-blue':'rgba(131, 198, 218, 1.00)',
-                'slider-pink':'rgba(246, 150, 165, 1.00)'
+                'slider-blue':'#61d0f0',
+                'slider-red':'rgb(184, 42, 21)',
+                'slider-pink':'#f56e83'
+                // 'slider-blue':'#61d0f0',
+                // 'slider-red':'rgb(184, 42, 21)',
+                // 'slider-pink':'#f56e83'
             },
             maxWidth: {
                 '11': '2.75rem',
@@ -72,6 +76,7 @@ export default {
                 // wikiart.org public domain arts, completely free to use
                 'simultaneous-counter-composition-1930': "url('/src/assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg')",
                 'noise': "url('/src/assets/bg/noise.svg')",
+                'noise-lg': "url('/src/assets/bg/noise-lg.svg')",
             }
         },
 

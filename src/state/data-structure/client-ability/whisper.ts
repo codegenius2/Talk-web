@@ -1,4 +1,3 @@
-import {produce} from "immer";
 import {WhisperOption} from "../../../api/restful/model.ts";
 import {ChooseOne, getOrDefault, mergeChoice} from "./types.ts";
 import {ServerWhisper} from "../../../api/sse/server-ability.ts";
@@ -9,15 +8,13 @@ export type ClientWhisper = {
     models: ChooseOne<string>
 }
 
-export const mergeWhisper = (c: ClientWhisper, s: ServerWhisper): ClientWhisper =>
-    produce(c, draft => {
-            draft.available = s.available
-            if (s.available) {
-                draft.models.choices = s.models?.map((m) => ({name: m, value: m, tags: []})) ?? []
-                draft.models.chosen = mergeChoice(c.models, s.models ?? [])
-            }
-        }
-    )
+export const adjustWhisper = (c: ClientWhisper, s: ServerWhisper): void => {
+    c.available = s.available
+    if (s.available) {
+        c.models.choices = s.models?.map((m) => ({name: m, value: m, tags: []})) ?? []
+        c.models.chosen = mergeChoice(c.models, s.models ?? [])
+    }
+}
 
 export const toWhisperOption = (whisper: ClientWhisper): WhisperOption | undefined => {
     if (!whisper.enabled || !whisper.available) {

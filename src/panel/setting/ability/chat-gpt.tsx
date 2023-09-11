@@ -1,12 +1,6 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {MySwitch} from "../widget/switch.tsx";
-import {
-    ClientChatGPT,
-    frequencyPenaltyChoices,
-    historyChoices, presencePenaltyChoices,
-    temperatureChoices,
-    tokenChoices
-} from "../../../state/data-structure/client-ability/chat-gpt.ts";
+import {ClientChatGPT, historyChoices, tokenChoices} from "../../../state/data-structure/client-ability/chat-gpt.ts";
 import {DiscreteRange} from "../widget/discrete-range.tsx";
 import {ListBox} from "../widget/list-box.tsx";
 import {useSnapshot} from "valtio/react";
@@ -45,10 +39,9 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
         }, [chatGPTProxy])
 
         const setFrequencyPenalty = useCallback((frequencyPenalty: number) => {
-            chatGPTProxy.presencePenalty.chosen = frequencyPenalty
+            chatGPTProxy.frequencyPenalty.chosen = frequencyPenalty
         }, [chatGPTProxy])
 
-        const [myValue, setMyValue] = useState(0)
         return <div
             className="flex flex-col w-full items-center justify-between gap-2 pt-1 pb-3 px-3 rounded-xl
             bg-white bg-opacity-40 backdrop-blur z-10 ">
@@ -65,7 +58,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
                                    value={chatGPTSnp.maxHistory.chosen ?? chatGPTSnp.maxHistory.default}
                                    showRange={true}
                                    outOfLeftBoundary={chatGPTSnp.maxHistory.rangeStart}
-                                   fallbackValue={chatGPTSnp.maxHistory.default}
+                                   defaultValue={chatGPTSnp.maxHistory.default}
                                    range={{
                                        rangeStart: chatGPTSnp.maxHistory.rangeStart,
                                        rangeEnd: chatGPTSnp.maxHistory.rangeEnd,
@@ -77,48 +70,38 @@ const ChatGpt: React.FC<Props> = ({chatGPTProxy}) => {
                                    value={chatGPTSnp.maxTokens.chosen ?? chatGPTSnp.maxTokens.default}
                                    showRange={true}
                                    outOfLeftBoundary={chatGPTSnp.maxTokens.rangeStart}
-                                   fallbackValue={chatGPTSnp.maxTokens.default}
+                                   defaultValue={chatGPTSnp.maxTokens.default}
                                    range={{
                                        rangeStart: chatGPTSnp.maxTokens.rangeStart,
                                        rangeEnd: chatGPTSnp.maxHistory.rangeEnd,
                                    }}
                     />
-                    <DiscreteRange choices={temperatureChoices}
-                                   title="Temperature"
-                                   setValue={setTemperature}
-                                   value={chatGPTSnp.temperature.chosen ?? chatGPTSnp.temperature.default}
-                                   showRange={false}
-                                   fallbackValue={chatGPTSnp.temperature.default}
-                                   range={{
-                                       rangeStart: chatGPTSnp.temperature.rangeStart,
-                                       rangeEnd: chatGPTSnp.temperature.rangeEnd,
-                                   }}
-                    />
-                    <DiscreteRange choices={presencePenaltyChoices}
-                                   title="Presence Penalty"
-                                   setValue={setPresencePenalty}
-                                   value={chatGPTSnp.presencePenalty.chosen ?? chatGPTSnp.presencePenalty.default}
-                                   showRange={false}
-                                   fallbackValue={chatGPTSnp.presencePenalty.default}
-                                   range={{
-                                       rangeStart: chatGPTSnp.presencePenalty.rangeStart,
-                                       rangeEnd: chatGPTSnp.presencePenalty.rangeEnd,
-                                   }}
-                    />
-                    <DiscreteRange choices={frequencyPenaltyChoices}
-                                   title="Frequency Penalty"
-                                   setValue={setFrequencyPenalty}
-                                   value={chatGPTSnp.frequencyPenalty.chosen ?? chatGPTSnp.frequencyPenalty.default}
-                                   showRange={false}
-                                   fallbackValue={chatGPTSnp.frequencyPenalty.default}
-                                   range={{
-                                       rangeStart: chatGPTSnp.frequencyPenalty.rangeStart,
-                                       rangeEnd: chatGPTSnp.frequencyPenalty.rangeEnd,
-                                   }}
-                    />
+                    <SliderRange title="Temperature"
+                                 defaultValue={chatGPTSnp.temperature.default}
+                                 range={({
+                                     start: chatGPTSnp.temperature.rangeStart,
+                                     end: chatGPTSnp.temperature.rangeEnd
+                                 })}
+                                 setValue={setTemperature}
+                                 value={chatGPTSnp.temperature.chosen ?? chatGPTSnp.temperature.default}/>
 
-                    <SliderRange defaultValue={0} range={({start: -1, end: 1})} setValue={setMyValue}
-                                 title="Frequency Panelty" value={myValue}/>
+                    <SliderRange title="Presence Panelty"
+                                 defaultValue={chatGPTSnp.presencePenalty.default}
+                                 range={({
+                                     start: chatGPTSnp.presencePenalty.rangeStart,
+                                     end: chatGPTSnp.presencePenalty.rangeEnd
+                                 })}
+                                 setValue={setPresencePenalty}
+                                 value={chatGPTSnp.presencePenalty.chosen ?? chatGPTSnp.presencePenalty.default}/>
+
+                    <SliderRange title="Frequency Panelty"
+                                 defaultValue={chatGPTSnp.frequencyPenalty.default}
+                                 range={({
+                                     start: chatGPTSnp.frequencyPenalty.rangeStart,
+                                     end: chatGPTSnp.frequencyPenalty.rangeEnd
+                                 })}
+                                 setValue={setFrequencyPenalty}
+                                 value={chatGPTSnp.frequencyPenalty.chosen ?? chatGPTSnp.frequencyPenalty.default}/>
 
                     <div className="flex justify-between items-center gap-2">
                         <p className="prose text-neutral-600">Model</p>
