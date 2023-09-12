@@ -5,13 +5,13 @@ import './index.css'
 import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import Auth from "./auth/page.tsx";
 import Error from "./error.tsx";
-import ChatHome from "./chat/page.tsx";
+import Home from "./home/home.tsx";
 import {Experiment} from "./experiment/experiment.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <ChatHome/>,
+        element: <Home/>,
         errorElement: <Error/>,
     },
     {
@@ -21,11 +21,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/chat",
-        element: <ChatHome/>,
+        element: <Home/>,
         errorElement: <Error/>,
     },
     {
-        path: "/experiment",
+        path: "/exp",
         element: <Experiment/>,
         errorElement: <Error/>,
     },

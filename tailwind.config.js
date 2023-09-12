@@ -3,6 +3,7 @@ import defaultTheme from 'tailwindcss/defaultTheme'
 import typography from '@tailwindcss/typography';
 
 export default {
+    mode: 'jit', // https://v2.tailwindcss.com/docs/just-in-time-mode
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
@@ -11,9 +12,9 @@ export default {
         extend: {
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
-                'slider-blue':'#61d0f0',
-                'slider-red':'rgb(184, 42, 21)',
-                'slider-pink':'#f56e83'
+                'slider-blue': '#61d0f0',
+                'slider-red': 'rgb(184, 42, 21)',
+                'slider-pink': '#f56e83'
                 // 'slider-blue':'#61d0f0',
                 // 'slider-red':'rgb(184, 42, 21)',
                 // 'slider-pink':'#f56e83'
@@ -80,11 +81,6 @@ export default {
             }
         },
 
-    },
-    variants: {
-        extend: {
-            backdropFilter: ['responsive'], // or other variants you need
-        },
     },
     plugins: [
         typography,

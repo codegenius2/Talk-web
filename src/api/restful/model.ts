@@ -9,14 +9,14 @@ export type ChatReq = {
 
 /**
  * When make a request to the Talk server, append a TalkOption to the request.
- * Each LLMOption, TTSOption, and SSTOption within TalkOption can only engage one provider at a time.
+ * Each LLMOption, TTSOption, and SSTOption can only engage one provider at a time.
  * For instance, either `talkOption.llm.chatGPT` or `talkOption.llm.claude` should be set to `undefined`.
  */
 export type TalkOption = {
-    toText: boolean, // transcribe user's speech to text, requiring STTOption option
-    toSpeech: boolean, // synthesize user's text to speech, requiring TTSOption
+    toText: boolean, // transcribe user's speech to text, requires STTOption option
+    toSpeech: boolean, // synthesize user's text to speech, requires TTSOption
     completion: boolean, // completion, requires messages or result of transcription, require LLMOption
-    completionToSpeech: boolean, // synthesize result of completion to speech, requiring TTSOption
+    completionToSpeech: boolean, // synthesize result of completion to speech, requires TTSOption
     sttOption?: STTOption,
     ttsOption?: TTSOption,
     llmOption?: LLMOption
@@ -38,6 +38,7 @@ export type ChatGPTOption = {
 export type STTOption = {
     whisper?: WhisperOption
 }
+
 export type WhisperOption = {
     model: string
 }
@@ -49,7 +50,7 @@ export type TTSOption = {
 
 export type GoogleTTSOption = {
     // if VoiceId is provided, LanguageCode and Gender will not be used
-    voiceId: string
+    voiceId?: string
     languageCode: string
     /**
      * An unspecified gender.

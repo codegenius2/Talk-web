@@ -70,9 +70,10 @@ export function chooseAudioMimeType(mimeTypes: RecordingMimeType[]): RecordingMi
     return undefined
 }
 
-export function joinClasses(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
+export const cx = (...classes: (boolean | string)[]): string => {
+    return classes.filter(c => typeof c === "string").join(" ")
 }
+
 
 export function getRandomElement<T>(arr: T[]): T | undefined {
     if (arr.length === 0) {

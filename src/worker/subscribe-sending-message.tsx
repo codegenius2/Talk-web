@@ -5,14 +5,13 @@ import {AxiosError} from "axios";
 import {controlState} from "../state/control-state.ts";
 import {appState} from "../state/app-state.ts";
 import {historyMessages} from "../api/restful/util.ts";
-import {ClientLLM, maxHistory} from "../state/data-structure/client-ability/llm.ts";
-import {newSending, onError, onSent} from "../state/data-structure/message.tsx";
-import {ClientAbility, toTalkOption} from "../state/data-structure/client-ability/client-ability.tsx";
+import {newSending, onError, onSent} from "../data-structure/message.tsx";
 import {postAudioChat, postChat} from "../api/restful/api.ts";
 import {randomHash16Char} from "../util/util.tsx";
 import {audioDb} from "../state/db.ts";
 import {LLMMessage} from "../shared-types.ts";
 import {minSpeakTimeMillis} from "../config.ts";
+import {toRestfulAPIOption} from "../data-structure/client-option.tsx";
 
 const systemMessage: LLMMessage = {
     role: "system",
@@ -45,13 +44,13 @@ export const SubscribeSendingMessage: React.FC = () => {
             return
         }
 
-        const ability = snapshot(chatProxy.ability)
+        const option = snapshot(chatProxy.option)
 
-        let messages = historyMessages(chatProxy, maxHistory(ability.llm as ClientLLM))
+        let messages = historyMessages(chatProxy, option.llm.maxHistory)
         messages = [systemMessage, ...messages]
 
         const message = newSending()
-        const talkOption = toTalkOption(ability as ClientAbility)
+        const talkOption = toRestfulAPIOption(option)
         let postPromise
         if (sm.audioBlob) {
             console.debug("sending audio and chat: ", message)

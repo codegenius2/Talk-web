@@ -23,7 +23,6 @@ export type ServerElevenlabs = {
 }
 
 // STT
-
 export type ServerSTT = {
     available: boolean
     whisper: ServerWhisper
@@ -57,3 +56,31 @@ export type Voice = {
     tags?: string [] // gender, accent, age, etc
 }
 
+export const defaultServerAbility = (): ServerAbility => {
+    return {
+        llm: {
+            available: false,
+            chatGPT: {
+                available: false,
+            }
+        },
+        tts: {
+            available: false,
+            google: {
+                available: false
+            },
+            elevenlabs: {
+                available: false
+            }
+        },
+        stt: {
+            available: false,
+            whisper: {
+                available: false
+            },
+            google: {
+                available: false
+            }
+        },
+    }
+}

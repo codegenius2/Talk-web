@@ -1,5 +1,5 @@
 import {Chat} from "../../state/app-state.ts";
-import {isInHistory} from "../../state/data-structure/message.tsx";
+import {isInHistory} from "../../data-structure/message.tsx";
 import {LLMMessage} from "../../shared-types.ts";
 
 export const historyMessages = (chat: Chat, maxHistory: number): LLMMessage[] => {

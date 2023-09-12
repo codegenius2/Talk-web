@@ -4,7 +4,7 @@ import {useSnapshot} from "valtio/react";
 import {networkState} from "../../state/network-state.ts";
 import {appState, Chat, findMessage} from "../../state/app-state.ts";
 import {ServerAbility} from "./server-ability.ts";
-import {newThinking, onAudio, onEOF, onError, onTyping} from "../../state/data-structure/message.tsx";
+import {newThinking, onAudio, onEOF, onError, onTyping} from "../../data-structure/message.tsx";
 import {
     EventMessageAudio,
     EventMessageError,
@@ -17,10 +17,10 @@ import {
     SSEMsgMeta,
     SSEMsgText
 } from "./event.ts";
-import {adjustAbility} from "../../state/data-structure/client-ability/client-ability.tsx";
 import {base64ToBlob, formatNow, randomHash16Char} from "../../util/util.tsx";
 import {audioDb} from "../../state/db.ts";
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts";
+import {adjustOption} from "../../data-structure/client-option.tsx";
 
 export const SSE = () => {
     const networkSnp = useSnapshot(networkState)
@@ -47,7 +47,7 @@ export const SSE = () => {
                 if (msg.event === EventSystemAbility) {
                     const sa = data as ServerAbility
                     // important! todo rewrite merge logics using by simply updating appState.ability
-                    adjustAbility(appState.ability, sa)
+                    adjustOption(appState.option, sa)
                     return;
                 }
 
@@ -105,7 +105,7 @@ export const SSE = () => {
                 }
             },
             onerror: (err) => {
-                console.error("SSE error", err)
+                console.error("SSE error:", err)
             }
         })
         return () => {

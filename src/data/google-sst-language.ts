@@ -1,4 +1,4 @@
-import {Choice} from "../state/data-structure/client-ability/types.ts";
+import {Choice} from "../data-structure/provider-api-refrence/types.ts";
 
 // see https://www.gstatic.com/cloud-site-ux/speech/speech.min.js
 // googleSTTLanguageSettings and googleTTSLanguageStrings are identical at the moment
