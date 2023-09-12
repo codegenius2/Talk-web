@@ -105,30 +105,22 @@ export function DiscreteRange<T extends string | number>({
                 setValue(outOfLeftBoundary)
             }
         }
-        // if (inputBoxRef.current) {
-        //     const scrollWidth = inputBoxRef.current.scrollWidth;
-        //     const clientWidth = inputBoxRef.current.clientWidth;
-        //     const mouseX = event.clientX;
-        //     const scrollPosition = (mouseX / window.innerWidth) * (scrollWidth - clientWidth);
-        //
-        //     inputBoxRef.current.scrollTo(scrollPosition, 0);
-        // }
     }
 
-    const scrollRef = useRef<HTMLInputElement>(null);
+    const scrollBarRef = useRef<HTMLInputElement>(null);
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         // move to top if mouse is in between start and 1/4 position of visible area
         // move to end if mouse is in between 3/4 and end position of visible area
-        if (scrollRef.current) {
+        if (scrollBarRef.current) {
             // total length of content
-            const totalWidth = scrollRef.current.scrollWidth
+            const totalWidth = scrollBarRef.current.scrollWidth
 
             // length of visible content
-            const visibleWidth = scrollRef.current.clientWidth;
+            const visibleWidth = scrollBarRef.current.clientWidth;
 
 
             const mouseX = e.clientX;
-            const relativeX = mouseX - scrollRef.current.getBoundingClientRect().left;
+            const relativeX = mouseX - scrollBarRef.current.getBoundingClientRect().left;
 
             let pos
             if (relativeX <= visibleWidth / 4) {
@@ -136,11 +128,22 @@ export function DiscreteRange<T extends string | number>({
             } else if (relativeX >= visibleWidth * 3 / 4) {
                 pos = totalWidth
             } else {
-                pos = (relativeX - visibleWidth / 4) / (visibleWidth / 2) * (totalWidth-visibleWidth)
+                pos = (relativeX - visibleWidth / 4) / (visibleWidth / 2) * (totalWidth - visibleWidth)
             }
-            scrollRef.current.scrollTo(pos, 0);
+            scrollBarRef.current.scrollTo({top: 0, left: pos, behavior: 'smooth'});
         }
     }, []);
+
+    const scrollChildRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (scrollChildRef.current) {
+            scrollChildRef.current.scrollIntoView({
+                behavior: 'smooth',
+                block: "center"
+            })
+        }
+    },);
+
 
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
             e.preventDefault()
@@ -192,10 +195,11 @@ export function DiscreteRange<T extends string | number>({
                 <div
                     className="flex justify-start items-center w-full overflow-auto scrollbar-gone"
                     onMouseMove={handleMouseMove}
-                    ref={scrollRef}
+                    ref={scrollBarRef}
                 >
                     {choiceColor.map((oc: ChoiceColor<T>) =>
                         <div
+                            ref={oc.choice.value === value ? scrollChildRef : null}
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")
                                 + (showRange ? '' : ' rounded-full')}
                             key={oc.index}
