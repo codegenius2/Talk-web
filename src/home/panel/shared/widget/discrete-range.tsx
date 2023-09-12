@@ -139,9 +139,8 @@ export function DiscreteRange<T extends string | number>({
                 pos = (relativeX - visibleWidth / 4) / (visibleWidth / 2) * (totalWidth-visibleWidth)
             }
             scrollRef.current.scrollTo(pos, 0);
-            console.log("scroll to pos", pos)
         }
-    }, [scrollRef.current]);
+    }, []);
 
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
             e.preventDefault()
