@@ -4,14 +4,14 @@ import {Chat} from "../../../state/app-state.ts";
 import {Spin} from "../../chat-window/message/widget/spin.tsx";
 
 type Props = {
-    chatSnp: Chat
+    chatSnap: Chat
 }
 
-export const Preview: React.FC<Props> = ({chatSnp}) => {
-    if (chatSnp.messages.length === 0) {
+export const Preview: React.FC<Props> = ({chatSnap}) => {
+    if (chatSnap.messages.length === 0) {
         return null
     }
-    const message = chatSnp.messages[chatSnp.messages.length - 1]
+    const message = chatSnap.messages[chatSnap.messages.length - 1]
 
     const who = message.role == "user" ? "You" : "Assistant"
     let content = null

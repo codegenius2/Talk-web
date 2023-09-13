@@ -18,7 +18,7 @@ export const SliderRange: React.FC<Props> = ({
                                                  range,
                                              }) => {
 
-    const controlSnp = useSnapshot(controlState)
+    const controlSnap= useSnapshot(controlState)
 
     const inputBoxRef = useRef<HTMLInputElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
@@ -34,10 +34,10 @@ export const SliderRange: React.FC<Props> = ({
         }
     }, []);
 
-    // if use is clicking, global controlSnp.isMouseLeftDown won't be updated before this event is propagated,
+    // if use is clicking, global controlSnap.isMouseLeftDown won't be updated before this event is propagated,
     // in such case, set clicking = true can help
     const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, clicking: boolean = false) => {
-            if (sliderRef.current && (clicking || controlSnp.isMouseLeftDown)) {
+            if (sliderRef.current && (clicking || controlSnap.isMouseLeftDown)) {
                 const clientWidth = sliderRef.current.clientWidth
                 const {left, right} = sliderRef.current.getBoundingClientRect()
                 let res
@@ -68,7 +68,7 @@ export const SliderRange: React.FC<Props> = ({
                     setValue(res)
                 }
             }
-        }, [controlSnp.isMouseLeftDown, setValue, range.start, range.end]
+        }, [controlSnap.isMouseLeftDown, setValue, range.start, range.end]
     )
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {

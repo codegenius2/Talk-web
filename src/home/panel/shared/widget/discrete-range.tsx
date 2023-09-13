@@ -1,5 +1,4 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
-import {useSnapshot} from "valtio/react";
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
 import {controlState} from "../../../../state/control-state.ts";
 
@@ -30,8 +29,6 @@ export function DiscreteRange<T extends string | number>({
                                                              outOfLeftBoundary,
                                                              range
                                                          }: Props<T>) {
-
-    const controlSnp = useSnapshot(controlState)
 
     const [choiceColor, setChoiceColors] = useState<ChoiceColor<T>[]>([])
     const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
@@ -97,7 +94,7 @@ export function DiscreteRange<T extends string | number>({
         if (outOfLeftBoundary === undefined) {
             return
         }
-        if (controlSnp.isMouseLeftDown) {
+        if (controlState.isMouseLeftDown) {
             const {clientX} = event;
             const {right} = event.currentTarget.getBoundingClientRect();
             // if mouse doesn't leave from right side
@@ -142,7 +139,7 @@ export function DiscreteRange<T extends string | number>({
                 block: "center"
             })
         }
-    },);
+    }, []);
 
 
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
@@ -154,7 +151,7 @@ export function DiscreteRange<T extends string | number>({
 
 
     const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
-        if (controlSnp.isMouseLeftDown) {
+        if (controlState.isMouseLeftDown) {
             setValue(oc.choice.value)
         }
     }

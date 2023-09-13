@@ -12,30 +12,31 @@ import {
 } from "../../../../data-structure/provider-api-refrence/chat-gpt.ts";
 import {appState} from "../../../../state/app-state.ts";
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
-import {SelectBoxExample} from "../widget/my-select-box.tsx";
+import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
+import _ from "lodash";
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
+    setEnabled: (enabled: boolean) => void
 }
 
-const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
-    const chatGPTOptionSnp = useSnapshot(chatGPTOptionProxy)
+const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy,setEnabled}) => {
+
+    const chatGPTOptionSnap = useSnapshot(chatGPTOptionProxy)
+
     const chatGPTAbility = useSnapshot(appState.ability.llm.chatGPT)
-    const llmOptionSnp = useSnapshot(appState.option.llm)
+    const llmOptionSnap = useSnapshot(appState.option.llm)
+
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
 
     useEffect(() => {
-        const choices = chatGPTAbility.models?.map((model): Choice<string> => ({
+        const choices = _.map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
             name: model,
             value: model,
             tags: []
-        })) ?? []
+        }))
         setModelChoices(choices)
     }, [chatGPTAbility.models]);
-
-    const setEnabled = useCallback((enabled: boolean) => {
-        chatGPTOptionProxy.enabled = enabled
-    }, [])
 
     const setMaxHistory = useCallback((hist: number) => {
         appState.option.llm.maxHistory = hist
@@ -72,14 +73,14 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                         rounded-lg w-full">
                 <div className="flex justify-between items-center w-full ">
                     <p className="prose text-lg text-neutral-600">ChatGPT</p>
-                    <MySwitch enabled={chatGPTOptionSnp.enabled} setEnabled={setEnabled}/>
+                    <MySwitch enabled={chatGPTOptionSnap.enabled} setEnabled={setEnabled}/>
                 </div>
-                {chatGPTOptionSnp.enabled &&
+                {chatGPTOptionSnap.enabled &&
                     <>
                         <DiscreteRange choices={historyChoices}
                                        title="Max Hisotry"
                                        setValue={setMaxHistory}
-                                       value={llmOptionSnp.maxHistory}
+                                       value={llmOptionSnap.maxHistory}
                                        showRange={true}
                                        outOfLeftBoundary={chatGPTAPIReference.maxHistory.rangeStart}
                                        defaultValue={chatGPTAPIReference.maxHistory.default}
@@ -91,7 +92,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                         <DiscreteRange choices={tokenChoices}
                                        title="Max Tokens"
                                        setValue={setMaxTokens}
-                                       value={chatGPTOptionSnp.maxTokens}
+                                       value={chatGPTOptionSnap.maxTokens}
                                        showRange={true}
                                        outOfLeftBoundary={chatGPTAPIReference.maxTokens.rangeStart}
                                        defaultValue={chatGPTAPIReference.maxTokens.default}
@@ -107,7 +108,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                                          end: chatGPTAPIReference.temperature.rangeEnd
                                      })}
                                      setValue={setTemperature}
-                                     value={chatGPTOptionSnp.temperature}/>
+                                     value={chatGPTOptionSnap.temperature}/>
 
                         <SliderRange title="TopP"
                                      defaultValue={chatGPTAPIReference.topP.default}
@@ -116,7 +117,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                                          end: chatGPTAPIReference.topP.rangeEnd
                                      })}
                                      setValue={setTopP}
-                                     value={chatGPTOptionSnp.topP}/>
+                                     value={chatGPTOptionSnap.topP}/>
 
                         <SliderRange title="Presence Panelty"
                                      defaultValue={chatGPTAPIReference.presencePenalty.default}
@@ -125,7 +126,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                                          end: chatGPTAPIReference.presencePenalty.rangeEnd
                                      })}
                                      setValue={setPresencePenalty}
-                                     value={chatGPTOptionSnp.presencePenalty}/>
+                                     value={chatGPTOptionSnap.presencePenalty}/>
 
                         <SliderRange title="Frequency Panelty"
                                      defaultValue={chatGPTAPIReference.frequencyPenalty.default}
@@ -134,11 +135,13 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy}) => {
                                          end: chatGPTAPIReference.frequencyPenalty.rangeEnd
                                      })}
                                      setValue={setFrequencyPenalty}
-                                     value={chatGPTOptionSnp.frequencyPenalty}/>
-                        <div className="flex justify-start items-center gap-4">
-                            <p className="prose text-neutral-600">Model</p>
-                            <div className="w-full overflow-x-hidden"><SelectBoxExample/></div>
-                        </div>
+                                     value={chatGPTOptionSnap.frequencyPenalty}/>
+                        <SelectBoxOrNotAvailable
+                            title={"Model"}
+                            choices={modelChoices}
+                            defaultValue={chatGPTOptionSnap.model}
+                            setValue={setModel}
+                        />
                     </>
                 }
             </div>

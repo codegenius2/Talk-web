@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useSnapshot} from "valtio/react";
 import {Chat, markMessageAsDeleted} from "../../state/app-state.ts";
 import {isInHistory, Message} from "../../data-structure/message.tsx";
 import {Audio} from "./message/audio.tsx";
@@ -8,11 +7,10 @@ import ErrorBoundary from "./message/error-boundary.tsx";
 import {maxLoadedVoice} from "../../config.ts";
 
 type MLProps = {
-    chatProxy: Chat
+    chatSnap: Chat
 }
 
-export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
-    const chatSnp = useSnapshot(chatProxy)
+export const MessageList: React.FC<MLProps> = ({chatSnap}) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const [shouldBeInHistory, setShouldBeInHistory] = useState<Set<number>>(new Set())
@@ -25,8 +23,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     }); // run once on mount
 
     useEffect(() => {
-        const messages = chatSnp.messages
-        const mh = chatSnp.option.llm.maxHistory
+        const messages = chatSnap.messages
+        const mh = chatSnap.option.llm.maxHistory
         for (let i = messages.length - 1; i >= 0; i--) {
             if (shouldBeInHistory.size >= mh && shouldLoadVoice.size >= maxLoadedVoice) {
                 break
@@ -47,17 +45,17 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         }
         setShouldBeInHistory(shouldBeInHistory)
         setShouldLoadVoice(shouldLoadVoice)
-    }, [chatSnp, shouldBeInHistory, shouldLoadVoice])
+    }, [chatSnap, shouldBeInHistory, shouldLoadVoice])
 
     return (
-        <div className="overflow-y-auto w-full scrollbar-hide hover:scrollbar-show">
+        <div className="overflow-y-auto w-full scrollbar-hidden hover:scrollbar-visible">
             <div className="flex flex-col gap-5 rounded-lg w-full justify-end">
                 {/*crucial; don't merge the 2 divs above*/}
-                {chatSnp.messages.filter(msg => msg.status !== 'deleted')
+                {chatSnap.messages.filter(msg => msg.status !== 'deleted')
                     .map((msg, index) =>
                         <div className="flex flex-col gap-1 mr-2" key={msg.id}>
-                            <Row chatId={chatSnp.id}
-                                 messageSnp={msg}
+                            <Row chatId={chatSnap.id}
+                                 messageSnap={msg}
                                  shouldBeInHistory={shouldBeInHistory.has(index)}
                                  shouldLoadAudio={shouldLoadVoice.has(index)}
                             />
@@ -71,23 +69,23 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
 type Props = {
     chatId: string
-    messageSnp: Message
+    messageSnap: Message
     shouldBeInHistory: boolean
     shouldLoadAudio: boolean
 }
 
 const Row: React.FC<Props> = ({
                                   chatId,
-                                  messageSnp: messageSnp,
+                                  messageSnap: messageSnap,
                                   shouldBeInHistory,
                                   shouldLoadAudio
                               }) => {
 
     const markAsDeleted = useCallback(() => {
-        markMessageAsDeleted(chatId, messageSnp.id)
-    }, [chatId, messageSnp.id])
+        markMessageAsDeleted(chatId, messageSnap.id)
+    }, [chatId, messageSnap.id])
 
-    switch (messageSnp.status) {
+    switch (messageSnap.status) {
         case "sending":
             break;
         case "sent":
@@ -102,13 +100,13 @@ const Row: React.FC<Props> = ({
             break;
     }
     let m: React.JSX.Element
-    if (messageSnp.audio) {
+    if (messageSnap.audio) {
         m = <div className="rounded-lg max-w-1/2 md:max-w-2/5 w-full text-neutral-900 self-end">
-            <Audio audioSnp={messageSnp.audio} self={messageSnp.role == "user"} loadAudio={shouldLoadAudio}/>
+            <Audio audioSnap={messageSnap.audio} self={messageSnap.role == "user"} loadAudio={shouldLoadAudio}/>
         </div>
     } else {
         m = <div className={shouldBeInHistory ? "border border-neutral-500 border-dashed" : ""}>
-            <RichOpText deleteFunc={markAsDeleted} text={messageSnp.text}/>
+            <RichOpText deleteFunc={markAsDeleted} text={messageSnap.text}/>
         </div>
     }
     return <ErrorBoundary>

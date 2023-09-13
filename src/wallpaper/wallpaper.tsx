@@ -13,7 +13,7 @@ export type WallpaperAuthProps = {
     onDark?: (isDark: boolean) => void
 }
 
-export const WallpaperAuth: React.FC<WallpaperAuthProps> = ({onDark}) => {
+export const WallpaperGranim: React.FC<WallpaperAuthProps> = ({onDark}) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     useEffect(() => {
         const darkColor = ["#000428", "#004e92"]
@@ -38,7 +38,7 @@ export const WallpaperAuth: React.FC<WallpaperAuthProps> = ({onDark}) => {
                 },
                 onGradientChange: (e) => {
                     const isDark = compareSlices(e.colorsTo, darkColor)
-                    if (isDark && onDark) {
+                    if (onDark !== undefined) {
                         onDark(isDark)
                     }
                 }
@@ -52,11 +52,13 @@ export const WallpaperAuth: React.FC<WallpaperAuthProps> = ({onDark}) => {
     }, [onDark]);
 
     return (
-        <canvas
-            ref={canvasRef}
-            className="absolute w-full h-full -z-50"
-            style={{position: 'fixed'}}
-        />
+        <div>
+            <canvas
+                ref={canvasRef}
+                className="inset-0 h-screen w-screen fixed -z-50 brightness-50"
+            />
+            <div className="inset-0 bg-noise opacity-80 fixed h-screen w-screen contrast-200 brightness-200 -z-50"/>
+        </div>
     );
 }
 

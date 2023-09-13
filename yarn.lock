@@ -1084,6 +1084,11 @@ eslint-plugin-react-refresh@^0.4.3:
   resolved "https://registry.npmmirror.com/eslint-plugin-react-refresh/-/eslint-plugin-react-refresh-0.4.3.tgz"
   integrity sha512-Hh0wv8bUNY877+sI0BlCUlsS0TYYQqvzEwJsJJPM2WF4RnTStSnSR3zdJYa2nPOJgg3UghXi54lVyMSmpCalzA==
 
+eslint-plugin-valtio@^0.6.2:
+  version "0.6.2"
+  resolved "https://registry.npmmirror.com/eslint-plugin-valtio/-/eslint-plugin-valtio-0.6.2.tgz#b66791b3b6c5964a1736c6a75106355e8cfb63be"
+  integrity sha512-7U870y+gjL6xsiwPyMcUFHFbrMPk2t02X6V4VF5rSDi0f3A/uQDqAVvsY7m035plKW0Ke2i1aRch4tNWtnRqLA==
+
 eslint-scope@^7.2.2:
   version "7.2.2"
   resolved "https://registry.npmmirror.com/eslint-scope/-/eslint-scope-7.2.2.tgz"
@@ -1799,15 +1804,6 @@ postcss@^8.4.23, postcss@^8.4.27:
   version "8.4.27"
   resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.27.tgz"
   integrity sha512-gY/ACJtJPSmUFPDCHtX78+01fHa64FaU4zaaWfuh1MhGJISufJAH4cun6k/8fwsHYeK4UQmENQK+tRLCFJE8JQ==
-  dependencies:
-    nanoid "^3.3.6"
-    picocolors "^1.0.0"
-    source-map-js "^1.0.2"
-
-postcss@^8.4.29:
-  version "8.4.29"
-  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.29.tgz#33bc121cf3b3688d4ddef50be869b2a54185a1dd"
-  integrity sha512-cbI+jaqIeu/VGqXEarWkRCCffhjgXc0qjBtXpqJhTBohMUjUQnbBr0xqX3vEKudc4iviTewcJo5ajcec5+wdJw==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"

@@ -2,12 +2,14 @@ import React, {useCallback} from 'react';
 import {Chat} from "../../../state/app-state.ts";
 import {CountDownButton} from "../shared/widget/button.tsx";
 import {BsTrash3} from "react-icons/bs";
+import {useSnapshot} from "valtio/react";
 
 type Props = {
     chatProxy: Chat
 }
 
 export const OtherSetting: React.FC<Props> = ({chatProxy}) => {
+    useSnapshot(chatProxy)
     const clearMessages = useCallback(() => {
         chatProxy.messages = []
     }, [chatProxy]);

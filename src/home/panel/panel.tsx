@@ -3,21 +3,20 @@ import {useSnapshot} from "valtio/react";
 import {appState, Chat, PanelSelection} from "../../state/app-state.ts";
 import {controlState} from "../../state/control-state.ts";
 import {ChatList} from "./chat-list/chat-list.tsx";
-import {OtherSetting} from "./current/other-setting.tsx";
-import {escapeSpaceKey, cx} from "../../util/util.tsx";
+import {cx, escapeSpaceKey} from "../../util/util.tsx";
 import {Global} from "./global/global.tsx";
+import {Current} from "./current/current.tsx";
 
 export const Panel: React.FC = () => {
 
-    const controlSnp = useSnapshot(controlState)
-    const appSnp = useSnapshot(appState)
+    const appSnap= useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat>()
 
     useEffect(() => {
-        if (appSnp.currentChatId) {
-            setChatProxy(appState.chats[appSnp.currentChatId] as Chat)
+        if (appSnap.currentChatId) {
+            setChatProxy(appState.chats[appState.currentChatId] as Chat)
         }
-    }, [appSnp.currentChatId]);
+    }, [appSnap.currentChatId, appSnap.chats]);
 
     const onMouseUp = useCallback((p: PanelSelection) => {
         appState.panelSelection = p
@@ -28,10 +27,10 @@ export const Panel: React.FC = () => {
     }, [])
 
     const onMouseEnter = useCallback((p: PanelSelection) => {
-        if (controlSnp.isMouseLeftDown) {
+        if (controlState.isMouseLeftDown) {
             appState.panelSelection = p
         }
-    }, [controlSnp])
+    }, [])
 
     return (
         <div className="flex h-full select-none flex-col gap-3 w-full"
@@ -41,7 +40,7 @@ export const Panel: React.FC = () => {
             p-1 bg-white bg-opacity-40">
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnp.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        appSnap.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUp("chats")}
                     onMouseDown={() => onMouseDown("chats")}
                     onMouseEnter={() => onMouseEnter("chats")}
@@ -50,7 +49,7 @@ export const Panel: React.FC = () => {
                 </div>
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnp.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        appSnap.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUp("global")}
                     onMouseDown={() => onMouseDown("global")}
                     onMouseEnter={() => onMouseEnter("global")}
@@ -60,8 +59,8 @@ export const Panel: React.FC = () => {
                 <div className={
                     cx(
                         "flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnp.currentChatId === "" ? "hidden" : "",
-                        appSnp.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
+                        appSnap.currentChatId === "" ? "hidden" : "",
+                        appSnap.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
                      onMouseUp={() => onMouseUp("current")}
                      onMouseDown={() => onMouseDown("current")}
@@ -72,15 +71,15 @@ export const Panel: React.FC = () => {
             </div>
             <div className="flex flex-col gap-y-3 items-center overflow-y-auto pr-1"
             >
-                {appSnp.panelSelection === "chats" &&
+                {appSnap.panelSelection === "chats" &&
                     <ChatList/>
                 }
-                {appSnp.panelSelection === "global" &&
-                    <Global/>
+                {appSnap.panelSelection === "global" &&
+                    <Global optionProxy={appState.option}/>
                 }
-                {appSnp.panelSelection === "current" && chatProxy &&
+                {appSnap.panelSelection === "current" && chatProxy &&
                     <>
-                        <OtherSetting chatProxy={chatProxy}/>
+                        <Current chatProxy={chatProxy}/>
                     </>
                 }
             </div>

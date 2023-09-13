@@ -8,7 +8,7 @@ type Props = {
 }
 
 const TextArea: React.FC<Props> = ({chatProxy}) => {
-        const chatSnp = useSnapshot(chatProxy)
+        const chatSnap= useSnapshot(chatProxy)
 
         const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
         const arrowButtonRef = useRef<HTMLButtonElement>(null);
@@ -27,12 +27,12 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                 sendButtonRef.current.blur()
             }
             if (chatProxy.inputText) {
-                controlState.sendingMessages.push({chatId: chatSnp.id, text: chatSnp.inputText})
+                controlState.sendingMessages.push({chatId: chatSnap.id, text: chatSnap.inputText})
                 controlState.sendingMessageSignal++
                 chatProxy.inputText = ""
             }
             textAreaRef.current?.focus()
-        }, [chatProxy, chatSnp.id, chatSnp.inputText])
+        }, [chatProxy, chatSnap.id, chatSnap.inputText])
 
         const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
             event.stopPropagation();
@@ -93,9 +93,9 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                     <textarea
                         ref={textAreaRef}
                         className="w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto
-                        placeholder:text-neutral-500 min-h-24 max-h-[30rem]"
+                        placeholder:text-neutral-500 placeholder:select-none min-h-24 max-h-[30rem]"
                         onKeyUp={stopPropagation}
-                        value={chatSnp.inputText}
+                        value={chatSnap.inputText}
                         onInput={autoGrowHeight}
                         onChange={(e) => chatProxy.inputText = e.target.value}
                         onKeyDown={handleKeyDown}

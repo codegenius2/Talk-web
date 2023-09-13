@@ -1,30 +1,30 @@
 import React from 'react';
 import {LLM} from "../shared/llm/llm.tsx";
-import {ClientOption} from "../../../data-structure/client-option.tsx";
 import {TTS} from "../shared/tts/tts.tsx";
 import {useSnapshot} from "valtio/react";
 import {STT} from "../shared/stt/stt.tsx";
 import {OtherSetting} from "./other-setting.tsx";
+import {Chat} from "../../../state/app-state.ts";
 
 type Props = {
-    optionProxy: ClientOption
+    chatProxy: Chat
 }
 
-export const Global: React.FC<Props> = ({optionProxy}) => {
-    useSnapshot(optionProxy)
+export const Current: React.FC<Props> = ({chatProxy}) => {
+    useSnapshot(chatProxy)
     return (
         <>
             <div className="z-40 w-full">
-                <LLM llmOptionProxy={optionProxy.llm}/>
+                <LLM llmOptionProxy={chatProxy.option.llm}/>
             </div>
             <div className="z-30 w-full">
-                <TTS ttsOptionProxy={optionProxy.tts}/>
+                <TTS ttsOptionProxy={chatProxy.option.tts}/>
             </div>
             <div className="z-20 w-full">
-                <STT sttOptionProxy={optionProxy.stt}/>
+                <STT sttOptionProxy={chatProxy.option.stt}/>
             </div>
             <div className="z-10 w-full">
-                <OtherSetting/>
+                <OtherSetting chatProxy={chatProxy}/>
             </div>
         </>
     )

@@ -7,29 +7,29 @@ import {clear, onPrevFinish, pause, play, playerState} from "../../../state/cont
 import Hover from 'wavesurfer.js/dist/plugins/hover'
 
 interface AudioProps {
-    audioSnp: MessageAudio
+    audioSnap: MessageAudio
     loadAudio: boolean
     self: boolean
 }
 
-export const Audio: React.FC<AudioProps> = ({audioSnp, loadAudio, self}) => {
+export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, self}) => {
     const [audioUrl, setAudioUrl] = useState<string>("")
     useEffect(() => {
         if (loadAudio) {
-            audioDb.getItem<Blob>(audioSnp.id, (blob:Blob) => {
+            audioDb.getItem<Blob>(audioSnap.id, (blob:Blob) => {
                 if (blob) {
                     const url = URL.createObjectURL(blob)
                     setAudioUrl(url)
                 } else {
-                    console.error("audio blob is empty, audioId:", audioSnp.id)
+                    console.error("audio blob is empty, audioId:", audioSnap.id)
                 }
             }).catch(e => {
-                console.error("failed to get audio blob, audioId:", audioSnp.id, e)
+                console.error("failed to get audio blob, audioId:", audioSnap.id, e)
             })
         }
-    }, [audioSnp.id, loadAudio])
+    }, [audioSnap.id, loadAudio])
 
-    return <Wave url={audioUrl} audioId={audioSnp.id} self={self}></Wave>
+    return <Wave url={audioUrl} audioId={audioSnap.id} self={self}></Wave>
 }
 
 interface WaveSurferProps {
@@ -40,7 +40,7 @@ interface WaveSurferProps {
 
 const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
 
-    const playerSnp = useSnapshot(playerState)
+    const playerSnap= useSnapshot(playerState)
     const wavesurfer = useRef<WaveSurfer>();
     const container = useRef(null);
     const [amIPlaying, setAmIPlaying] = useState(false)
@@ -97,8 +97,8 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
     }, [audioId, color, url]);
 
     useEffect(() => {
-        setAmIPlaying(playerSnp.isPlaying && playerSnp.current === audioId)
-    }, [audioId, playerSnp]);
+        setAmIPlaying(playerSnap.isPlaying && playerSnap.current === audioId)
+    }, [audioId, playerSnap]);
 
     useEffect(() => {
         if (wavesurfer.current) {

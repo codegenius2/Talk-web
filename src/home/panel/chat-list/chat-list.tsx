@@ -9,11 +9,11 @@ import {randomHash16Char} from "../../../util/util.tsx";
 import {ChatComponent} from "./chat-component.tsx";
 
 export const ChatList = () => {
-    const appSnp = useSnapshot(appState)
+    const appSnap = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
 
     const newChat = useCallback((): void => {
-        const optionClone = _.cloneDeep(appSnp.option)
+        const optionClone = _.cloneDeep(appState.option)
         const chat = proxy<Chat>({
             id: randomHash16Char(),
             name: randomHash16Char(),
@@ -24,7 +24,7 @@ export const ChatList = () => {
         })
         appState.chats[chat.id] = chat
         appState.currentChatId = chat.id
-    }, [appSnp.ability])
+    }, [])
 
     // delete a chat should not trigger auto scrolling
     useEffect(() => {
@@ -34,7 +34,7 @@ export const ChatList = () => {
                 block: "nearest"
             })
         }
-    }, [appSnp.currentChatId])
+    }, [appSnap.currentChatId])
 
     return (
         <div className="flex h-full w-full flex-col gap-4">
@@ -52,13 +52,13 @@ export const ChatList = () => {
                 </div>
             </div>
             <div
-                className="h-full w-full overflow-y-auto pr-1 scrollbar-hide hover:scrollbar-show">
+                className="h-full w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
                 <div
                     className="flex cursor-pointer flex-col gap-1">
-                    {Object.entries(appSnp.chats).map(([key, chatSnp]) =>
-                        <div ref={chatSnp.id === appSnp.currentChatId ? chatRef : undefined}
+                    {Object.entries(appSnap.chats).map(([key, chatSnap]) =>
+                        <div ref={chatSnap.id === appSnap.currentChatId ? chatRef : undefined}
                              key={key}>
-                            <ChatComponent chatSnp={chatSnp as Chat}/>
+                            <ChatComponent chatSnap={chatSnap as Chat}/>
                         </div>
                     )}
                 </div>

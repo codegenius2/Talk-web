@@ -29,16 +29,22 @@ export const CountDownButton: React.FC<Props> = ({
     return <div className={
         cx(
             "cursor-pointer flex items-center bg-white bg-opacity-60 rounded-lg gap-1 px-2 py-0.5",
-            "hover:text-neutral-100 hover:border-transparent transition duration-300 border",
+            "hover:text-neutral-100 hover:border-transparent transition duration-300 border select-none",
             color === "red" && "border-red-600 text-red-600 hover:bg-red-600",
             color === "blue" && "border-blue-600 text-blue-600 hover:bg-blue-600",
-            color === "black" && "border-black-600 text-black-600 hover:bg-black-600",
+            color === "black" && "border-black text-black hover:bg-black",
             holding && "scale-110"
         )}
-                onMouseDown={() => setHolding(true)}
+                onMouseDown={(e) => {
+                    if (e.button === 0) {
+                        // only respond to left-click
+                        setHolding(true)
+                    }
+                }}
                 onMouseUp={() => setHolding(false)}
                 onMouseLeave={() => setHolding(false)}
-                onContextMenu={() => {
+                onContextMenu={(e) => {
+                    e.preventDefault()
                     setHolding(false)
                 }}>
         {icon}

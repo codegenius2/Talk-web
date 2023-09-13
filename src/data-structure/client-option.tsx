@@ -64,7 +64,6 @@ export const adjustOption = (c: ClientOption, s: ServerAbility): void => {
     c.llm.chatGPT.model = pickOne(c.llm.chatGPT.model, s.llm.chatGPT.models)
 
     c.tts.google.available = s.tts.google.available
-    c.tts.google.voiceId = pickOne(c.tts.google.voiceId, s.tts.google.voices, (voice) => voice.id)
     c.tts.elevenlabs.available = s.tts.elevenlabs.available
     c.tts.elevenlabs.voiceId = pickOne(c.tts.elevenlabs.voiceId, s.tts.elevenlabs.voices, (voice) => voice.id)
 
@@ -151,6 +150,7 @@ export type TTSOption = {
     google: GoogleTTSOption
     elevenlabs: ElevenlabsTTSOption
 }
+
 
 export type GoogleTTSOption = Switchable & {
     // if VoiceId is provided, LanguageCode and Gender will not be used

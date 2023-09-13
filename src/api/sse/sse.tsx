@@ -28,14 +28,14 @@ export const SSE = () => {
 
     useEffect(() => {
         const ep = SSEEndpoint()
-        const url = ep + "?stream=" + networkSnp.streamId
+        const url = ep + "?stream=" + networkState.streamId
 
         console.info("connecting to SSE: ", url);
         const ctrl = new AbortController();
         fetchEventSource(url, {
             signal: ctrl.signal,
             headers: {
-                'Authorization': 'Bearer ' + authSnp.passwordHash,
+                'Authorization': 'Bearer ' + appState.auth.passwordHash,
             },
             keepalive: true,
             onopen: async (response: Response) => {
@@ -46,8 +46,8 @@ export const SSE = () => {
                 const data = JSON.parse(msg.data)
                 if (msg.event === EventSystemAbility) {
                     const sa = data as ServerAbility
-                    // important! todo rewrite merge logics using by simply updating appState.ability
                     adjustOption(appState.option, sa)
+                    appState.ability = sa
                     return;
                 }
 

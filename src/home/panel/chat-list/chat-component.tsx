@@ -5,37 +5,37 @@ import {controlState} from "../../../state/control-state.ts";
 import {Preview} from "./preview.tsx";
 
 type Props = {
-    chatSnp: Chat
+    chatSnap: Chat
 }
 
-export const ChatComponent: React.FC<Props> = ({chatSnp}) => {
-    const appSnp = useSnapshot(appState)
-    const controlSnp = useSnapshot(controlState)
+export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
+    const appSnap= useSnapshot(appState)
+    const controlSnap= useSnapshot(controlState)
     const [selected, setSelected] = useState(false)
     const [over, setMouseOver] = useState(false)
 
     const onContainerMouseDownOrUp = useCallback(() => {
-        appState.currentChatId = chatSnp.id
-    }, [chatSnp.id])
+        appState.currentChatId = chatSnap.id
+    }, [chatSnap.id])
 
     const onMouseEnter = useCallback(() => {
-        if (controlSnp.isMouseLeftDown) {
-            appState.currentChatId = chatSnp.id
+        if (controlSnap.isMouseLeftDown) {
+            appState.currentChatId = chatSnap.id
         }
-    }, [chatSnp.id, controlSnp.isMouseLeftDown])
+    }, [chatSnap.id, controlSnap.isMouseLeftDown])
 
     const removeChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
-        deleteChat(chatSnp.id)
-    }, [chatSnp.id])
+        deleteChat(chatSnap.id)
+    }, [chatSnap.id])
 
     const onDeleteButtonMouseDownOrUp = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
     }, [])
 
     useEffect(() => {
-        setSelected(appSnp.currentChatId === chatSnp.id)
-    }, [appSnp, chatSnp]);
+        setSelected(appSnap.currentChatId === chatSnap.id)
+    }, [appSnap, chatSnap]);
 
 
     return (
@@ -53,11 +53,11 @@ export const ChatComponent: React.FC<Props> = ({chatSnp}) => {
                     "hover:bg-neutral-100 hover:bg-opacity-70 "}`}
             >
                 <div className="">
-                    <p className="w-auto break-keep">{chatSnp.name}</p>
+                    <p className="w-auto break-keep">{chatSnap.name}</p>
                 </div>
                 <div className="">
                     <div className="w-auto text-sm text-neutral-600">
-                        <Preview chatSnp={chatSnp}/>
+                        <Preview chatSnap={chatSnap}/>
                     </div>
                 </div>
             </div>

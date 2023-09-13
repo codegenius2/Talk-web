@@ -56,6 +56,20 @@ const defaultAppState = (): AppState => ({
     panelSelection: "chats"
 })
 
+export const clearSettings = () => {
+    const dft = defaultAppState()
+    appState.auth = dft.auth
+    appState.ability = dft.ability
+    appState.option = dft.option
+    appState.panelSelection = dft.panelSelection
+}
+
+export const clearChats = () => {
+    const dft = defaultAppState()
+    appState.chats = dft.chats
+    appState.currentChatId = dft.currentChatId
+}
+
 export const resetAppState = () => {
     const dft = defaultAppState()
     appState.auth = dft.auth
@@ -66,25 +80,17 @@ export const resetAppState = () => {
     appState.panelSelection = dft.panelSelection
 }
 
-appDb.getItem<AppState>(appStateKey).then((as) => {
-    console.debug("loading from db:", as)
-    if (as) {
-        if (as.auth) {
-            appState.auth = as.auth
-        }
-        if (as.option) {
-            appState.option = as.option
-        }
-        if (as.chats) {
-            appState.chats = as.chats
-        }
-        if (as.currentChatId) {
-            appState.currentChatId = as.currentChatId
-        }
-        if (as.panelSelection) {
-            appState.panelSelection = as.panelSelection
-        }
+appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
+    console.debug("restoring from db:", as)
+
+    if (as !== null) {
+        Object.keys(appState).forEach((key) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            appState[key as keyof AppState] = as[key]
+        })
     }
+    console.debug("restored")
     hydrationState.hydrated = true
 })
 
@@ -133,11 +139,6 @@ export const savePassAsHash = (password: string) => {
 
 export const setLoggedIn = (loggedIn: boolean) => {
     appState.auth.loggedIn = loggedIn
-}
-
-export const clearChats = () => {
-    appState.chats = {}
-    appState.currentChatId = ""
 }
 
 export const deleteChat = (id: string) => {

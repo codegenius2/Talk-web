@@ -4,7 +4,8 @@ import {AxiosError, AxiosResponse} from "axios";
 import {useNavigate} from "react-router-dom";
 import {login} from "../api/restful/api.ts";
 import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
-import {WallpaperAuth} from "../wallpaper/wallpaper.tsx";
+import {WallpaperGranim} from "../wallpaper/wallpaper.tsx";
+import {cx} from "../util/util.tsx";
 
 const detectDelay = 1000
 const fadeOutDuration = 1500
@@ -24,7 +25,6 @@ export default function Auth() {
     const [shake, setShake] = useState(false);
     const [startFadeOut, setStartFadeOut] = useState(false);
     const [startFadeIn, setStartFadeIn] = useState(false);
-
 
     // use this function to detect where password is required by Talk server
     const detectPassword = useCallback((shake: boolean, password?: string) => {
@@ -50,6 +50,10 @@ export default function Auth() {
         detectPassword(true, inputValue)
     }, [detectPassword, inputValue])
 
+    const onDark = useCallback((isDark: boolean) => {
+        setTextLight(isDark)
+    }, [])
+
     // detect if login is required
     useEffect(() => {
         const t = setTimeout(() => detectPassword(false)
@@ -63,15 +67,17 @@ export default function Auth() {
 
     return (
         // fadeOutDuration is shorter than duration-2000 to avoid staying in a white page
-        <div className={`transition-opacity duration-2000 ${startFadeOut ? 'opacity-0' : 'opacity-100'}`}>
-            <div className={`transition-opacity duration-300 ${startFadeIn ? 'opacity-100' : 'opacity-0'}`}>
-                {<WallpaperAuth onDark={(isDark)=>setTextLight(isDark)}/>}
+        <div className={cx("transition-opacity duration-2000", startFadeOut ? 'opacity-0' : 'opacity-100')}>
+            <div className={cx("transition-opacity duration-300", startFadeIn ? 'opacity-100' : 'opacity-0')}>
+                {<WallpaperGranim onDark={onDark}/>}
                 <div
-                    className="flex flex-col items-center justify-center h-screen w-screen overflow-hidden gap-14 transition-colors">
-                    <p className={"font-borel text-7xl md:text-8xl lg:text-9xl tracking-widest z-10 transition duration-5000 " + (textLight ? "text-neutral-200" : "text-neutral-800")}>
+                    className="flex h-screen w-screen flex-col items-center justify-center gap-14 overflow-hidden transition-colors">
+                    <p className={cx("select-none font-borel text-7xl md:text-8xl lg:text-9xl tracking-widest transition duration-5000",
+                        textLight ? "text-neutral-200" : "text-neutral-800"
+                    )}>
                         Let&apos;s talk
                     </p>
-                    <form className="max-w-3/4 w-96 mb-[25vh]" onSubmit={handleSubmit}>
+                    <form className="w-96 max-w-3/4 mb-[25vh]" onSubmit={handleSubmit}>
                         {/*<input type="text" id="username" hidden={true} autoComplete="current-password" aria-hidden="true" required={false}/>*/}
                         <motion.input
                             type="password"
@@ -85,9 +91,9 @@ export default function Auth() {
                                 setInputValue(e.target.value);
                                 setShake(false);
                             }}
-                            className={"appearance-none w-full h-16 rounded-lg outline-0 shadow-md caret-transparent " +
-                                "text-6xl text-center tracking-widest bg-white bg-opacity-10 backdrop-blur " +
-                                "placeholder:text-neutral-200 transition duration-5000" + (textLight ? "text-neutral-200" : "text-neutral-800")}
+                            className={cx("appearance-none w-full h-16 rounded-lg outline-0 caret-transparent",
+                                "text-6xl text-center tracking-widest bg-white backdrop-blur bg-opacity-10 transition duration-5000",
+                                textLight ? "text-neutral-200" : "text-neutral-800")}
                         />
                     </form>
                 </div>

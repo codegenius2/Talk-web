@@ -23,8 +23,12 @@ https://benborgers.com/posts/tailwind-h-screen
 }
 
 @layer utilities {
-    .scrollbar-show::-webkit-scrollbar-thumb {
+    .scrollbar-visible::-webkit-scrollbar-thumb {
         background-color: #eeeeee;
+        transition: background-color 1000ms linear;
+    }
+    .scrollbar-visible-neutral-300::-webkit-scrollbar-thumb {
+        background-color: #d4d4d4;
         transition: background-color 1000ms linear;
     }
 
@@ -33,7 +37,7 @@ https://benborgers.com/posts/tailwind-h-screen
         height: 0;
     }
 
-    .scrollbar-hide::-webkit-scrollbar-thumb {
+    .scrollbar-hidden::-webkit-scrollbar-thumb {
         background-color: rgba(255, 255, 255, 0);
         transition: background-color 1000ms linear;
     }
