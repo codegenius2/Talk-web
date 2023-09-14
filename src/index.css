@@ -31,6 +31,10 @@ https://benborgers.com/posts/tailwind-h-screen
         background-color: #d4d4d4;
         transition: background-color 1000ms linear;
     }
+    .scrollbar-visible-neutral-500::-webkit-scrollbar-thumb {
+        background-color: #71717a;
+        transition: background-color 1000ms linear;
+    }
 
     .scrollbar-gone::-webkit-scrollbar{
         width: 0;

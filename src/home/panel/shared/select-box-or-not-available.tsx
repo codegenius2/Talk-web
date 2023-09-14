@@ -1,4 +1,4 @@
-import {SelectBoxExample} from "./widget/my-select-box.tsx";
+import {SelectBox} from "./widget/select-box.tsx";
 import {Choice} from "../../../data-structure/provider-api-refrence/types.ts";
 
 
@@ -6,7 +6,7 @@ type Props<T extends number | string> = {
     title: string
     choices: Choice<T>[]
     defaultValue?: T
-    setValue: (value: T) => void
+    setValue: (value?: T) => void
 }
 
 export function SelectBoxOrNotAvailable<T extends number | string>({title, choices, defaultValue, setValue}: Props<T>) {
@@ -15,7 +15,7 @@ export function SelectBoxOrNotAvailable<T extends number | string>({title, choic
             <p className="prose text-neutral-600">{title}</p>
             {defaultValue !== undefined && choices.length > 0 ?
                 <div className="w-full overflow-x-hidden">
-                    <SelectBoxExample
+                    <SelectBox
                         choices={choices}
                         defaultValue={defaultValue}
                         setValue={setValue}

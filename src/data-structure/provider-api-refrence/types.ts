@@ -1,3 +1,5 @@
+export const k = 1024
+
 export interface IntRange {
     readonly rangeStart: number;
     readonly rangeEnd: number;

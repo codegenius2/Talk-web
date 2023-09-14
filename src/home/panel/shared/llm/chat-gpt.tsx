@@ -14,6 +14,7 @@ import {appState} from "../../../../state/app-state.ts";
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
+import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts";
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
@@ -42,8 +43,8 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy,setEnabled}) => {
         appState.option.llm.maxHistory = hist
     }, [])
 
-    const setModel = useCallback((model: string) => {
-        chatGPTOptionProxy.model = model
+    const setModel = useCallback((model?: string|number) => {
+        chatGPTOptionProxy.model = model as string
     }, [])
 
     const setMaxTokens = useCallback((token: number) => {
@@ -82,11 +83,11 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy,setEnabled}) => {
                                        setValue={setMaxHistory}
                                        value={llmOptionSnap.maxHistory}
                                        showRange={true}
-                                       outOfLeftBoundary={chatGPTAPIReference.maxHistory.rangeStart}
-                                       defaultValue={chatGPTAPIReference.maxHistory.default}
+                                       outOfLeftBoundary={llmAPIReference.maxHistory.rangeStart}
+                                       defaultValue={llmAPIReference.maxHistory.default}
                                        range={{
-                                           rangeStart: chatGPTAPIReference.maxHistory.rangeStart,
-                                           rangeEnd: chatGPTAPIReference.maxHistory.rangeEnd,
+                                           rangeStart: llmAPIReference.maxHistory.rangeStart,
+                                           rangeEnd: llmAPIReference.maxHistory.rangeEnd,
                                        }}
                         />
                         <DiscreteRange choices={tokenChoices}

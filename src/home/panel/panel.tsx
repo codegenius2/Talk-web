@@ -6,10 +6,11 @@ import {ChatList} from "./chat-list/chat-list.tsx";
 import {cx, escapeSpaceKey} from "../../util/util.tsx";
 import {Global} from "./global/global.tsx";
 import {Current} from "./current/current.tsx";
+import {layoutState} from "../../state/layout-state.ts";
 
 export const Panel: React.FC = () => {
 
-    const appSnap= useSnapshot(appState)
+    const appSnap = useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat>()
 
     useEffect(() => {
@@ -18,11 +19,7 @@ export const Panel: React.FC = () => {
         }
     }, [appSnap.currentChatId, appSnap.chats]);
 
-    const onMouseUp = useCallback((p: PanelSelection) => {
-        appState.panelSelection = p
-    }, [])
-
-    const onMouseDown = useCallback((p: PanelSelection) => {
+    const onMouseUpOrDown = useCallback((p: PanelSelection) => {
         appState.panelSelection = p
     }, [])
 
@@ -31,6 +28,12 @@ export const Panel: React.FC = () => {
             appState.panelSelection = p
         }
     }, [])
+
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const scrollTop = e.currentTarget.scrollTop
+        console.debug("scrollTop", scrollTop)
+        layoutState.settingPanelScrollOffset = scrollTop
+    };
 
     return (
         <div className="flex h-full select-none flex-col gap-3 w-full"
@@ -41,8 +44,8 @@ export const Panel: React.FC = () => {
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         appSnap.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
-                    onMouseUp={() => onMouseUp("chats")}
-                    onMouseDown={() => onMouseDown("chats")}
+                    onMouseUp={() => onMouseUpOrDown("chats")}
+                    onMouseDown={() => onMouseUpOrDown("chats")}
                     onMouseEnter={() => onMouseEnter("chats")}
                 >
                     <p className="text-center">Chats</p>
@@ -50,8 +53,8 @@ export const Panel: React.FC = () => {
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
                         appSnap.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
-                    onMouseUp={() => onMouseUp("global")}
-                    onMouseDown={() => onMouseDown("global")}
+                    onMouseUp={() => onMouseUpOrDown("global")}
+                    onMouseDown={() => onMouseUpOrDown("global")}
                     onMouseEnter={() => onMouseEnter("global")}
                 >
                     <p className="text-center">Setting</p>
@@ -62,25 +65,43 @@ export const Panel: React.FC = () => {
                         appSnap.currentChatId === "" ? "hidden" : "",
                         appSnap.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
-                     onMouseUp={() => onMouseUp("current")}
-                     onMouseDown={() => onMouseDown("current")}
+                     onMouseUp={() => onMouseUpOrDown("current")}
+                     onMouseDown={() => onMouseUpOrDown("current")}
                      onMouseEnter={() => onMouseEnter("current")}
                 >
                     <p className="text-center">Current</p>
                 </div>
             </div>
-            <div className="flex flex-col gap-y-3 items-center overflow-y-auto pr-1"
+
+            {/* utilizing hidden to avoid flashing animation on panel selection*/}
+            <div
+                onScroll={handleScroll}
+                className={cx(
+                    "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
+                    appSnap.panelSelection !== "chats" && "hidden"
+                )}
             >
-                {appSnap.panelSelection === "chats" &&
-                    <ChatList/>
-                }
-                {appSnap.panelSelection === "global" &&
-                    <Global optionProxy={appState.option}/>
-                }
-                {appSnap.panelSelection === "current" && chatProxy &&
-                    <>
-                        <Current chatProxy={chatProxy}/>
-                    </>
+                <ChatList/>
+            </div>
+
+            <div
+                onScroll={handleScroll}
+                className={cx(
+                    "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
+                    appSnap.panelSelection !== "global" && "hidden"
+                )}
+            >
+                <Global optionProxy={appState.option}/>
+            </div>
+            <div
+                onScroll={handleScroll}
+                className={cx(
+                    "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
+                    appSnap.panelSelection !== "current" && "hidden"
+                )}
+            >
+                {chatProxy &&
+                    <Current chatProxy={chatProxy}/>
                 }
             </div>
         </div>

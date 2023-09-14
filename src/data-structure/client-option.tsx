@@ -4,6 +4,7 @@ import {chatGPTAPIReference} from "./provider-api-refrence/chat-gpt.ts";
 import {googleTTSAPIReference} from "./provider-api-refrence/google-tts.ts";
 import {elevenlabsAPIReference} from "./provider-api-refrence/elevenlabs-tts.ts";
 import {Switchable} from "../shared-types.ts";
+import {llmAPIReference} from "./provider-api-refrence/llm.ts";
 
 /**
  * Data structures embodying the parameters intended for the settings page display.
@@ -31,7 +32,7 @@ export const defaultOption = (): ClientOption => ({
             available: false,
             enabled: true,
         },
-        maxHistory: 1000,
+        maxHistory: llmAPIReference.maxHistory.default,
     },
     tts: {
         google: {

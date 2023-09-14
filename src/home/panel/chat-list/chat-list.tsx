@@ -26,7 +26,7 @@ export const ChatList = () => {
         appState.currentChatId = chat.id
     }, [])
 
-    // delete a chat should not trigger auto scrolling
+    // delete other chats should not trigger auto scrolling
     useEffect(() => {
         if (chatRef.current) {
             chatRef.current.scrollIntoView({

@@ -598,31 +598,31 @@ export const googleSTTLanguageSettings: Choice<string>[] = [
         name: "\ud55c\uad6d\uc5b4 (\ub300\ud55c\ubbfc\uad6d)",
         tags: []
     },
-    {
-        value: "cmn-Hant-TW",
-        name: "\u570b\u8a9e (\u53f0\u7063)",
-        tags: []
-    },
-    {
-        value: "yue-Hant-HK",
-        name: "\u5ee3\u6771\u8a71 (\u9999\u6e2f)",
-        tags: []
-    },
+    // {
+    //     value: "cmn-Hant-TW",
+    //     name: "\u570b\u8a9e (\u53f0\u7063)",
+    //     tags: []
+    // },
+    // {
+    //     value: "yue-Hant-HK",
+    //     name: "\u5ee3\u6771\u8a71 (\u9999\u6e2f)",
+    //     tags: []
+    // },
     {
         value: "ja-JP",
         name: "\u65e5\u672c\u8a9e\uff08\u65e5\u672c)",
         tags: []
     },
-    {
-        value: "cmn-Hans-HK",
-        name: "\u666e\u901a\u8a71 (\u9999\u6e2f)",
-        tags: []
-    },
-    {
-        value: "cmn-Hans-CN",
-        name: "\u666e\u901a\u8bdd (\u4e2d\u56fd\u5927\u9646)",
-        tags: []
-    },
+    // {
+    //     value: "cmn-Hans-HK",
+    //     name: "\u666e\u901a\u8a71 (\u9999\u6e2f)",
+    //     tags: []
+    // },
+    // {
+    //     value: "cmn-Hans-CN",
+    //     name: "\u666e\u901a\u8bdd (\u4e2d\u56fd\u5927\u9646)",
+    //     tags: []
+    // },
     {
         value: "cmn-CN",
         name: "\u666e\u901a\u8bdd (\u4e2d\u56fd\u5927\u9646)",

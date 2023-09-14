@@ -55,8 +55,8 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
         }
     }, [googleAbilitySnap, googleTTSSnap.languageCode])
 
-    const setVoice = useCallback((voiceId: string) => {
-        googleTTSOptionProxy.voiceId = voiceId
+    const setVoice = useCallback((voiceId?: string | number) => {
+        googleTTSOptionProxy.voiceId = voiceId as string
     }, [])
 
     const setSpeakingRate = useCallback((speakingRate: number) => {
@@ -97,6 +97,13 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
                             choices={voiceChoices}
                             defaultValue={googleTTSSnap.voiceId}
                             setValue={setVoice}/>
+                        {/*<div className="flex gap-4 w-full">*/}
+                        {/*    <div>sadfasdf</div>*/}
+                        {/*    <ListBox*/}
+                        {/*        choices={voiceChoices}*/}
+                        {/*        defaultValue={googleTTSSnap.voiceId}*/}
+                        {/*        setValue={setVoice}/>*/}
+                        {/*</div>*/}
                         <SliderRange title="Speaking Rate"
                                      defaultValue={googleTTSAPIReference.speakingRate.default}
                                      range={({

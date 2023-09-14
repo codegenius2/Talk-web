@@ -33,8 +33,11 @@ export function DiscreteRange<T extends string | number>({
     const [choiceColor, setChoiceColors] = useState<ChoiceColor<T>[]>([])
     const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
     const [valueUpdated, setValueUpdated] = useState(0)
+    const scrollChildRef = useRef<HTMLDivElement>(null)
+    const scrollBarRef = useRef<HTMLInputElement>(null);
+    const inputBoxRef = useRef<HTMLInputElement>(null);
 
-    const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
         const target = e.target.value
         const found = choices.find((c) => c.name === target)?.value
         let res: T
@@ -59,7 +62,7 @@ export function DiscreteRange<T extends string | number>({
         }
         setValue(res)
         setValueUpdated(valueUpdated + 1)
-    }
+    }, [choices, defaultValue, range, setValue, value, valueUpdated])
 
     useEffect(() => {
         if (!inputBoxRef.current) {
@@ -90,11 +93,28 @@ export function DiscreteRange<T extends string | number>({
         setChoiceColors(res)
     }, [choices, showRange, value])
 
-    const handleMouseLeaveFirstElement = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-        if (outOfLeftBoundary === undefined) {
-            return
+    // useEffect doesn't run again after scrollChildRef.current is set, use timeout to trigger
+    const [shouldScroll, setShouldScroll] = useState(0)
+    useEffect(() => {
+        setTimeout(() => setShouldScroll(1), 20)
+    }, []);
+    // auto scroll to selected value when page is loaded
+    useEffect(() => {
+        if (scrollChildRef.current && scrollBarRef.current) {
+            console.debug("scrollChildRef", scrollChildRef.current.getBoundingClientRect())
+            console.debug("scrollBarRef", scrollBarRef.current.getBoundingClientRect())
+            const point = scrollChildRef.current.getBoundingClientRect().left
+
+            const visibleWith = scrollBarRef.current.clientWidth
+            const {left} = scrollBarRef.current.getBoundingClientRect()
+            const distance = point - left - visibleWith / 2
+            console.debug("distance", distance)
+            scrollBarRef.current.scrollTo({top: 0, left: distance, behavior: 'smooth'});
         }
-        if (controlState.isMouseLeftDown) {
+    }, [shouldScroll])
+
+    const handleMouseLeaveFirstElement = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (outOfLeftBoundary !== undefined && controlState.isMouseLeftDown) {
             const {clientX} = event;
             const {right} = event.currentTarget.getBoundingClientRect();
             // if mouse doesn't leave from right side
@@ -102,9 +122,8 @@ export function DiscreteRange<T extends string | number>({
                 setValue(outOfLeftBoundary)
             }
         }
-    }
+    }, [outOfLeftBoundary, setValue])
 
-    const scrollBarRef = useRef<HTMLInputElement>(null);
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         // move to top if mouse is in between start and 1/4 position of visible area
         // move to end if mouse is in between 3/4 and end position of visible area
@@ -114,7 +133,6 @@ export function DiscreteRange<T extends string | number>({
 
             // length of visible content
             const visibleWidth = scrollBarRef.current.clientWidth;
-
 
             const mouseX = e.clientX;
             const relativeX = mouseX - scrollBarRef.current.getBoundingClientRect().left;
@@ -127,20 +145,9 @@ export function DiscreteRange<T extends string | number>({
             } else {
                 pos = (relativeX - visibleWidth / 4) / (visibleWidth / 2) * (totalWidth - visibleWidth)
             }
-            scrollBarRef.current.scrollTo({top: 0, left: pos, behavior: 'smooth'});
+            scrollBarRef.current.scrollTo({top: 0, left: pos, behavior: 'instant'});
         }
     }, []);
-
-    const scrollChildRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        if (scrollChildRef.current) {
-            scrollChildRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: "center"
-            })
-        }
-    }, []);
-
 
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
             e.preventDefault()
@@ -148,7 +155,6 @@ export function DiscreteRange<T extends string | number>({
             setValueUpdated(valueUpdated + 1)
         }, [defaultValue, setValue, valueUpdated]
     )
-
 
     const handleMouseEnterChild = (oc: ChoiceColor<T>) => {
         if (controlState.isMouseLeftDown) {
@@ -160,7 +166,6 @@ export function DiscreteRange<T extends string | number>({
         setValue(oc.choice.value)
     }
 
-    const inputBoxRef = useRef<HTMLInputElement>(null);
     const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
         if (event.code == 'Escape') {
             inputBoxRef.current?.blur()
@@ -196,7 +201,7 @@ export function DiscreteRange<T extends string | number>({
                 >
                     {choiceColor.map((oc: ChoiceColor<T>) =>
                         <div
-                            ref={oc.choice.value === value ? scrollChildRef : null}
+                            ref={oc.choice.value === value ? scrollChildRef : undefined}
                             className={"flex justify-center items-center flex-grow " + (oc.inRange ? "bg-blue-600" : "")
                                 + (showRange ? '' : ' rounded-full')}
                             key={oc.index}
@@ -209,7 +214,8 @@ export function DiscreteRange<T extends string | number>({
                                 {oc.choice.name}
                             </p>
                         </div>
-                    )}
+                    )
+                    }
                 </div>
             </div>
         </div>

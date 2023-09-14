@@ -1,7 +1,6 @@
-import {Choice, FloatRange, IntRange} from "./types.ts";
+import {Choice, FloatRange, IntRange, k} from "./types.ts";
 
 export type ChatGPTAPIReference = {
-    readonly maxHistory: IntRange
     readonly maxTokens: IntRange;
     readonly temperature: FloatRange;
     readonly topP: FloatRange;
@@ -10,16 +9,11 @@ export type ChatGPTAPIReference = {
 }
 
 // see https://platform.openai.com/docs/api-reference/chat/create
-export const chatGPTAPIReference : ChatGPTAPIReference={
-    maxHistory: {
-        rangeStart: 0,
-        rangeEnd: Number.MAX_SAFE_INTEGER,
-        default: 4,
-    },
+export const chatGPTAPIReference: ChatGPTAPIReference = {
     maxTokens: {
         rangeStart: 0,
         rangeEnd: Number.MAX_SAFE_INTEGER,
-        default: 2000,
+        default: k,
     },
     temperature: {
         rangeStart: 0,
@@ -58,7 +52,11 @@ export const historyChoices: Choice<number>[] = [
     {value: 30, name: "30", tags: []},
     {value: 40, name: "40", tags: []},
     {value: 50, name: "50", tags: []},
-    {value: 100, name: "100", tags: []}
+    {value: 100, name: "100", tags: []},
+    {value: 250, name: "250", tags: []},
+    {value: 500, name: "500", tags: []},
+    {value: k, name: "1k", tags: []},
+    {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []}
 ]
 
 export const tokenChoices: Choice<number>[] = [
@@ -66,11 +64,15 @@ export const tokenChoices: Choice<number>[] = [
     {value: 100, name: "100", tags: []},
     {value: 200, name: "200", tags: []},
     {value: 500, name: "500", tags: []},
-    {value: 1000, name: "1k", tags: []},
-    {value: 2000, name: "2k", tags: []},
-    {value: 4000, name: "4k", tags: []},
-    {value: 8000, name: "8k", tags: []},
-    {value: 16000, name: "16k", tags: []},
-    {value: 32000, name: "32k", tags: []},
+    {value: k, name: "1k", tags: []},
+    {value: 2 * k, name: "2k", tags: []},
+    {value: 3 * k, name: "3k", tags: []},
+    {value: 4 * k, name: "4k", tags: []},
+    {value: 8 * k, name: "8k", tags: []},
+    {value: 16 * k, name: "16k", tags: []},
+    {value: 32 * k, name: "32k", tags: []},
+    {value: 64 * k, name: "64k", tags: []},
+    {value: 128 * k, name: "128k", tags: []},
+    {value: 256 * k, name: "256k", tags: []},
     {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []},
 ]
