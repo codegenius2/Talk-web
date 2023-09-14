@@ -25,6 +25,7 @@ export type SendingMessage = {
 
 type ControlState = {
     isMouseLeftDown: boolean
+    isMouseDragging: boolean
     player: Player
     recordingMimeType?: RecordingMimeType
     recorder: EnhancedRecorder<RecordingCtx>
@@ -34,6 +35,7 @@ type ControlState = {
 
 export const controlState = proxy<ControlState>({
     isMouseLeftDown: false,
+    isMouseDragging: false,
     player: {
         autoPlay: true,
         isPlaying: false,

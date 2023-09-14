@@ -122,6 +122,26 @@ export const findChatProxy = (chatId: string): [Chat, number] | undefined => {
     return undefined
 }
 
+export const dragChat = (draggingIndex: number, hoveringIndex: number) => {
+    if (draggingIndex === hoveringIndex) {
+        return
+    }
+    const chats = appState.chats
+    if (draggingIndex < hoveringIndex) {
+        const chat = appState.chats[draggingIndex]
+        for (let i = draggingIndex; i < hoveringIndex; i++) {
+            chats[i] = chats[i + 1]
+        }
+        chats[hoveringIndex] = chat
+    } else {
+        const chat = appState.chats[draggingIndex]
+        for (let i = draggingIndex; i > hoveringIndex; i--) {
+            chats[i] = chats[i - 1]
+        }
+        chats[hoveringIndex] = chat
+    }
+}
+
 export const currentChatProxy = (): Chat | undefined => {
     if (appState.currentChatId === "") {
         return undefined
@@ -200,7 +220,7 @@ export const deleteChat = (id: string) => {
         removeChatById(id)
     } else {
         const index = findChatProxy(currentChatId)?.[1];
-        if (!index) {
+        if (index === undefined) {
             // currentChatId is actually invalid, reset it
             appState.currentChatId = ""
         } else {

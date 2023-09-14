@@ -6,9 +6,9 @@ import {PiPlusLight} from "react-icons/pi";
 import {CiSearch} from "react-icons/ci";
 import {appState, Chat} from "../../../state/app-state.ts";
 import {randomHash16Char} from "../../../util/util.tsx";
-import {ChatComponent} from "./chat-component.tsx";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import {DraggableChat} from "./draggable-chat.tsx";
 
 export const ChatList = () => {
     const appSnap = useSnapshot(appState)
@@ -58,10 +58,10 @@ export const ChatList = () => {
                 <div
                     className="flex cursor-pointer flex-col gap-1">
                     <DndProvider backend={HTML5Backend}>
-                        {Object.entries(appSnap.chats).map(([key, chatSnap]) =>
+                        {appSnap.chats.map((chatSnap, index) =>
                             <div ref={chatSnap.id === appSnap.currentChatId ? chatRef : undefined}
-                                 key={key}>
-                                <ChatComponent chatSnap={chatSnap as Chat}/>
+                                 key={chatSnap.id}>
+                                <DraggableChat chatSnap={chatSnap as Chat} index={index}/>
                             </div>
                         )}
                     </DndProvider>

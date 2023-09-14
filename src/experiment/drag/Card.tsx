@@ -14,7 +14,7 @@ const style = {
 }
 
 export interface CardProps {
-  id: any
+  id: string
   text: string
   index: number
   moveCard: (dragIndex: number, hoverIndex: number) => void
