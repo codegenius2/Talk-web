@@ -18,13 +18,13 @@ export const ChatList = () => {
         const optionClone = _.cloneDeep(appState.option)
         const chat = proxy<Chat>({
             id: randomHash16Char(),
-            name: randomHash16Char(),
+            name: "New Chat",
             // name: "New Chat",
             messages: [],
             option: optionClone,
             inputText: ""
         })
-        appState.chats[chat.id] = chat
+        appState.chats.push(chat)
         appState.currentChatId = chat.id
     }, [])
 

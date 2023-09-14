@@ -22,12 +22,12 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
 
     const [voiceChoices, setVoicesChoice] = useState<Choice<string>[]>([])
 
-    const setGender = useCallback((gender: number) => {
+    const setGender = useCallback((gender?: number) => {
         googleTTSOptionProxy.gender = gender as GoogleTTSGender
     }, [])
 
-    const setLanguage = useCallback((languageCode: string) => {
-        googleTTSOptionProxy.languageCode = languageCode
+    const setLanguage = useCallback((languageCode?: string) => {
+        googleTTSOptionProxy.languageCode = languageCode??""
 
     }, [])
 

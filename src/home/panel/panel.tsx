@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useSnapshot} from "valtio/react";
-import {appState, Chat, PanelSelection} from "../../state/app-state.ts";
+import {appState, Chat, currentChatProxy, PanelSelection} from "../../state/app-state.ts";
 import {controlState} from "../../state/control-state.ts";
 import {ChatList} from "./chat-list/chat-list.tsx";
 import {cx, escapeSpaceKey} from "../../util/util.tsx";
@@ -14,10 +14,9 @@ export const Panel: React.FC = () => {
     const [chatProxy, setChatProxy] = useState<Chat>()
 
     useEffect(() => {
-        if (appSnap.currentChatId) {
-            setChatProxy(appState.chats[appState.currentChatId] as Chat)
-        }
-    }, [appSnap.currentChatId, appSnap.chats]);
+        const p = currentChatProxy()
+        setChatProxy(p)
+    }, [appSnap.currentChatId]);
 
     const onMouseUpOrDown = useCallback((p: PanelSelection) => {
         appState.panelSelection = p

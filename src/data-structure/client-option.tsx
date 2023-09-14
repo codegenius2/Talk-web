@@ -157,7 +157,7 @@ export type GoogleTTSOption = Switchable & {
     // if VoiceId is provided, LanguageCode and Gender will not be used
     voiceId?: string // mustn't be empty if enabled === true
     languageCode: string
-    gender: api.GoogleTTSGender
+    gender?: api.GoogleTTSGender
     /**
      * An unspecified gender.
      * In VoiceSelectionParams, this means that the client doesn't care which

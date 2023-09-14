@@ -51,7 +51,8 @@ export type TTSOption = {
 export type GoogleTTSOption = {
     // if VoiceId is provided, LanguageCode and Gender will not be used
     voiceId?: string
-    languageCode: string
+    // if languageCode is undefined, server should return an error, it's users' responsibility to choose a language
+    languageCode?: string
     /**
      * An unspecified gender.
      * In VoiceSelectionParams, this means that the client doesn't care which
@@ -66,7 +67,7 @@ export type GoogleTTSOption = {
      * A gender-neutral voice. This voice is not yet supported.
      * SsmlVoiceGender_NEUTRAL SsmlVoiceGender = 3
      */
-    gender: GoogleTTSGender
+    gender?: GoogleTTSGender
     speakingRate: number
     pitch: number
     volumeGainDb: number

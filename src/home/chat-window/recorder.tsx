@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {RecordingCtx, controlState} from "../../state/control-state.ts";
+import {controlState, RecordingCtx} from "../../state/control-state.ts";
 import {cx, timeElapsedMMSS} from "../../util/util.tsx";
 
 type Props = {
@@ -119,7 +119,8 @@ const Recorder: React.FC<Props> = ({chatId}) => {
                       d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
             </svg>
             <div className="prose text-lg text-neutral-600">
-                Hold <span className="hidden sm:inline rounded-md text-neutral-700 bg-white opacity-70 px-1.5">Spacebar</span> to
+                Hold <span
+                className="hidden sm:inline rounded-md text-neutral-700 bg-white opacity-70 px-1.5">Spacebar</span> to
                 speak
             </div>
         </div>
@@ -128,7 +129,8 @@ const Recorder: React.FC<Props> = ({chatId}) => {
             onClick={handleClickDone}
             className={cx("flex justify-evenly items-center", isRecording ? "" : "hidden")}>
             <div
-                className={"hidden sm:block overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
+                className={cx("hidden overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2",
+                    context?.triggeredBy === 'spacebar' && 'sm:block')}>
                 Press any key to <div className="inline text-red-400">cancel</div>
             </div>
             <div className="flex justify-center items-center">
@@ -145,7 +147,8 @@ const Recorder: React.FC<Props> = ({chatId}) => {
                 </p>
             </div>
             <div
-                className={"hidden sm:block overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2 " + (context?.triggeredBy === 'spacebar' ? '' : 'hidden')}>
+                className={cx("hidden overflow-hidden whitespace-nowrap text-neutral-500 text-sm bg-white rounded-full px-2",
+                    context?.triggeredBy === 'spacebar' && 'sm:block')}>
                 Release to <div className="inline text-blue-500">send</div>
             </div>
         </div>

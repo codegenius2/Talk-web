@@ -1,9 +1,10 @@
-import {appState, Chat} from "../../state/app-state.ts";
+import {appState, Chat, currentChatProxy} from "../../state/app-state.ts";
 import {MessageList} from "./message-list.tsx";
 import TextArea from "./text-area.tsx";
 import Recorder from "./recorder.tsx";
 import React, {useEffect, useState} from "react";
 import {useSnapshot} from "valtio/react";
+import {snapshot} from "valtio";
 
 export const ChatWindow: React.FC = () => {
 
@@ -12,10 +13,12 @@ export const ChatWindow: React.FC = () => {
     const [chatSnap, setChatSnap] = useState<Chat | undefined>(undefined)
 
     useEffect(() => {
-        const cp = appState.chats[appState.currentChatId]
+        const cp = currentChatProxy()
         setChatProxy(cp)
-        const snap = appSnap.chats[appSnap.currentChatId]
-        setChatSnap(snap as Chat)
+        if (cp) {
+            const snap = snapshot(cp)
+            setChatSnap(snap as Chat)
+        }
     }, [appSnap.chats, appSnap.currentChatId])
 
     return <div

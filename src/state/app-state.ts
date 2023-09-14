@@ -23,7 +23,7 @@ export interface AppState {
     auth: AuthState
     ability: ServerAbility,
     option: ClientOption,
-    chats: Record<string, Chat>
+    chats: Chat[],
     currentChatId: string
     panelSelection: PanelSelection
 }
@@ -39,7 +39,7 @@ export const appState = proxy<AppState>({
     },
     ability: defaultServerAbility(),
     option: defaultOption(),
-    chats: {},
+    chats: [],
     currentChatId: "",
     panelSelection: "chats"
 })
@@ -51,7 +51,7 @@ const defaultAppState = (): AppState => ({
     },
     ability: defaultServerAbility(),
     option: defaultOption(),
-    chats: {},
+    chats: [],
     currentChatId: "",
     panelSelection: "chats"
 })
@@ -112,12 +112,62 @@ export const findMessage = (chatProxy: Chat, messageId: string): Message | undef
     return chatProxy.messages.find(m => m.id === messageId)
 }
 
+export const findChatProxy = (chatId: string): [Chat, number] | undefined => {
+    for (let i = appState.chats.length - 1; i >= 0; i--) {
+        const chat = appState.chats[i]
+        if (chat.id === chatId) {
+            return [chat, i]
+        }
+    }
+    return undefined
+}
+
+export const currentChatProxy = (): Chat | undefined => {
+    if (appState.currentChatId === "") {
+        return undefined
+    }
+    for (let i = appState.chats.length - 1; i >= 0; i--) {
+        const chat = appState.chats[i]
+        if (chat.id === appState.currentChatId) {
+            return chat
+        }
+    }
+    return undefined
+}
+
+export const currentChatSnap = (): Chat | undefined => {
+    if (appState.currentChatId === "") {
+        return undefined
+    }
+    for (let i = appState.chats.length - 1; i >= 0; i--) {
+        const chat = appState.chats[i]
+        if (chat.id === appState.currentChatId) {
+            return snapshot(chat) as Chat
+        }
+    }
+    return undefined
+}
+
+const removeChatByIndex = (index: number) => {
+    appState.chats.splice(index, 1)
+}
+
+const removeChatById = (chatId: string) => {
+    for (let i = appState.chats.length - 1; i >= 0; i--) {
+        const chat = appState.chats[i]
+        if (chat.id === chatId) {
+            appState.chats.splice(i, 1)
+            return
+        }
+    }
+}
+
 // The decision to not delete a message directly is based on the potential disruption caused by ongoing updates.
 // If a message is continuously being updated, deleting it would result in the inability to locate the message,
 // potentially leading to the creation of a new message and causing disorder.
 // Messages will be completely deleted as user `Clear Messages` or deletes a chat
 export const markMessageAsDeleted = (chatId: string, messageId: string): void => {
-    const chat = appState.chats[chatId]
+    const chat = findChatProxy(chatId)?.[0]
     if (!chat) {
         console.error("failed to mark the message as deleted, because the chat is gone. this usually happens when the" +
             " chat is deleted. chatId,messageId:", chatId, messageId)
@@ -147,48 +197,31 @@ export const deleteChat = (id: string) => {
 
     if (currentChatId === "" || id != currentChatId) {
         // if there is no chat selected or user are deleting a chat other than current chat
-        delete chats[id]
-    } else if (!chats[currentChatId]) {
-        // currentChatId is actually invalid, reset it
-        appState.currentChatId = ""
+        removeChatById(id)
     } else {
-        // if user delete current chat
-        const keys = Object.keys(chats)
-        if (keys.length === 0) {
-            // chats are empty
-            appState.currentChatId = ""
-        } else if (keys.length === 1) {
-            // current chat is the only chat in list
-            delete chats[id]
+        const index = findChatProxy(currentChatId)?.[1];
+        if (!index) {
+            // currentChatId is actually invalid, reset it
             appState.currentChatId = ""
         } else {
-            // in this branch, currentChatId is ensured to be in the chat list and chat list size is >= 2
-
-            // 1. select the chat behind current chat if this chat is not at the tail
-            // 2. select the chat in front of current chat if this chat is at the tail
-
-            let i = keys.length - 1
-            for (; i >= 0; i--) {
-                if (keys[i] === currentChatId) {
-                    break
-                }
-            }
-            if (i < 0) {
-                throw new Error("impossible")
-            } else if (i < keys.length - 1) {
-                // current chat is not at the tail
-                const newId = keys[i + 1]
-                delete chats[currentChatId]
-                appState.currentChatId = newId
-            } else if (i === keys.length - 1) {
-                // current chat is at the tail
-                const newId = keys[i - 1]
-                delete chats[currentChatId]
-                appState.currentChatId = newId
+            // if user delete current chat
+            if (chats.length === 0) {
+                // chats are empty
+                appState.currentChatId = ""
+            } else if (chats.length === 1) {
+                // current chat is the only chat in list
+                removeChatByIndex(index)
+                appState.currentChatId = ""
             } else {
-                throw new Error("impossible")
-            }
+                // in this branch, currentChatId is ensured to be in the chat list and chat list size is >= 2
 
+                // 1. select the chat behind current chat if this chat is not at the tail
+                // 2. select the chat in front of current chat if this chat is at the tail
+                const newChatIndex = (index === chats.length - 1) ? index - 1 : index + 1
+                const newChat = chats[newChatIndex]
+                removeChatByIndex(index)
+                appState.currentChatId = newChat.id
+            }
         }
     }
 }

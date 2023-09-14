@@ -32,7 +32,7 @@ const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy,setEnabled}) =
         setVoicesChoice(voices)
     }, [elevenlabsAbilitySnap])
 
-    const setVoice = useCallback((voiceId: string) => {
+    const setVoice = useCallback((voiceId?: string) => {
         elevenlabsTTSOptionProxy.voiceId = voiceId
     }, [])
 

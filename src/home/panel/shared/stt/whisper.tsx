@@ -16,8 +16,8 @@ const Whisper: React.FC<Props> = ({whisperOptionProxy, setEnabled}) => {
     const whisperOptionSnap = useSnapshot(whisperOptionProxy)
     const whisperAbilitySnap = useSnapshot(appState.ability.stt.whisper)
 
-    const setModel = useCallback((model: string) => {
-        whisperOptionProxy.model = model
+    const setModel = useCallback((model?: string) => {
+        whisperOptionProxy.model = model ?? ""
     }, [])
 
     return (

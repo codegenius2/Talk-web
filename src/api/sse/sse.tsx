@@ -2,7 +2,7 @@ import {useEffect} from 'react';
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {useSnapshot} from "valtio/react";
 import {networkState} from "../../state/network-state.ts";
-import {appState, Chat, findMessage} from "../../state/app-state.ts";
+import {appState, findChatProxy, findMessage} from "../../state/app-state.ts";
 import {ServerAbility} from "./server-ability.ts";
 import {newThinking, onAudio, onEOF, onError, onTyping} from "../../data-structure/message.tsx";
 import {
@@ -53,7 +53,7 @@ export const SSE = () => {
 
                 // the following event are all related to chat
                 const chatId = (data as SSEMsgMeta).chatId!
-                const chatProxy = appState.chats[chatId] as Chat | undefined
+                const chatProxy = findChatProxy(chatId)?.[0]
                 if (!chatProxy) {
                     console.warn("received an event from server, but can't find a chat to deal with, " +
                         "this usually happens when a chat has been deleted, or this would be fatal err that requires " +

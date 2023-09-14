@@ -3,7 +3,7 @@ import {useSnapshot} from "valtio/react";
 import {snapshot} from "valtio";
 import {AxiosError} from "axios";
 import {controlState} from "../state/control-state.ts";
-import {appState} from "../state/app-state.ts";
+import {findChatProxy} from "../state/app-state.ts";
 import {historyMessages} from "../api/restful/util.ts";
 import {newSending, onError, onSent} from "../data-structure/message.tsx";
 import {postAudioChat, postChat} from "../api/restful/api.ts";
@@ -38,7 +38,7 @@ export const SubscribeSendingMessage: React.FC = () => {
             }
         }
 
-        const chatProxy = appState.chats[sm.chatId]
+        const chatProxy = findChatProxy(sm.chatId)?.[0]
         if (!chatProxy) {
             console.warn("chat does exist any more, chatId:", sm.chatId)
             return
