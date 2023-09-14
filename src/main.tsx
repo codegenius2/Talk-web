@@ -7,6 +7,7 @@ import Auth from "./auth/page.tsx";
 import Error from "./error.tsx";
 import Home from "./home/home.tsx";
 import {Experiment} from "./experiment/experiment.tsx";
+import Drag from "./experiment/drag";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +28,11 @@ const router = createBrowserRouter([
     {
         path: "/exp",
         element: <Experiment/>,
+        errorElement: <Error/>,
+    },
+    {
+        path: "/exp/drag",
+        element: <Drag/>,
         errorElement: <Error/>,
     },
 

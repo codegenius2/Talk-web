@@ -7,6 +7,8 @@ import {CiSearch} from "react-icons/ci";
 import {appState, Chat} from "../../../state/app-state.ts";
 import {randomHash16Char} from "../../../util/util.tsx";
 import {ChatComponent} from "./chat-component.tsx";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 
 export const ChatList = () => {
     const appSnap = useSnapshot(appState)
@@ -55,12 +57,14 @@ export const ChatList = () => {
                 className="h-full w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
                 <div
                     className="flex cursor-pointer flex-col gap-1">
-                    {Object.entries(appSnap.chats).map(([key, chatSnap]) =>
-                        <div ref={chatSnap.id === appSnap.currentChatId ? chatRef : undefined}
-                             key={key}>
-                            <ChatComponent chatSnap={chatSnap as Chat}/>
-                        </div>
-                    )}
+                    <DndProvider backend={HTML5Backend}>
+                        {Object.entries(appSnap.chats).map(([key, chatSnap]) =>
+                            <div ref={chatSnap.id === appSnap.currentChatId ? chatRef : undefined}
+                                 key={key}>
+                                <ChatComponent chatSnap={chatSnap as Chat}/>
+                            </div>
+                        )}
+                    </DndProvider>
                 </div>
             </div>
         </div>

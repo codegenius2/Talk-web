@@ -31,7 +31,7 @@ export const STT: React.FC<Props> = ({sttOptionProxy}) => {
         <div className="relative flex h-full select-none flex-col w-full before:bg-white before:bg-opacity-40
          pt-1 pb-3 px-3 gap-1 before:backdrop-hack before:backdrop-blur before:rounded-xl">
             <div className="flex w-full items-center justify-between px-3">
-                <p className="text-lg text-neutral-600 prose">Text to Speech</p>
+                <p className="text-lg text-neutral-600 prose">Speech to Text</p>
             </div>
             {whisperSnap.available &&
                 <Whisper

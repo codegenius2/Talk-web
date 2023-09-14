@@ -53,9 +53,6 @@ export const historyChoices: Choice<number>[] = [
     {value: 40, name: "40", tags: []},
     {value: 50, name: "50", tags: []},
     {value: 100, name: "100", tags: []},
-    {value: 250, name: "250", tags: []},
-    {value: 500, name: "500", tags: []},
-    {value: k, name: "1k", tags: []},
     {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []}
 ]
 
@@ -66,13 +63,10 @@ export const tokenChoices: Choice<number>[] = [
     {value: 500, name: "500", tags: []},
     {value: k, name: "1k", tags: []},
     {value: 2 * k, name: "2k", tags: []},
-    {value: 3 * k, name: "3k", tags: []},
     {value: 4 * k, name: "4k", tags: []},
     {value: 8 * k, name: "8k", tags: []},
     {value: 16 * k, name: "16k", tags: []},
     {value: 32 * k, name: "32k", tags: []},
     {value: 64 * k, name: "64k", tags: []},
-    {value: 128 * k, name: "128k", tags: []},
-    {value: 256 * k, name: "256k", tags: []},
     {value: Number.MAX_SAFE_INTEGER, name: "∞", tags: []},
 ]

@@ -75,11 +75,7 @@ export const cx = (...classes: (boolean | string)[]): string => {
 }
 
 
-export function getRandomElement<T>(arr: T[]): T | undefined {
-    if (arr.length === 0) {
-        return undefined;
-    }
-
+export function getRandomElement<T>(...arr: T[]): T {
     const randomIndex = Math.floor(Math.random() * arr.length);
     return arr[randomIndex];
 }
