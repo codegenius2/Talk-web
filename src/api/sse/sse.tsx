@@ -17,7 +17,7 @@ import {
     SSEMsgMeta,
     SSEMsgText
 } from "./event.ts";
-import {base64ToBlob, formatNow, randomHash16Char} from "../../util/util.tsx";
+import {base64ToBlob, generateUudioId} from "../../util/util.tsx";
 import {audioDb} from "../../state/db.ts";
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts";
 import {adjustOption} from "../../data-structure/client-option.tsx";
@@ -62,7 +62,7 @@ export const SSE = () => {
                 }
                 const meta: SSEMsgMeta = data
                 if (msg.event === EventMessageThinking) {
-                    const message = newThinking(meta.messageID)
+                    const message = newThinking(meta.messageID, meta.role)
                     chatProxy.messages.push(message)
                 } else if (msg.event == EventMessageTextTyping) {
                     const found = findMessage(chatProxy, meta.messageID);
@@ -88,7 +88,7 @@ export const SSE = () => {
                     }
                     const audio: SSEMsgAudio = data
                     const blob = base64ToBlob(audio.audio, audioPlayerMimeType);
-                    const audioId = formatNow() + "-" + randomHash16Char()
+                    const audioId = generateUudioId("synthesis")
                     audioDb.setItem(audioId, blob, () => {
                         onAudio(found!, {id: audioId, durationMs: audio.durationMs})
                     })

@@ -45,8 +45,12 @@ const padZero = (num: number): string => {
 
 // duration is in ms
 export const formatNow = (): string => {
-    return format(new Date(2014, 1, 11), 'yyyy-MM-dd_HH_mm_SS')
+    return format(new Date(), 'yyyy-MM-dd_HH_mm_SS')
 };
+
+export const generateUudioId = (action: "recording" | "synthesis"): string => {
+    return action + "-" + formatNow() + "-" + randomHash16Char()
+}
 
 export function currentProtocolHostPortPath(): string {
     const protocol = window.location.protocol

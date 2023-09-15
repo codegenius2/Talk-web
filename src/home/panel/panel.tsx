@@ -29,9 +29,7 @@ export const Panel: React.FC = () => {
     }, [])
 
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        const scrollTop = e.currentTarget.scrollTop
-        console.debug("scrollTop", scrollTop)
-        layoutState.settingPanelScrollOffset = scrollTop
+        layoutState.settingPanelScrollOffset = e.currentTarget.scrollTop
     };
 
     return (

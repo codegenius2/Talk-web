@@ -34,15 +34,15 @@ const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy,setEnabled}) =
 
     const setVoice = useCallback((voiceId?: string) => {
         elevenlabsTTSOptionProxy.voiceId = voiceId
-    }, [])
+    }, [elevenlabsTTSSnap])
 
     const setStability = useCallback((stability: number) => {
         elevenlabsTTSOptionProxy.stability = stability
-    }, [])
+    }, [elevenlabsTTSSnap])
 
     const setClarity = useCallback((clarity: number) => {
         elevenlabsTTSOptionProxy.clarity = clarity
-    }, [])
+    }, [elevenlabsTTSSnap])
 
     return (
         <div className="flex flex-col w-full items-center justify-between gap-2">

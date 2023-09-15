@@ -1,7 +1,7 @@
 import React from "react";
 import {BsEmojiExpressionless, BsSoundwave} from "react-icons/bs";
 import {Chat} from "../../../state/app-state.ts";
-import {Spin} from "../../chat-window/message/widget/spin.tsx";
+import {Spin} from "../../chat-window/compnent/widget/spin.tsx";
 
 type Props = {
     chatSnap: Chat

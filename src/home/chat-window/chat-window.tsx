@@ -23,11 +23,11 @@ export const ChatWindow: React.FC = () => {
 
     return <div
         className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2
-                    bg-white bg-opacity-40 backdrop-blur">
+                    bg-neutral-200 bg-opacity-40 backdrop-blur">
         {chatSnap === undefined && <></>}
         {chatSnap !== undefined && chatProxy !== undefined &&
             <>
-                <MessageList chatSnap={chatSnap}/>
+                <MessageList chatProxy={chatProxy}/>
                 <div
                     className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2">
                     <TextArea chatProxy={chatProxy}/>

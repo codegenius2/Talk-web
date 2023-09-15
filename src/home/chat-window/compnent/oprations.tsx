@@ -2,12 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Confetti from 'react-confetti';
 
-interface TextProps {
+interface Props {
     text: string
     deleteFunc: () => void
 }
 
-export const RichOpText: React.FC<TextProps> = ({text, deleteFunc}) => {
+export const Oprations: React.FC<Props> = ({text, deleteFunc}) => {
     const [hovering, setHovering] = useState(false)
     const [copied, setCopied] = useState(false);
     const [confettiCount, setConfettiCount] = useState(0);

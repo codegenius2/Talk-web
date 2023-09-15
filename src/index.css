@@ -69,3 +69,7 @@ https://benborgers.com/posts/tailwind-h-screen
         @apply absolute inset-0 -z-10;
     }
 }
+
+.brightness-200 {
+  -webkit-filter: brightness(150%);
+}

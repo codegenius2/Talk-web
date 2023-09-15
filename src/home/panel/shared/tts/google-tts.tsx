@@ -24,18 +24,16 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
 
     const setGender = useCallback((gender?: number) => {
         googleTTSOptionProxy.gender = gender as GoogleTTSGender
-    }, [])
+    }, [googleTTSSnap])
 
     const setLanguage = useCallback((languageCode?: string) => {
-        googleTTSOptionProxy.languageCode = languageCode??""
-
-    }, [])
+        googleTTSOptionProxy.languageCode = languageCode ?? ""
+    }, [googleTTSSnap])
 
     useEffect(() => {
         const lang = googleTTSSnap.languageCode
         if (lang) {
-            // eslint-disable-next-line valtio/state-snapshot-rule
-            const filtered = _.filter(googleAbilitySnap.voices,
+            const filtered = _.filter(appState.ability.tts.google.voices,
                 voice =>
                     _.some(voice.tags,
                         tag => tag.startsWith(lang) || lang.startsWith(tag)
@@ -53,23 +51,23 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
         } else {
             setVoicesChoice([])
         }
-    }, [googleAbilitySnap, googleTTSSnap.languageCode])
+    }, [googleAbilitySnap, googleTTSSnap])
 
     const setVoice = useCallback((voiceId?: string | number) => {
         googleTTSOptionProxy.voiceId = voiceId as string
-    }, [])
+    }, [googleTTSSnap])
 
     const setSpeakingRate = useCallback((speakingRate: number) => {
         googleTTSOptionProxy.speakingRate = speakingRate
-    }, [])
+    }, [googleTTSSnap])
 
     const setPitch = useCallback((pitch: number) => {
         googleTTSOptionProxy.pitch = pitch
-    }, [])
+    }, [googleTTSSnap])
 
     const setVolumeGainDb = useCallback((volumeGainDb: number) => {
         googleTTSOptionProxy.volumeGainDb = volumeGainDb
-    }, [])
+    }, [googleTTSSnap])
 
     return (
         <div className="flex flex-col w-full items-center justify-between gap-2">
@@ -97,12 +95,6 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
                             choices={voiceChoices}
                             defaultValue={googleTTSSnap.voiceId}
                             setValue={setVoice}/>
-                        {/*<div className="flex gap-4 w-full">*/}
-                        {/*    <div>sadfasdf</div>*/}
-                        {/*    <ListBox*/}
-                        {/*        choices={voiceChoices}*/}
-                        {/*        defaultValue={googleTTSSnap.voiceId}*/}
-                        {/*        setValue={setVoice}/>*/}
                         {/*</div>*/}
                         <SliderRange title="Speaking Rate"
                                      defaultValue={googleTTSAPIReference.speakingRate.default}

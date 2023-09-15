@@ -18,7 +18,7 @@ const Whisper: React.FC<Props> = ({whisperOptionProxy, setEnabled}) => {
 
     const setModel = useCallback((model?: string) => {
         whisperOptionProxy.model = model ?? ""
-    }, [])
+    }, [whisperOptionSnap])
 
     return (
         <div className="flex flex-col w-full items-center justify-between gap-2">

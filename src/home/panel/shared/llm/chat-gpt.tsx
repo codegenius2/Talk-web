@@ -4,7 +4,7 @@ import {MySwitch} from "../widget/switch.tsx";
 import {DiscreteRange} from "../widget/discrete-range.tsx";
 import {useSnapshot} from "valtio/react";
 import {SliderRange} from "../widget/slider-range.tsx";
-import {ChatGPTOption} from "../../../../data-structure/client-option.tsx";
+import {ChatGPTOption, LLMOption} from "../../../../data-structure/client-option.tsx";
 import {
     chatGPTAPIReference,
     historyChoices,
@@ -18,17 +18,22 @@ import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
+    llmOptionProxy: LLMOption
     setEnabled: (enabled: boolean) => void
 }
 
-const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy,setEnabled}) => {
+const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnabled}) => {
 
     const chatGPTOptionSnap = useSnapshot(chatGPTOptionProxy)
 
     const chatGPTAbility = useSnapshot(appState.ability.llm.chatGPT)
-    const llmOptionSnap = useSnapshot(appState.option.llm)
+    const llmOptionSnap = useSnapshot(llmOptionProxy)
 
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
+
+    useEffect(() => {
+        console.debug("current chat setting chatGPTOptionSnap.maxTokens", llmOptionProxy.chatGPT.maxTokens)
+    }, [chatGPTOptionSnap]);
 
     useEffect(() => {
         const choices = _.map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
@@ -40,32 +45,33 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy,setEnabled}) => {
     }, [chatGPTAbility.models]);
 
     const setMaxHistory = useCallback((hist: number) => {
-        appState.option.llm.maxHistory = hist
-    }, [])
+        // eslint-disable-next-line valtio/state-snapshot-rule
+        llmOptionProxy.maxHistory = hist
+    }, [llmOptionSnap])
 
-    const setModel = useCallback((model?: string|number) => {
+    const setModel = useCallback((model?: string | number) => {
         chatGPTOptionProxy.model = model as string
-    }, [])
+    }, [chatGPTOptionSnap])
 
     const setMaxTokens = useCallback((token: number) => {
         chatGPTOptionProxy.maxTokens = token
-    }, [])
+    }, [chatGPTOptionSnap])
 
     const setTemperature = useCallback((temperature: number) => {
         chatGPTOptionProxy.temperature = temperature
-    }, [])
+    }, [chatGPTOptionSnap])
 
     const setTopP = useCallback((topP: number) => {
         chatGPTOptionProxy.topP = topP
-    }, [])
+    }, [chatGPTOptionSnap])
 
     const setPresencePenalty = useCallback((presencePenalty: number) => {
         chatGPTOptionProxy.presencePenalty = presencePenalty
-    }, [])
+    }, [chatGPTOptionSnap])
 
     const setFrequencyPenalty = useCallback((frequencyPenalty: number) => {
         chatGPTOptionProxy.frequencyPenalty = frequencyPenalty
-    }, [])
+    }, [chatGPTOptionSnap])
 
     return (
         <div className="flex flex-col w-full items-center justify-between gap-2">

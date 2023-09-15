@@ -29,16 +29,16 @@ export type Message = {
     lastUpdatedAt: number
 }
 
-export const newThinking = (id: string): Message => ({
+export const newThinking = (id: string, role: Role): Message => ({
     id: id,
-    role: 'assistant',
+    role: role,
     status: "thinking",
     text: "",
     createdAt: Date.now(),
     lastUpdatedAt: Date.now()
 })
 
-export const newSending = (): Message =>({
+export const newSending = (): Message => ({
     id: randomHash16Char(),
     role: 'user',
     status: "sending",

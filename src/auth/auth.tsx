@@ -12,7 +12,7 @@ const fadeOutDuration = 1500
 
 // (0,0) -> (-500,0) -> (500,0) -> ...
 const shakeAnimation = {
-    x: [0, -500, 500, -500, 500, 0],
+    x: [0, -30, 30, -30, 30, 0],
     y: [0, 0, 0, 0, 0, 0],
 };
 
@@ -27,7 +27,7 @@ export default function Auth() {
     const [startFadeIn, setStartFadeIn] = useState(false);
 
     // use this function to detect where password is required by Talk server
-    const detectPassword = useCallback((shake: boolean, password?: string) => {
+    const handleLogin = useCallback((detect: boolean, password?: string) => {
         setShake(false);
         login(password).then((r: AxiosResponse) => {
             console.info("login is successful", r.status, r.data)
@@ -39,27 +39,29 @@ export default function Auth() {
             setTimeout(() => navigate("/chat"), fadeOutDuration)
         }).catch((e: AxiosError) => {
             console.info("failed to login", e)
-            setShake(shake);
-            setInputValue('')
+            if (!detect) {
+                setInputValue('')
+                setShake(true)
+            }
         })
     }, [navigate])
 
+    // detect if login is required
+    useEffect(() => {
+        const t = setTimeout(() => handleLogin(true)
+            , detectDelay)
+        return () => clearTimeout(t)
+    }, [handleLogin]);
 
     const handleSubmit = useCallback((event: React.FormEvent) => {
         event.preventDefault();
-        detectPassword(true, inputValue)
-    }, [detectPassword, inputValue])
+        handleLogin(false, inputValue)
+    }, [handleLogin, inputValue])
+
 
     const onDark = useCallback((isDark: boolean) => {
         setTextLight(isDark)
     }, [])
-
-    // detect if login is required
-    useEffect(() => {
-        const t = setTimeout(() => detectPassword(false)
-            , detectDelay)
-        return () => clearTimeout(t)
-    }, [detectPassword]);
 
     useEffect(() => {
         setStartFadeIn(true)
@@ -77,7 +79,11 @@ export default function Auth() {
                     )}>
                         Let&apos;s talk
                     </p>
-                    <form className="w-96 max-w-3/4 mb-[25vh]" onSubmit={handleSubmit}>
+                    <motion.form className="w-96 max-w-3/4 mb-[25vh]"
+                                 onSubmit={handleSubmit}
+                                 animate={shake ? shakeAnimation : {}}
+                                 transition={{stiffness: 300, damping: 30}}
+                    >
                         {/*<input type="text" id="username" hidden={true} autoComplete="current-password" aria-hidden="true" required={false}/>*/}
                         <motion.input
                             type="password"
@@ -85,8 +91,6 @@ export default function Auth() {
                             id="password"
                             value={inputValue}
                             autoComplete="current-password"
-                            animate={shake ? shakeAnimation : {}}
-                            transition={{stiffness: 300, damping: 30}}
                             onChange={(e) => {
                                 setInputValue(e.target.value);
                                 setShake(false);
@@ -95,7 +99,7 @@ export default function Auth() {
                                 "text-6xl text-center tracking-widest bg-white backdrop-blur bg-opacity-10 transition duration-5000",
                                 textLight ? "text-neutral-200" : "text-neutral-800")}
                         />
-                    </form>
+                    </motion.form>
                 </div>
             </div>
         </div>

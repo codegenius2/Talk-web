@@ -3,11 +3,11 @@ import {useSnapshot} from "valtio/react";
 import {snapshot} from "valtio";
 import {AxiosError} from "axios";
 import {controlState} from "../state/control-state.ts";
-import {findChatProxy} from "../state/app-state.ts";
+import {findChatProxy, findMessage} from "../state/app-state.ts";
 import {historyMessages} from "../api/restful/util.ts";
-import {newSending, onError, onSent} from "../data-structure/message.tsx";
+import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx";
 import {postAudioChat, postChat} from "../api/restful/api.ts";
-import {randomHash16Char} from "../util/util.tsx";
+import {generateUudioId, randomHash16Char} from "../util/util.tsx";
 import {audioDb} from "../state/db.ts";
 import {LLMMessage} from "../shared-types.ts";
 import {minSpeakTimeMillis} from "../config.ts";
@@ -49,13 +49,13 @@ export const SubscribeSendingMessage: React.FC = () => {
         let messages = historyMessages(chatProxy, option.llm.maxHistory)
         messages = [systemMessage, ...messages]
 
-        const message = newSending()
+        const nonProxyMessage = newSending()
         const talkOption = toRestfulAPIOption(option)
         let postPromise
         if (sm.audioBlob) {
-            console.debug("sending audio and chat: ", message)
-            message.audio = {id: ""}
-            chatProxy.messages.push(message)
+            console.debug("sending audio and chat: ", nonProxyMessage)
+            nonProxyMessage.audio = {id: ""}
+            chatProxy.messages.push(nonProxyMessage)
 
             postPromise = postAudioChat(sm.audioBlob as Blob, controlSnp.recordingMimeType?.fileName ?? "audio.webm", {
                 chatId: chatProxy.id,
@@ -66,7 +66,7 @@ export const SubscribeSendingMessage: React.FC = () => {
         } else {
             messages.push({role: "user", content: sm.text})
             console.debug("sending chat: ", messages)
-            chatProxy.messages.push(message)
+            chatProxy.messages.push(nonProxyMessage)
             postPromise = postChat({
                 chatId: chatProxy.id,
                 ticketId: randomHash16Char(),
@@ -76,19 +76,37 @@ export const SubscribeSendingMessage: React.FC = () => {
         }
 
         postPromise.then((r) => {
+                const msg = findMessage(chatProxy, nonProxyMessage.id);
+                if (!msg) {
+                    console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
+                    return
+                }
                 if (r.status >= 200 && r.status < 300) {
-                    onSent(message)
+                    onSent(nonProxyMessage)
                 } else {
-                    onError(message, "Failed to send, reason:" + r.statusText)
+                    onError(nonProxyMessage, "Failed to send, reason:" + r.statusText)
                 }
             }
         ).catch((e: AxiosError) => {
-            onError(message, "Failed to send, reason:" + e.message)
+            onError(nonProxyMessage, "Failed to send, reason:" + e.message)
         })
 
         if (sm.audioBlob) {
-            const audioId = randomHash16Char()
-            audioDb.setItem<Blob>(audioId, sm.audioBlob as Blob, () => console.debug("saved audio blob, audioId:", audioId))
+            const audioId = generateUudioId("recording")
+            audioDb.setItem<Blob>(audioId, sm.audioBlob as Blob, (err, value) => {
+                    if (err || !value) {
+                        console.debug("failed to save audio blob, audioId:", audioId, err)
+                    } else {
+                        const msg = findMessage(chatProxy, nonProxyMessage.id);
+                        if (!msg) {
+                            console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
+                            return
+                        }
+                        onAudio(msg, {id: audioId, durationMs: sm.durationMs})
+                        console.debug("saved audio blob, audioId:", audioId)
+                    }
+                }
+            )
         }
     }, [controlSnp.recordingMimeType?.fileName, controlSnp.sendingMessageSignal]);
     return null

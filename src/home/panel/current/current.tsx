@@ -1,7 +1,6 @@
 import React from 'react';
 import {LLM} from "../shared/llm/llm.tsx";
 import {TTS} from "../shared/tts/tts.tsx";
-import {useSnapshot} from "valtio/react";
 import {STT} from "../shared/stt/stt.tsx";
 import {OtherSetting} from "./other-setting.tsx";
 import {Chat} from "../../../state/app-state.ts";
@@ -11,7 +10,6 @@ type Props = {
 }
 
 export const Current: React.FC<Props> = ({chatProxy}) => {
-    useSnapshot(chatProxy)
     return (
         <>
             <div className="z-40 w-full">

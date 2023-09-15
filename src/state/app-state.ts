@@ -3,6 +3,7 @@ import {appDb, appStateKey} from "./db.ts";
 import {Message, onMarkDeleted} from "../data-structure/message.tsx";
 import {ClientOption, defaultOption} from "../data-structure/client-option.tsx";
 import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts";
+import {generateHash} from "../util/util.tsx";
 
 export type AuthState = {
     passwordHash: string,
@@ -19,6 +20,10 @@ export type Chat = {
 
 export type PanelSelection = 'chats' | 'global' | 'current'
 
+export type UserPreference = {
+    showBorderAroundHistoryMessage: boolean
+}
+
 export interface AppState {
     auth: AuthState
     ability: ServerAbility,
@@ -26,6 +31,7 @@ export interface AppState {
     chats: Chat[],
     currentChatId: string
     panelSelection: PanelSelection
+    pref: UserPreference
 }
 
 export const hydrationState = proxy({
@@ -41,7 +47,10 @@ export const appState = proxy<AppState>({
     option: defaultOption(),
     chats: [],
     currentChatId: "",
-    panelSelection: "chats"
+    panelSelection: "chats",
+    pref: {
+        showBorderAroundHistoryMessage: false
+    }
 })
 
 const defaultAppState = (): AppState => ({
@@ -53,7 +62,10 @@ const defaultAppState = (): AppState => ({
     option: defaultOption(),
     chats: [],
     currentChatId: "",
-    panelSelection: "chats"
+    panelSelection: "chats",
+    pref: {
+        showBorderAroundHistoryMessage: false
+    }
 })
 
 export const clearSettings = () => {
@@ -84,10 +96,12 @@ appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
     console.debug("restoring from db:", as)
 
     if (as !== null) {
+        const dft = defaultAppState()
         Object.keys(appState).forEach((key) => {
+            console.debug("restoring from db, key:", key)
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            appState[key as keyof AppState] = as[key]
+            appState[key as keyof AppState] = as[key] ?? dft[key]
         })
     }
     console.debug("restored")
@@ -204,7 +218,7 @@ export const markMessageAsDeleted = (chatId: string, messageId: string): void =>
 
 // password hash will be embedded within the header of subsequent requests
 export const savePassAsHash = (password: string) => {
-    appState.auth.passwordHash = password
+    appState.auth.passwordHash = generateHash(password)
 }
 
 export const setLoggedIn = (loggedIn: boolean) => {

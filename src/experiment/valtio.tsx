@@ -1,24 +1,93 @@
-import {motion} from 'framer-motion';
+import {proxy} from "valtio";
+import {useSnapshot} from "valtio/react";
+import {useCallback} from "react";
 
-const shakeAnimation = {
-    x: [0, -500, 500, -500, 500, 0],
-    y: [0, 0, 0, 0, 0, 0],
-};
+type Person = {
+    name: string
+    age: number
+}
+
+type ExpState = {
+    person: Person
+    clicked: number
+}
+
+const expState = proxy<ExpState>(
+    {
+        clicked: 0,
+        person: {
+            name: "kate",
+            age: 50
+        }
+    }
+)
+
+type Props = {
+    personProxy: Person
+    // personProxy: Person
+}
+export const PersonWindow: React.FC<Props> = ({personProxy}) => {
+    const personSnp = useSnapshot(personProxy)
+    const addMyOwnName = useCallback(() => {
+        personProxy.name += "x"
+    }, [personProxy]);
+    return (
+        <div className="flex flex-col justify-center items-center w-1/2 h-1/2">
+            <div className="flex gap-3">
+                <button onClick={addMyOwnName}>
+                    addMyOwnName
+                </button>
+                name: {personSnp.name}
+            </div>
+            <div>
+                age: {personProxy.age}
+            </div>
+        </div>
+    )
+}
 
 // 4. to always get the latest updates on a state.field alternation, you must subscribe root state
 export const Experiment = () => {
     // const personSnp =  useSnapshot(expState.person)
     // const expSnp =  useSnapshot(expState)
 
+    const addClicked = useCallback(() => {
+        expState.clicked++
+    }, []);
+
+    const personAddAge = useCallback(() => {
+        expState.person.age++
+    }, []);
+
+    const changePerson = useCallback(() => {
+        expState.person = {
+            name: "jack",
+            age: 1999
+        }
+    }, []);
+
     return (
         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
             <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
                 <div className="flex flex-col justify-center items-center">
+                    <button
+                        onClick={addClicked}
+                    >
+                        add clicked: {expState.clicked}
+                    </button>
+                    <button
+                        onClick={changePerson}
+                    >
+                        change person
+                    </button>
+                    <button
+                        onClick={personAddAge}
+                    >
+                        add age
+                    </button>
                 </div>
-                <motion.div
-                    animate={shakeAnimation}>
-                    asfasdsad
-                </motion.div>
+                <PersonWindow personProxy={expState.person}/>
+                {/*    personProxy={expState.person}*/}
             </div>
         </div>
     )

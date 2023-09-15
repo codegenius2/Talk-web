@@ -9,14 +9,15 @@ type Props = {
 }
 
 export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
-
-    const chatGPTOptionSnap = useSnapshot(llmOptionProxy.chatGPT)
-
+    const llmSnap = useSnapshot(llmOptionProxy)
 
     const disableAll = useCallback(() => {
         const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.claude]
         switchable.forEach(it => it.enabled = false)
     }, [])
+    useEffect(() => {
+        console.debug("llmSnap=> chatGPT", llmSnap.chatGPT)
+    }, [llmSnap.chatGPT]);
 
     // const claudeOptionSnap= useSnapshot(llmOptionProxy.claude)
     // Only one can be enabled simultaneously
@@ -27,7 +28,8 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
         if (enabled.length > 1) {
             enabled.slice(1).forEach(e => e.enabled = false)
         }
-    }, [chatGPTOptionSnap])
+    }, [llmSnap.chatGPT])
+
 
     return (
         <div className="relative flex h-full select-none flex-col w-full before:bg-white before:bg-opacity-40
@@ -35,15 +37,15 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
             <div className="flex w-full items-center justify-between px-3">
                 <p className="text-lg text-neutral-600 prose">Large Language Model</p>
             </div>
-            {chatGPTOptionSnap.available &&
+            {llmSnap.chatGPT.available &&
                 <ChatGpt chatGPTOptionProxy={llmOptionProxy.chatGPT}
+                         llmOptionProxy={llmOptionProxy}
                          setEnabled={(enabled: boolean) => {
                              if (enabled) {
                                  disableAll()
                              }
                              llmOptionProxy.chatGPT.enabled = enabled
                          }}
-
                 />}
         </div>
     )

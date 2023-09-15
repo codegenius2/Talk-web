@@ -9,60 +9,56 @@ import Hover from 'wavesurfer.js/dist/plugins/hover'
 interface AudioProps {
     audioSnap: MessageAudio
     loadAudio: boolean
-    self: boolean
+    theme: 'blue' | 'neutral'
 }
 
-export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, self}) => {
+export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, theme}) => {
     const [audioUrl, setAudioUrl] = useState<string>("")
     useEffect(() => {
         if (loadAudio) {
-            audioDb.getItem<Blob>(audioSnap.id, (blob:Blob) => {
-                if (blob) {
-                    const url = URL.createObjectURL(blob)
-                    setAudioUrl(url)
-                } else {
-                    console.error("audio blob is empty, audioId:", audioSnap.id)
-                }
-            }).catch(e => {
-                console.error("failed to get audio blob, audioId:", audioSnap.id, e)
-            })
+            if (audioSnap.id) {
+                audioDb.getItem<Blob>(audioSnap.id, (err, blob) => {
+                    if (err) {
+                        console.error("failed to loaded audio blob, audioId:", audioSnap.id, err)
+                        return
+                    }
+                    if (blob) {
+                        const url = URL.createObjectURL(blob)
+                        console.info("audio blob loaded:", audioSnap.id, url)
+                        setAudioUrl(url)
+                    } else {
+                        console.error("audio blob is empty, audioId:", audioSnap.id)
+                    }
+                })
+            }
         }
     }, [audioSnap.id, loadAudio])
 
-    return <Wave url={audioUrl} audioId={audioSnap.id} self={self}></Wave>
-}
-
-interface WaveSurferProps {
-    url: string;
-    audioId: string;
-    self: boolean;
-}
-
-const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
-
-    const playerSnap= useSnapshot(playerState)
+    const playerSnap = useSnapshot(playerState)
     const wavesurfer = useRef<WaveSurfer>();
     const container = useRef(null);
     const [amIPlaying, setAmIPlaying] = useState(false)
-    const color = self ? selfColor : assistantColor
+    const [style] = useState(theme === 'blue' ? blueColor : neutralColor)
 
     useEffect(() => {
+        console.debug("wave style:", style)
+        console.debug("container.current:", container.current)
         wavesurfer.current = WaveSurfer.create({
             container: container.current!,
-            waveColor: color.wave,
-            progressColor: color.progress,
+            waveColor: style.wave,
+            progressColor: style.progress,
             cursorWidth: 0,
             barWidth: 4,
             barGap: 2,
             barRadius: 10,
             height: 'auto',
-            url: url,
+            url: audioUrl,
             plugins: [
                 Hover.create({
-                    lineColor: color.hoverLine,
+                    lineColor: style.hoverLine,
                     lineWidth: 1,
-                    labelBackground: color.labelBg,
-                    labelColor: color.label,
+                    labelBackground: style.labelBg,
+                    labelColor: style.label,
                     labelSize: '11px',
                 }),
             ],
@@ -75,7 +71,7 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
         })
 
         wavesurfer.current.on('play', () => {
-            play(audioId)
+            play(audioSnap.id)
         })
 
         wavesurfer.current.on('pause', () => {
@@ -94,11 +90,12 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
         return () => {
             wavesurfer.current && wavesurfer.current.destroy();
         };
-    }, [audioId, color, url]);
+    }, [audioSnap.id, theme, audioUrl, style]);
 
     useEffect(() => {
-        setAmIPlaying(playerSnap.isPlaying && playerSnap.current === audioId)
-    }, [audioId, playerSnap]);
+        // eslint-disable-next-line valtio/state-snapshot-rule
+        setAmIPlaying(playerSnap.isPlaying && playerSnap.current === audioSnap.id)
+    }, [audioSnap.id, playerSnap]);
 
     useEffect(() => {
         if (wavesurfer.current) {
@@ -127,11 +124,11 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
         }
     };
 
-    return <div className={"flex rounded-2xl items-center p-1 gap-2 " + color.boxBg}>
-        <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + color.playBg}
+    return <div className={"flex rounded-2xl items-center p-1 gap-2 " + style.boxBg}>
+        <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + style.playBg}
              onClick={togglePlay}>
             <div hidden={amIPlaying}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill={color.play} viewBox="0 0 24 24"
+                <svg xmlns="http://www.w3.org/2000/svg" fill={style.play} viewBox="0 0 24 24"
                      className="w-6 h-6">
                     <path strokeLinecap="round" strokeLinejoin="round"
                           d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
@@ -139,7 +136,7 @@ const Wave: React.FC<WaveSurferProps> = ({url, audioId, self}) => {
             </div>
             <div hidden={!amIPlaying}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={4}
-                     stroke="currentColor" className={"w-6 h-6 " + color.pause}>
+                     stroke="currentColor" className={"w-6 h-6 " + style.pause}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/>
                 </svg>
             </div>
@@ -161,7 +158,7 @@ type Color = {
     label: string
 }
 
-const selfColor: Color = {
+const blueColor: Color = {
     boxBg: 'bg-blue-600',
     playBg: 'bg-blue-grey',
     play: 'white',
@@ -173,8 +170,8 @@ const selfColor: Color = {
     label: 'white',
 }
 
-const assistantColor: Color = {
-    boxBg: 'bg-neutral-200',
+const neutralColor: Color = {
+    boxBg: 'bg-neutral-100 bg-opacity-80 backdrop-blur',
     playBg: 'bg-white',
     play: '#5e5e5e',
     pause: 'text-neutral-500',

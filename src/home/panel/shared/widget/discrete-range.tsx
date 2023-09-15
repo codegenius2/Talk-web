@@ -101,14 +101,11 @@ export function DiscreteRange<T extends string | number>({
     // auto scroll to selected value when page is loaded
     useEffect(() => {
         if (scrollChildRef.current && scrollBarRef.current) {
-            console.debug("scrollChildRef", scrollChildRef.current.getBoundingClientRect())
-            console.debug("scrollBarRef", scrollBarRef.current.getBoundingClientRect())
             const point = scrollChildRef.current.getBoundingClientRect().left
 
             const visibleWith = scrollBarRef.current.clientWidth
             const {left} = scrollBarRef.current.getBoundingClientRect()
             const distance = point - left - visibleWith / 2
-            console.debug("distance", distance)
             scrollBarRef.current.scrollTo({top: 0, left: distance, behavior: 'smooth'});
         }
     }, [shouldScroll])
