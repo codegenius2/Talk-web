@@ -1,21 +1,34 @@
 import React, {useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import {useSnapshot} from "valtio/react";
-import {MessageAudio} from "../../../data-structure/message.tsx";
+import {Message, MessageAudio} from "../../../data-structure/message.tsx";
 import {audioDb} from "../../../state/db.ts";
 import {clear, onPrevFinish, pause, play, playerState} from "../../../state/control-state.ts";
 import Hover from 'wavesurfer.js/dist/plugins/hover'
+import {Theme} from "./theme.ts";
+import {cx, formatAgo, formatAudioDuration} from "../../../util/util.tsx";
+import {BsCheck2Circle} from "react-icons/bs";
+import {MySpin} from "./widget/icon.tsx";
+import {CgDanger} from "react-icons/cg";
 
 interface AudioProps {
     audioSnap: MessageAudio
+    messageSnap: Message
     loadAudio: boolean
-    theme: 'blue' | 'neutral'
+    theme: Theme
 }
 
-export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, theme}) => {
+export const Audio: React.FC<AudioProps> = ({audioSnap, messageSnap, loadAudio, theme}) => {
     const [audioUrl, setAudioUrl] = useState<string>("")
+
+    const playerSnap = useSnapshot(playerState)
+    const wavesurfer = useRef<WaveSurfer>();
+    const container = useRef(null);
+    const [amIPlaying, setAmIPlaying] = useState(false)
+    const [load, setLoad] = useState(false)
+
     useEffect(() => {
-        if (loadAudio) {
+        if (load) {
             if (audioSnap.id) {
                 audioDb.getItem<Blob>(audioSnap.id, (err, blob) => {
                     if (err) {
@@ -32,33 +45,36 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, theme}) => {
                 })
             }
         }
-    }, [audioSnap.id, loadAudio])
-
-    const playerSnap = useSnapshot(playerState)
-    const wavesurfer = useRef<WaveSurfer>();
-    const container = useRef(null);
-    const [amIPlaying, setAmIPlaying] = useState(false)
-    const [style] = useState(theme === 'blue' ? blueColor : neutralColor)
+    }, [audioSnap.id, loadAudio, load])
 
     useEffect(() => {
-        console.debug("wave style:", style)
-        console.debug("container.current:", container.current)
+        setLoad(loadAudio)
+    }, [loadAudio]);
+
+    useEffect(() => {
+        if (!load || !audioUrl) {
+            return
+        }
+        console.log("create again?!!!")
         wavesurfer.current = WaveSurfer.create({
             container: container.current!,
-            waveColor: style.wave,
-            progressColor: style.progress,
+            waveColor: theme.wave,
+            progressColor: theme.progress,
             cursorWidth: 0,
             barWidth: 4,
+            dragToSeek: true,
+            autoScroll: false,
+            hideScrollbar: true,
             barGap: 2,
             barRadius: 10,
             height: 'auto',
             url: audioUrl,
             plugins: [
                 Hover.create({
-                    lineColor: style.hoverLine,
+                    lineColor: theme.hoverLine,
                     lineWidth: 1,
-                    labelBackground: style.labelBg,
-                    labelColor: style.label,
+                    labelBackground: theme.labelBg,
+                    labelColor: theme.label,
                     labelSize: '11px',
                 }),
             ],
@@ -90,7 +106,7 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, theme}) => {
         return () => {
             wavesurfer.current && wavesurfer.current.destroy();
         };
-    }, [audioSnap.id, theme, audioUrl, style]);
+    }, [audioSnap.id, theme, audioUrl, load]);
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
@@ -124,60 +140,53 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, loadAudio, theme}) => {
         }
     };
 
-    return <div className={"flex rounded-2xl items-center p-1 gap-2 " + style.boxBg}>
-        <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + style.playBg}
-             onClick={togglePlay}>
-            <div hidden={amIPlaying}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill={style.play} viewBox="0 0 24 24"
-                     className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round"
-                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
-                </svg>
+    return (
+        <div className={cx("flex flex-col rounded-2xl px-1 pt-1 pb-0.5", theme.text, theme.bg)}
+             onClick={() => setLoad(true)}
+        >
+            <div className={"relative flex px-1 items-center gap-2 "}>
+                <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + theme.playBg}
+                     onClick={togglePlay}>
+                    <div hidden={amIPlaying}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill={theme.play} viewBox="0 0 24 24"
+                             className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
+                        </svg>
+                    </div>
+                    <div hidden={!amIPlaying}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={4}
+                             stroke="currentColor" className={"w-6 h-6 " + theme.pause}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div ref={container} className="h-10 w-full">
+                </div>
+                {!load &&
+                    <div className={cx("absolute w-full h-full flex justify-center items-center", theme.text)}>
+                        Click to Load
+                    </div>
+                }
             </div>
-            <div hidden={!amIPlaying}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={4}
-                     stroke="currentColor" className={"w-6 h-6 " + style.pause}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5"/>
-                </svg>
+            <div className={"flex pl-1 pr-3 justify-between gap-1 "}>
+                <p className="text-xs inline w-10 text-center">{formatAudioDuration(audioSnap.durationMs)}</p>
+                <div className="flex justify-end items-center gap-1">
+                    <p className="text-xs inline ">{formatAgo(messageSnap.createdAt)}</p>
+                    {['sent', 'received'].includes(messageSnap.status) &&
+                        <BsCheck2Circle className={"h-4 w-4"}/>
+                    }
+                    {messageSnap.status === 'sending' &&
+                        <MySpin className={"h-4 w-4"}/>
+                    }
+                    {messageSnap.status === 'error' &&
+                        <div className="leading-none">
+                            <CgDanger className={"w-4 h-4 mr-1 inline " + theme.warning}/>
+                            <p className="text-xs inline">{messageSnap.errorMessage}</p>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        <div ref={container} className="w-full h-10"/>
-    </div>
+    )
 };
-
-
-type Color = {
-    boxBg: string
-    playBg: string
-    play: string
-    pause: string
-    wave: string
-    progress: string
-    hoverLine: string
-    labelBg: string
-    label: string
-}
-
-const blueColor: Color = {
-    boxBg: 'bg-blue-600',
-    playBg: 'bg-blue-grey',
-    play: 'white',
-    pause: 'text-white',
-    wave: 'rgb(128, 154, 241)',
-    progress: 'rgb(213, 221, 250)',
-    hoverLine: 'white',
-    labelBg: '#94a3b8',
-    label: 'white',
-}
-
-const neutralColor: Color = {
-    boxBg: 'bg-neutral-100 bg-opacity-80 backdrop-blur',
-    playBg: 'bg-white',
-    play: '#5e5e5e',
-    pause: 'text-neutral-500',
-    wave: '#8c8c8c',
-    progress: '#2f2f2f',
-    hoverLine: 'black',
-    labelBg: '#d1d5db',
-    label: 'black',
-}

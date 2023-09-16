@@ -62,6 +62,11 @@ export const SSE = () => {
                 }
                 const meta: SSEMsgMeta = data
                 if (msg.event === EventMessageThinking) {
+                    const found = findMessage(chatProxy, meta.messageID);
+                    if (found) {
+                        console.info("duplicated thinking: ", chatId, meta.messageID)
+                        return
+                    }
                     const message = newThinking(meta.messageID, meta.role)
                     chatProxy.messages.push(message)
                 } else if (msg.event == EventMessageTextTyping) {

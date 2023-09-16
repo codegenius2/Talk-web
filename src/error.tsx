@@ -54,7 +54,7 @@ export default function Error() {
                     text={"Clear All Chats"}
                     countDownMs={1000}
                     color="red"
-                    icon={undefined}
+                    icon={<BsTrash3 className="text-lg"/>}
                     action={() => {
                         clearChats()
                         navigate("/", {replace: true})
@@ -64,7 +64,7 @@ export default function Error() {
                     text={"Clear Settings (Keep All Chats)"}
                     countDownMs={1000}
                     color="red"
-                    icon={undefined}
+                    icon={<BsTrash3 className="text-lg"/>}
                     action={() => {
                         clearSettings()
                         navigate("/", {replace: true})

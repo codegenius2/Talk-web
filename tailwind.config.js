@@ -10,6 +10,9 @@ export default {
     ],
     theme: {
         extend: {
+            animation: {
+                'spin-slow': 'spin 5s linear infinite',
+            },
             colors: {
                 'blue-grey': 'rgb(85,121,235)',
                 'slider-blue': '#61d0f0',
@@ -83,7 +86,7 @@ export default {
 
     },
     plugins: [
-        typography,
+        typography
     ],
 
 }

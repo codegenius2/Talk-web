@@ -53,10 +53,10 @@ export const SubscribeSendingMessage: React.FC = () => {
         const talkOption = toRestfulAPIOption(option)
         let postPromise
         if (sm.audioBlob) {
-            console.debug("sending audio and chat: ", nonProxyMessage)
             nonProxyMessage.audio = {id: ""}
             chatProxy.messages.push(nonProxyMessage)
 
+            console.debug("sending audio and chat, chatId,messages: ", chatProxy.id, messages)
             postPromise = postAudioChat(sm.audioBlob as Blob, controlSnp.recordingMimeType?.fileName ?? "audio.webm", {
                 chatId: chatProxy.id,
                 ticketId: randomHash16Char(),
@@ -65,8 +65,9 @@ export const SubscribeSendingMessage: React.FC = () => {
             });
         } else {
             messages.push({role: "user", content: sm.text})
-            console.debug("sending chat: ", messages)
+            nonProxyMessage.text = sm.text
             chatProxy.messages.push(nonProxyMessage)
+            console.debug("sending chat, chatId,messages: ", chatProxy.id, messages)
             postPromise = postChat({
                 chatId: chatProxy.id,
                 ticketId: randomHash16Char(),
@@ -82,13 +83,18 @@ export const SubscribeSendingMessage: React.FC = () => {
                     return
                 }
                 if (r.status >= 200 && r.status < 300) {
-                    onSent(nonProxyMessage)
+                    onSent(msg)
                 } else {
-                    onError(nonProxyMessage, "Failed to send, reason:" + r.statusText)
+                    onError(msg, "Failed to send, reason:" + r.statusText)
                 }
             }
         ).catch((e: AxiosError) => {
-            onError(nonProxyMessage, "Failed to send, reason:" + e.message)
+            const msg = findMessage(chatProxy, nonProxyMessage.id);
+            if (!msg) {
+                console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
+                return
+            }
+            onError(msg, "Failed to send, reason:" + e.message)
         })
 
         if (sm.audioBlob) {

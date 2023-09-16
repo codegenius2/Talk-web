@@ -7,7 +7,6 @@ import Auth from "./auth/auth.tsx";
 import Error from "./error.tsx";
 import Home from "./home/home.tsx";
 import {Experiment} from "./experiment/experiment.tsx";
-import Drag from "./experiment/drag";
 
 const router = createBrowserRouter([
     {
@@ -30,12 +29,6 @@ const router = createBrowserRouter([
         element: <Experiment/>,
         errorElement: <Error/>,
     },
-    {
-        path: "/exp/drag",
-        element: <Drag/>,
-        errorElement: <Error/>,
-    },
-
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

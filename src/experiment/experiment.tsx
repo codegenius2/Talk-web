@@ -1,10 +1,3 @@
-import {motion} from 'framer-motion';
-
-const shakeAnimation = {
-    x: [0, -500, 500, -500, 500, 0],
-    y: [0, 0, 0, 0, 0, 0],
-};
-
 // 4. to always get the latest updates on a state.field alternation, you must subscribe root state
 export const Experiment = () => {
     // const personSnp =  useSnapshot(expState.person)
@@ -13,12 +6,8 @@ export const Experiment = () => {
     return (
         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
             <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
-                <div className="flex flex-col justify-center items-center">
+                <div className="w-96 border-black border-2">
                 </div>
-                <motion.div
-                    animate={shakeAnimation}>
-                    asfasdsad
-                </motion.div>
             </div>
         </div>
     )

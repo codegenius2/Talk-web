@@ -3,6 +3,7 @@ import {KeyboardEventHandler} from "react";
 import {v4 as uuidv4} from 'uuid';
 import {format} from 'date-fns'
 import {RecordingMimeType} from "../config.ts";
+import {floor} from "lodash";
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
     console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
@@ -47,6 +48,42 @@ const padZero = (num: number): string => {
 export const formatNow = (): string => {
     return format(new Date(), 'yyyy-MM-dd_HH_mm_SS')
 };
+
+// time in ms
+export const formatAgo = (time: number): string => {
+    const now = new Date();
+    const date = new Date(time);
+    const delta = Math.abs(now.getTime() - date.getTime()) / 1000;
+
+    if (delta < 60) {
+        return 'Now';
+    } else if (delta < 60 * 60) {
+        const minutes = Math.floor(delta / (60));
+        return `${minutes} min`;
+    } else if (delta < 24 * 60 * 60) {
+        return format(date, 'HH:mm');
+    } else if (delta < 365 * 24 * 60 * 60) {
+        return format(date, 'MM-dd HH:mm');
+    } else {
+        return format(date, 'yyyy-MM-dd HH:mm');
+    }
+};
+
+// duration is in ms
+export const formatAudioDuration = (duration?: number): string => {
+    if (!duration) {
+        return ""
+    }
+    duration /= 1000
+    const min = floor(duration / 60)
+    const sec = floor(duration % 60)
+    if (min === 0) {
+        return `${sec}s`
+    } else {
+        return `${min}min${sec}s`
+    }
+};
+
 
 export const generateUudioId = (action: "recording" | "synthesis"): string => {
     return action + "-" + formatNow() + "-" + randomHash16Char()

@@ -7,7 +7,7 @@ import {cx} from "../../util/util.tsx";
 type Props = {
     chatProxy: Chat
 }
-const transprentPL = 'My Placeholder'
+const transparentPL = 'My Placeholder'
 
 const TextArea: React.FC<Props> = ({chatProxy}) => {
         const chatSnap = useSnapshot(chatProxy)
@@ -18,7 +18,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         const textAreaRef = useRef<HTMLTextAreaElement>(null);
         // if user is typing in a composing way
         const [isComposing, setIsComposing] = useState(false);
-        const [text, setText] = useState(transprentPL)
+        const [text, setText] = useState(transparentPL)
 
         // avoid using <textarea value={chatSnap.inputText}> as it inexplicably disrupts the composition of input.
         // restore input text on mount
@@ -90,7 +90,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
 
         useEffect(() => {
-            if (text !== transprentPL) {
+            if (text !== transparentPL) {
                 chatProxy.inputText = text
             }
         }, [chatProxy, text]);
@@ -112,7 +112,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                         ref={textAreaRef}
                         className={cx("w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto",
                             "placeholder:text-neutral-500 placeholder:select-none min-h-24 max-h-[30rem]",
-                            text === transprentPL && "text-transparent")}
+                            text === transparentPL && "text-transparent")}
                         onKeyUp={stopPropagation}
                         value={text}
                         onInput={autoGrowHeight}

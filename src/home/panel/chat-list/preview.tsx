@@ -1,7 +1,7 @@
 import React from "react";
 import {BsEmojiExpressionless, BsSoundwave} from "react-icons/bs";
 import {Chat} from "../../../state/app-state.ts";
-import {Spin} from "../../chat-window/compnent/widget/spin.tsx";
+import {ThinkingIcon} from "../../chat-window/compnent/widget/icon.tsx";
 
 type Props = {
     chatSnap: Chat
@@ -18,7 +18,7 @@ export const Preview: React.FC<Props> = ({chatSnap}) => {
     switch (message.status) {
         case "sending":
         case "thinking":
-            content = <Spin/>
+            content = <ThinkingIcon/>
             break;
         case "sent":
         case "typing":
