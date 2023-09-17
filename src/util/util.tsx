@@ -61,12 +61,27 @@ export const formatAgo = (time: number): string => {
         return `${minutes} min`;
     } else if (delta < 24 * 60 * 60) {
         return format(date, 'HH:mm');
-    } else if (delta < 365 * 24 * 60 * 60) {
-        return format(date, 'MM-dd HH:mm');
+    } else if (isSameMonth(now, date)) {
+        return format(date, 'do, HH:mm');
+    } else if (isSameMonthAndYear(now, date)) {
+        return format(date, 'do MMM, HH:mm');
     } else {
-        return format(date, 'yyyy-MM-dd HH:mm');
+        return format(date, 'do MMM yyyy, HH:mm');
     }
 };
+
+function isSameMonth(date1: Date, date2: Date): boolean {
+    return (
+        date1.getMonth() === date2.getMonth()
+    );
+}
+
+function isSameMonthAndYear(date1: Date, date2: Date): boolean {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth()
+    );
+}
 
 // duration is in ms
 export const formatAudioDuration = (duration?: number): string => {
