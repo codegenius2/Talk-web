@@ -11,7 +11,6 @@ export const appDb = localforage.createInstance({
     name: talkDbName
 });
 
-
 const audioDB = "audio"
 
 export const audioDb = localforage.createInstance({

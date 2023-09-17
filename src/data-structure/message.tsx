@@ -107,7 +107,6 @@ export const onAudio = (message: Message, audio: MessageAudio): void => {
     switch (message.status) {
         case "sending":
         case "sent":
-            message.status = "sent"
             message.audio = audio
             message.lastUpdatedAt = Date.now()
             break

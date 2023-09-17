@@ -2,9 +2,9 @@ import {useSelect} from "downshift";
 import {cx} from "../../../../util/util.tsx";
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
 import {useEffect, useRef, useState} from "react";
-import {CheckIcon} from "@heroicons/react/20/solid";
 import {layoutState} from "../../../../state/layout-state.ts";
 import {useSnapshot} from "valtio/react";
+import {HiCheck} from "react-icons/hi2";
 
 type Props<T extends number | string> = {
     choices: Choice<T>[]
@@ -90,7 +90,7 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
                             {...getItemProps({item: c, index})}
                         >
                             {selectedItem?.value === c.value && (
-                                <CheckIcon className="absolute inset-x-0 left-0 h-5 w-5" aria-hidden="true"/>)
+                                <HiCheck className="absolute inset-x-0 left-0 h-5 w-5" aria-hidden="true"/>)
                             }
                             <div className="flex flex-nowrap items-center justify-between pr-1">
                                 <span
@@ -98,7 +98,7 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
                                     <p className="m-0">{c.name}</p>
                                     {c.tags.length > 0 &&
                                         <div className='flex items-center justify-between gap-1'>
-                                            {c.tags.filter(it=>it).map(tag =>
+                                            {c.tags.filter(it => it).map(tag =>
                                                 <span key={tag}
                                                       className="prose rounded-md px-1 border bg-white/[0.2] border-neutral-400
                                                    whitespace-nowrap text-sm text-neutral-600">{tag}</span>

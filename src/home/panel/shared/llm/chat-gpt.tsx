@@ -26,14 +26,10 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
 
     const chatGPTOptionSnap = useSnapshot(chatGPTOptionProxy)
 
-    const chatGPTAbility = useSnapshot(appState.ability.llm.chatGPT)
-    const llmOptionSnap = useSnapshot(llmOptionProxy)
+    const {models} = useSnapshot(appState.ability.llm.chatGPT)
+    const {maxHistory} = useSnapshot(llmOptionProxy)
 
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
-
-    useEffect(() => {
-        console.debug("current chat setting chatGPTOptionSnap.maxTokens", llmOptionProxy.chatGPT.maxTokens)
-    }, [chatGPTOptionSnap]);
 
     useEffect(() => {
         const choices = _.map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
@@ -42,12 +38,11 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
             tags: []
         }))
         setModelChoices(choices)
-    }, [chatGPTAbility.models]);
+    }, [models]);
 
     const setMaxHistory = useCallback((hist: number) => {
-        // eslint-disable-next-line valtio/state-snapshot-rule
         llmOptionProxy.maxHistory = hist
-    }, [llmOptionSnap])
+    }, [llmOptionProxy])
 
     const setModel = useCallback((model?: string | number) => {
         chatGPTOptionProxy.model = model as string
@@ -87,7 +82,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
                         <DiscreteRange choices={historyChoices}
                                        title="Max Hisotry"
                                        setValue={setMaxHistory}
-                                       value={llmOptionSnap.maxHistory}
+                                       value={maxHistory}
                                        showRange={true}
                                        outOfLeftBoundary={llmAPIReference.maxHistory.rangeStart}
                                        defaultValue={llmAPIReference.maxHistory.default}

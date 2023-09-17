@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Avatar, {genConfig, GlassesStyle, HairStyle} from 'react-nice-avatar'
 
 type Props = {
@@ -11,9 +11,14 @@ const avatarStyle = {
     minWidth: '2rem',
     minHeight: '2rem',
 }
+const dftConf = genConfig()
 
 export const TalkAvatar: React.FC<Props> = ({id}) => {
-    const [avatarConf] = useState(createAvatarConf(id))
+    const [avatarConf,setAvatarConf] = useState(dftConf)
+    useEffect(() => {
+        const conf =createAvatarConf(id)
+        setAvatarConf(conf)
+    }, [id]);
     return <Avatar style={avatarStyle} shape={"circle"} className="self-center" {...avatarConf} />
 }
 

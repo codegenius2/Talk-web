@@ -10,13 +10,13 @@ import {layoutState} from "../../state/layout-state.ts";
 
 export const Panel: React.FC = () => {
 
-    const appSnap = useSnapshot(appState)
+    const {currentChatId,panelSelection} = useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat>()
 
     useEffect(() => {
         const p = currentChatProxy()
         setChatProxy(p)
-    }, [appSnap.currentChatId]);
+    }, [currentChatId]);
 
     const onMouseUpOrDown = useCallback((p: PanelSelection) => {
         appState.panelSelection = p
@@ -40,7 +40,7 @@ export const Panel: React.FC = () => {
             p-1 bg-white bg-opacity-40">
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnap.panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        panelSelection === "chats" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUpOrDown("chats")}
                     onMouseDown={() => onMouseUpOrDown("chats")}
                     onMouseEnter={() => onMouseEnter("chats")}
@@ -49,7 +49,7 @@ export const Panel: React.FC = () => {
                 </div>
                 <div
                     className={cx("flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnap.panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
+                        panelSelection === "global" ? "bg-white/[0.8]" : "hover:bg-white/[0.4]")}
                     onMouseUp={() => onMouseUpOrDown("global")}
                     onMouseDown={() => onMouseUpOrDown("global")}
                     onMouseEnter={() => onMouseEnter("global")}
@@ -59,8 +59,8 @@ export const Panel: React.FC = () => {
                 <div className={
                     cx(
                         "flex w-1/3 justify-center items-center h-full rounded-lg transition-all duration-150",
-                        appSnap.currentChatId === "" ? "hidden" : "",
-                        appSnap.panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
+                        currentChatId === "" ? "hidden" : "",
+                        panelSelection === "current" ? "bg-white bg-opacity-80" : "hover:bg-white/[0.4]"
                     )}
                      onMouseUp={() => onMouseUpOrDown("current")}
                      onMouseDown={() => onMouseUpOrDown("current")}
@@ -75,7 +75,7 @@ export const Panel: React.FC = () => {
                 onScroll={handleScroll}
                 className={cx(
                     "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
-                    appSnap.panelSelection !== "chats" && "hidden"
+                    panelSelection !== "chats" && "hidden"
                 )}
             >
                 <ChatList/>
@@ -85,7 +85,7 @@ export const Panel: React.FC = () => {
                 onScroll={handleScroll}
                 className={cx(
                     "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
-                    appSnap.panelSelection !== "global" && "hidden"
+                    panelSelection !== "global" && "hidden"
                 )}
             >
                 <Global optionProxy={appState.option}/>
@@ -94,7 +94,7 @@ export const Panel: React.FC = () => {
                 onScroll={handleScroll}
                 className={cx(
                     "flex flex-col gap-y-3 items-center overflow-y-auto pr-1",
-                    appSnap.panelSelection !== "current" && "hidden"
+                    panelSelection !== "current" && "hidden"
                 )}
             >
                 {chatProxy &&

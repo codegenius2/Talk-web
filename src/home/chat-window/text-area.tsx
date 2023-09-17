@@ -7,10 +7,10 @@ import {cx} from "../../util/util.tsx";
 type Props = {
     chatProxy: Chat
 }
-const transparentPL = 'My Placeholder'
 
 const TextArea: React.FC<Props> = ({chatProxy}) => {
         const chatSnap = useSnapshot(chatProxy)
+        const {inputText} = useSnapshot(chatProxy, {sync: true})
 
         const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
         const arrowButtonRef = useRef<HTMLButtonElement>(null);
@@ -18,15 +18,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         const textAreaRef = useRef<HTMLTextAreaElement>(null);
         // if user is typing in a composing way
         const [isComposing, setIsComposing] = useState(false);
-        const [text, setText] = useState(transparentPL)
-
-        // avoid using <textarea value={chatSnap.inputText}> as it inexplicably disrupts the composition of input.
-        // restore input text on mount
-        useEffect(() => {
-            // eslint-disable-next-line valtio/state-snapshot-rule
-            setText(chatSnap.inputText)
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, []);
 
         const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
             console.debug('stopPropagation', event.code);
@@ -40,7 +31,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             if (chatProxy.inputText) {
                 controlState.sendingMessages.push({chatId: chatSnap.id, text: chatSnap.inputText})
                 controlState.sendingMessageSignal++
-                setText("")
+                chatProxy.inputText = ""
             }
             textAreaRef.current?.focus()
         }, [chatProxy, chatSnap.id, chatSnap.inputText])
@@ -63,10 +54,11 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             setIsComposing(true);
         }, []);
 
-        const handleCompositionEnd = useCallback(() => {
+        const handleCompositionEnd = useCallback((e: React.CompositionEvent<HTMLTextAreaElement>) => {
+            chatProxy.inputText = e.currentTarget.value
             console.debug("is not composing")
             setIsComposing(false);
-        }, []);
+        }, [chatProxy]);
 
         const handleClick = useCallback(() => {
             setInputAreaIsLarge(!inputAreaIsLarge)
@@ -84,16 +76,9 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }, [inputAreaIsLarge])
 
         const autoGrowHeight = (e: React.BaseSyntheticEvent) => {
-            e.persist()
             e.currentTarget.style.height = "5px"
             e.currentTarget.style.height = e.currentTarget.scrollHeight + "px"
         }
-
-        useEffect(() => {
-            if (text !== transparentPL) {
-                chatProxy.inputText = text
-            }
-        }, [chatProxy, text]);
 
         return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
                 <button
@@ -109,15 +94,16 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                 </button>
                 <div className="flex w-full">
                     <textarea
+                        name={"Message Input"}
                         ref={textAreaRef}
                         className={cx("w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto",
-                            "placeholder:text-neutral-500 placeholder:select-none min-h-24 max-h-[30rem]",
-                            text === transparentPL && "text-transparent")}
+                            "placeholder:text-neutral-500 placeholder:select-none min-h-24 max-h-[30rem]")}
                         onKeyUp={stopPropagation}
-                        value={text}
+                        value={inputText}
                         onInput={autoGrowHeight}
                         onChange={(e) => {
-                            setText(e.target.value)
+                            e.persist()
+                            chatProxy.inputText = e.target.value
                         }}
                         onKeyDown={handleKeyDown}
                         onCompositionStart={handleCompositionStart}

@@ -22,27 +22,61 @@ https://benborgers.com/posts/tailwind-h-screen
     border-radius: 10px;
 }
 
+/*for Firefox*/
+:root {
+    scrollbar-color: #eeeeee transparent;
+    scrollbar-width: thin;
+}
+
 @layer utilities {
     .scrollbar-visible::-webkit-scrollbar-thumb {
         background-color: #eeeeee;
         transition: background-color 1000ms linear;
     }
+
+    /*for Firefox*/
+    .scrollbar-visible {
+        scrollbar-color: #eeeeee transparent;
+        transition: background-color 1000ms linear;
+    }
+
     .scrollbar-visible-neutral-300::-webkit-scrollbar-thumb {
         background-color: #d4d4d4;
         transition: background-color 1000ms linear;
     }
+    /*for Firefox*/
+    .scrollbar-visible-neutral-300 {
+        scrollbar-color: #d4d4d4 transparent;
+        transition: background-color 1000ms linear;
+    }
+
     .scrollbar-visible-neutral-500::-webkit-scrollbar-thumb {
         background-color: #71717a;
         transition: background-color 1000ms linear;
     }
+    /*for Firefox*/
+    .scrollbar-visible-neutral-500 {
+        scrollbar-color: #71717a transparent;
+        transition: background-color 1000ms linear;
+    }
 
-    .scrollbar-gone::-webkit-scrollbar{
+    .scrollbar-gone::-webkit-scrollbar {
         width: 0;
         height: 0;
     }
 
+    .scrollbar-gone {
+        /*for Firefox*/
+        scrollbar-width: none;
+    }
+
     .scrollbar-hidden::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0);
+        background-color: transparent;
+        transition: background-color 1000ms linear;
+    }
+    /*for Firefox*/
+    .scrollbar-hidden {
+        scrollbar-color: transparent transparent;
         transition: background-color 1000ms linear;
     }
 }
@@ -71,5 +105,5 @@ https://benborgers.com/posts/tailwind-h-screen
 }
 
 .brightness-200 {
-  -webkit-filter: brightness(150%);
+    -webkit-filter: brightness(150%);
 }

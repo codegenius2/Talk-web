@@ -6,6 +6,7 @@ import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts"
 import {IoRefreshSharp} from "react-icons/io5";
 import {BsTrash3} from "react-icons/bs";
 import {cx} from "./util/util.tsx";
+import {Helmet} from "react-helmet";
 
 export default function Error() {
 
@@ -20,6 +21,10 @@ export default function Error() {
 
     return (
         <div className="flex h-screen w-screen flex-col items-center justify-around gap-3 p-3">
+            <Helmet>
+                <title>Talk - Error</title>
+            </Helmet>
+
             <WallpaperGranim onDark={onDark}/>
             <div
                 className="w-[50%] max-h-[60%] flex flex-col items-center justify-center gap-5 rounded-xl py-3 px-5

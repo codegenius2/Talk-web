@@ -1,3 +1,4 @@
+/* eslint-disable valtio/state-snapshot-rule */
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {appState, Chat, markMessageAsDeleted} from "../../state/app-state.ts";
 import {isInHistory, Message} from "../../data-structure/message.tsx";
@@ -13,13 +14,16 @@ import {MySpin} from "./compnent/widget/icon.tsx";
 import {MdOutlineContentCopy} from "react-icons/md";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {BsTrash3} from "react-icons/bs";
+import {DropDownMenu} from "./compnent/drop-down-menu.tsx";
+import {PiDownloadSimpleLight} from "react-icons/pi";
+import {audioDb} from "../../state/db.ts";
 
 type MLProps = {
     chatProxy: Chat
 }
 
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
-    const chatSnap = useSnapshot(chatProxy)
+    const {id, messages, option} = useSnapshot(chatProxy)
     const scrollRef = useRef<HTMLDivElement>(null);
 
     const [shouldBeInHistory, setShouldBeInHistory] = useState<Set<number>>(new Set())
@@ -33,9 +37,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
-        const messages = chatSnap.messages
-        // eslint-disable-next-line valtio/state-snapshot-rule
-        const mh = chatSnap.option.llm.maxHistory
+        const mh = option.llm.maxHistory
         const hist: Set<number> = new Set()
         const load: Set<number> = new Set()
         for (let i = messages.length - 1; i >= 0; i--) {
@@ -58,16 +60,17 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         }
         setShouldBeInHistory(hist)
         setShouldLoadVoice(load)
-    }, [chatSnap])
+    }, [messages, option.llm.maxHistory])
 
     return (
-        <div className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
+        <div
+            className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
             <div className="flex w-full select-text flex-col justify-end gap-5 rounded-2xl">
                 {/*crucial; don't merge the 2 divs above*/}
-                {chatSnap.messages.map((msg, index) =>
+                {messages.map((msg, index) =>
                     msg.status !== 'deleted' &&
                     <ErrorBoundary key={msg.id}>
-                        <Row chatId={chatSnap.id}
+                        <Row chatId={id}
                              messageSnap={msg}
                              shouldBeInHistory={shouldBeInHistory.has(index)}
                              shouldLoadAudio={shouldLoadVoice.has(index)}
@@ -94,11 +97,10 @@ const Row: React.FC<Props> = ({
                                   shouldLoadAudio
                               }) => {
 
-    const prefSnap = useSnapshot(appState.pref)
+    const {showBorderAroundHistoryMessage} = useSnapshot(appState.pref)
 
     const [theme, setTheme] = useState(neutralColor)
     const [hoveringOnRow, setHoveringOnRow] = useState(false)
-    const [copied, setCopied] = useState(false);
 
     const markAsDeleted = useCallback(() => {
         markMessageAsDeleted(chatId, messageSnap.id)
@@ -123,15 +125,6 @@ const Row: React.FC<Props> = ({
         setTheme(messageSnap.role === "user" ? blueColor : neutralColor)
     }, [messageSnap.role]);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setCopied(false)
-        }, 1000);
-
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [copied]);
 
     return (
         <div className={cx("flex items-center gap-1 w-full",
@@ -141,17 +134,15 @@ const Row: React.FC<Props> = ({
         >
             {messageSnap.role === "user" && messageSnap.status !== 'thinking' && hoveringOnRow &&
                 <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer">
-                    <BsTrash3 className="p-1 rounded transition-all duration-100 h-8 w-8
-                     text-red-600/[0.8] hover:text-red-600 hover:bg-neutral-100/[0.5]"
-                              onClick={markAsDeleted}
-                    />
-                    {!messageSnap.audio && <CopyToClipboard text={messageSnap.text}
-                                                            onCopy={() => setCopied(true)}>
-                        <MdOutlineContentCopy className={cx(" p-1 rounded transition-all duration-100 h-8 w-8",
-                            copied ? "scale-125 text-violet-100 bg-green-400/[0.5]" :
-                                "h-7 w-7 text-green-400 bg-green-400/[0] hover:text-green-600 hover:bg-neutral-100/[0.5]"
-                        )}/>
-                    </CopyToClipboard>}
+                    {
+                        messageSnap.audio &&
+                        <AudioMenu deleteAction={markAsDeleted} audioId={messageSnap.audio.id}/>
+                    }
+                    {
+                        messageSnap.text &&
+                        <TextMenu deleteAction={markAsDeleted}/>
+                    }
+                    {messageSnap.text && <MyCopy text={messageSnap.text}></MyCopy>}
                 </div>
             }
 
@@ -170,7 +161,7 @@ const Row: React.FC<Props> = ({
             }
             {messageSnap.text &&
                 <div className={cx("rounded-2xl max-w-3/4",
-                    prefSnap.showBorderAroundHistoryMessage && "p-1 border-2 border-dashed",
+                    showBorderAroundHistoryMessage && "p-1 border-2 border-dashed",
                     shouldBeInHistory ? "border-white" : "border-transparent")
                 }
                 >
@@ -185,20 +176,98 @@ const Row: React.FC<Props> = ({
 
             {messageSnap.role === "assistant" && messageSnap.status !== 'thinking' && hoveringOnRow &&
                 <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer">
-                    {!messageSnap.audio && <CopyToClipboard text={messageSnap.text}
-                                                            onCopy={() => setCopied(true)}>
-                        <MdOutlineContentCopy className={cx(" p-1 rounded transition-all duration-100 h-8 w-8",
-                            copied ? "scale-125 text-violet-100 bg-green-400/[0.5]" :
-                                "h-7 w-7 text-green-400 bg-green-400/[0] hover:text-green-600 hover:bg-neutral-100/[0.5]"
-                        )}/>
-                    </CopyToClipboard>}
-                    <BsTrash3 className="p-1 rounded transition-all duration-100 h-8 w-8
-                     text-red-600/[0.8] hover:text-red-600 hover:bg-neutral-100/[0.5]"
-                              onClick={markAsDeleted}
-                    />
+                    {messageSnap.text && <MyCopy text={messageSnap.text}></MyCopy>}
+                    {
+                        messageSnap.audio &&
+                        <AudioMenu deleteAction={markAsDeleted} audioId={messageSnap.audio.id}/>
+                    }
+                    {
+                        messageSnap.text &&
+                        <TextMenu deleteAction={markAsDeleted}/>
+                    }
                 </div>
             }
         </div>
     )
 }
 
+type CopyProps = {
+    text: string
+}
+
+export const MyCopy: React.FC<CopyProps> = ({text}) => {
+    const [copied, setCopied] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setCopied(false)
+        }, 350);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [copied]);
+    return <CopyToClipboard text={text}
+                            onCopy={() => setCopied(true)}>
+        <MdOutlineContentCopy className={cx("p-1 rounded transition-all duration-100 h-8 w-8",
+            copied ? "scale-125" :
+                "h-7 w-7 text-violet-50 hover:text-neutral-500 hover:bg-white/[0.8]"
+        )}/>
+    </CopyToClipboard>
+}
+
+type TextMenuProps = {
+    deleteAction: () => void
+}
+
+export const TextMenu: React.FC<TextMenuProps> = ({deleteAction}) => {
+    return <DropDownMenu list={[
+        {
+            name: "Delete",
+            action: deleteAction,
+            icon: <BsTrash3 className="text-red-600"/>
+        }
+    ]}/>
+}
+
+type AudioMenuProps = {
+    deleteAction: () => void
+    audioId: string
+}
+
+export const AudioMenu: React.FC<AudioMenuProps> = ({deleteAction, audioId}) => {
+    const [url, setUrl] = useState("")
+
+    useEffect(() => {
+            if (audioId) {
+                audioDb.getItem<Blob>(audioId, (err, blob) => {
+                        if (err) {
+                            console.warn("failed to loaded audio blob, audioId:", audioId, err)
+                            return
+                        }
+                        if (blob) {
+                            const url = URL.createObjectURL(blob)
+                            setUrl(url)
+                        } else {
+                            console.error("audio blob is empty, audioId:", audioId)
+                        }
+                    }
+                ).then(() => true)
+            }
+        }, [audioId]
+    );
+
+    return <DropDownMenu list={[
+        {
+            name: "Download",
+            download: {
+                url: url,
+                fileName: audioId
+            },
+            icon: <PiDownloadSimpleLight className="w-5 h-5"/>
+        }, {
+            name: "Delete",
+            action: deleteAction,
+            icon: <BsTrash3 className="text-red-600"/>
+        }
+    ]}/>
+}

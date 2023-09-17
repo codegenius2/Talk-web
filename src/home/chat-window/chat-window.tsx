@@ -8,7 +8,7 @@ import {snapshot} from "valtio";
 
 export const ChatWindow: React.FC = () => {
 
-    const appSnap = useSnapshot(appState)
+    const {currentChatId,chats} = useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat | undefined>(undefined)
     const [chatSnap, setChatSnap] = useState<Chat | undefined>(undefined)
 
@@ -19,7 +19,7 @@ export const ChatWindow: React.FC = () => {
             const snap = snapshot(cp)
             setChatSnap(snap as Chat)
         }
-    }, [appSnap.chats, appSnap.currentChatId])
+    }, [currentChatId, chats])
 
     return <div
         className="flex flex-col items-center max-w-4xl w-full h-full rounded-xl justify-between gap-1 p-2

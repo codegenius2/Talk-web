@@ -18,31 +18,32 @@ interface AudioProps {
     theme: Theme
 }
 
-export const Audio: React.FC<AudioProps> = ({audioSnap, messageSnap, loadAudio, theme}) => {
-    const [audioUrl, setAudioUrl] = useState<string>("")
+export const Audio: React.FC<AudioProps> = ({
+                                                audioSnap, messageSnap, loadAudio, theme
+                                            }) => {
 
     const playerSnap = useSnapshot(playerState)
     const wavesurfer = useRef<WaveSurfer>();
     const container = useRef(null);
     const [amIPlaying, setAmIPlaying] = useState(false)
     const [load, setLoad] = useState(false)
+    const [url, setUrl] = useState("")
 
     useEffect(() => {
         if (load) {
             if (audioSnap.id) {
                 audioDb.getItem<Blob>(audioSnap.id, (err, blob) => {
                     if (err) {
-                        console.error("failed to loaded audio blob, audioId:", audioSnap.id, err)
+                        console.warn("failed to loaded audio blob, audioId:", audioSnap.id, err)
                         return
                     }
                     if (blob) {
                         const url = URL.createObjectURL(blob)
-                        console.info("audio blob loaded:", audioSnap.id, url)
-                        setAudioUrl(url)
+                        setUrl(url)
                     } else {
                         console.error("audio blob is empty, audioId:", audioSnap.id)
                     }
-                })
+                }).then(() => true)
             }
         }
     }, [audioSnap.id, loadAudio, load])
@@ -52,10 +53,9 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, messageSnap, loadAudio, 
     }, [loadAudio]);
 
     useEffect(() => {
-        if (!load || !audioUrl) {
+        if (!load || !url) {
             return
         }
-        console.log("create again?!!!")
         wavesurfer.current = WaveSurfer.create({
             container: container.current!,
             waveColor: theme.wave,
@@ -68,7 +68,7 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, messageSnap, loadAudio, 
             barGap: 2,
             barRadius: 10,
             height: 'auto',
-            url: audioUrl,
+            url: url,
             plugins: [
                 Hover.create({
                     lineColor: theme.hoverLine,
@@ -106,7 +106,7 @@ export const Audio: React.FC<AudioProps> = ({audioSnap, messageSnap, loadAudio, 
         return () => {
             wavesurfer.current && wavesurfer.current.destroy();
         };
-    }, [audioSnap.id, theme, audioUrl, load]);
+    }, [audioSnap.id, theme, url, load]);
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule

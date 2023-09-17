@@ -11,7 +11,7 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {DraggableChat} from "./draggable-chat.tsx";
 
 export const ChatList = () => {
-    const appSnap = useSnapshot(appState)
+    const {currentChatId, chats} = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
 
     const newChat = useCallback((): void => {
@@ -36,7 +36,7 @@ export const ChatList = () => {
                 block: "nearest"
             })
         }
-    }, [appSnap.currentChatId])
+    }, [currentChatId])
 
     return (
         <div className="flex h-full w-full flex-col gap-4">
@@ -58,8 +58,8 @@ export const ChatList = () => {
                 <div
                     className="flex cursor-pointer flex-col gap-1">
                     <DndProvider backend={HTML5Backend}>
-                        {appSnap.chats.map((chatSnap, index) =>
-                            <div ref={chatSnap.id === appSnap.currentChatId ? chatRef : undefined}
+                        {chats.map((chatSnap, index) =>
+                            <div ref={chatSnap.id === currentChatId ? chatRef : undefined}
                                  key={chatSnap.id}>
                                 <DraggableChat chatSnap={chatSnap as Chat} index={index}/>
                             </div>

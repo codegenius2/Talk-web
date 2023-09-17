@@ -11,10 +11,10 @@ type Props = {
 }
 
 export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
-    const appSnap = useSnapshot(appState)
+    const {currentChatId} = useSnapshot(appState)
     const [selected, setSelected] = useState(false)
     const [over, setMouseOver] = useState(false)
-    const controlSnap = useSnapshot(controlState)
+    const {isMouseDragging} = useSnapshot(controlState)
     const onClick = useCallback(() => {
         appState.currentChatId = chatSnap.id
     }, [chatSnap.id])
@@ -29,8 +29,8 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
     }, [])
 
     useEffect(() => {
-        setSelected(appSnap.currentChatId === chatSnap.id)
-    }, [appSnap, chatSnap]);
+        setSelected(currentChatId === chatSnap.id)
+    }, [currentChatId, chatSnap]);
 
     return (
         <div
@@ -44,7 +44,7 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
                 className={cx("w-full px-1 flex h-14 font-medium rounded-lg",
                     "transition-all duration-100 bg-white",
                     selected ? "bg-opacity-90" : "bg-opacity-40",
-                    !controlSnap.isMouseDragging && !selected && "hover:bg-neutral-100 hover:bg-opacity-70"
+                    !isMouseDragging && !selected && "hover:bg-neutral-100 hover:bg-opacity-70"
                 )
                 }
             >
@@ -60,7 +60,7 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
                     </div>
                 </div>
             </div>
-            {!controlSnap.isMouseDragging && over && <div
+            {!isMouseDragging && over && <div
                 className="absolute right-2 rounded-lg text-neutral-500 p-0.5 hover:bg-neutral-500/[0.4] hover:text-neutral-100"
                 onMouseDown={onDeleteButtonMouseDownOrUp}
                 onMouseUp={onDeleteButtonMouseDownOrUp}

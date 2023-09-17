@@ -1,6 +1,5 @@
 import {SHA256} from 'crypto-js';
 import {KeyboardEventHandler} from "react";
-import {v4 as uuidv4} from 'uuid';
 import {format} from 'date-fns'
 import {RecordingMimeType} from "../config.ts";
 import {floor} from "lodash";
@@ -136,14 +135,14 @@ export const escapeSpaceKey: KeyboardEventHandler<HTMLElement> = (event) => {
 
 // return a string contains 16 chars
 export const randomHash16Char = (): string => {
-    const str = uuidv4() + randomString(10);
+    const str = randomString(20);
     // 256**16>3.4e38, it's not likely to cause collision, but save more bytes to speed up state management
     return SHA256(str).toString().slice(0, 16);
 }
 
 // return a string contains 16 chars
 export const randomHash32Char = (): string => {
-    const str = uuidv4() + randomString(10);
+    const str = randomString(20);
     return SHA256(str).toString().slice(0, 32);
 }
 

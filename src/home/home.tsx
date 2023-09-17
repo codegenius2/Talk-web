@@ -5,19 +5,16 @@ import {WindowListeners} from "../window-listeners.tsx";
 import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper.tsx";
 import {ChatWindow} from "./chat-window/chat-window.tsx";
 import {useEffect} from "react";
-import {unsDevTools} from "../state/devtool.ts";
 import {useSnapshot} from "valtio/react";
 import {appState, hydrationState} from "../state/app-state.ts";
 import {useNavigate} from "react-router-dom";
+import {Helmet} from 'react-helmet';
+
 
 export default function Home() {
     const hydrationSnap = useSnapshot(hydrationState)
     const authSnap = useSnapshot(appState.auth)
     const navigate = useNavigate()
-
-    useEffect(() => {
-        return () => unsDevTools.forEach(it => it?.())
-    }, []);
 
     useEffect(() => {
         if (hydrationState.hydrated && !appState.auth.loggedIn) {
@@ -28,6 +25,9 @@ export default function Home() {
     return (
         hydrationSnap.hydrated ?
             <div>
+                <Helmet>
+                    <title>Let's Talk</title>
+                </Helmet>
                 {/*<WallpaperWalkInGreen/>*/}
                 {/*<WallpaperBalloon/>*/}
                 <WallpaperSimultaneousCounter/>

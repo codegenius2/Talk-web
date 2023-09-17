@@ -174,6 +174,7 @@ export function DiscreteRange<T extends string | number>({
             <div className="flex justify-between items-center max-h-10">
                 <p className="text-neutral-600">{title}</p>
                 <input
+                    name={"title"}
                     ref={inputBoxRef}
                     className={"min-w-11 max-h-6 text-center px-1 align-middle outline-0 overflow-hidden border border-neutral-500 rounded-xl resize-none "
                         + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}

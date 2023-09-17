@@ -6,6 +6,7 @@ import {login} from "../api/restful/api.ts";
 import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
 import {WallpaperGranim} from "../wallpaper/wallpaper.tsx";
 import {cx} from "../util/util.tsx";
+import {Helmet} from "react-helmet";
 
 const detectDelay = 1000
 const fadeOutDuration = 1500
@@ -70,6 +71,11 @@ export default function Auth() {
     return (
         // fadeOutDuration is shorter than duration-2000 to avoid staying in a white page
         <div className={cx("transition-opacity duration-2000", startFadeOut ? 'opacity-0' : 'opacity-100')}>
+            <Helmet>
+                <title>Talk - login</title>
+                <meta name="description" content="You may need to login"/>
+                {/* Add more meta tags as needed */}
+            </Helmet>
             <div className={cx("transition-opacity duration-300", startFadeIn ? 'opacity-100' : 'opacity-0')}>
                 {<WallpaperGranim onDark={onDark}/>}
                 <div

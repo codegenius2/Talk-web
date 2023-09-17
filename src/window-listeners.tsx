@@ -20,14 +20,17 @@ export const WindowListeners: React.FC = () => {
             const handleKeyDown = (event: KeyboardEvent) => {
                 if (event.key === ' ') {
                     if (event.repeat) {
-                        console.debug('handleKeyDown skip repeated space');
                         return
                     }
                     if (!recorder.currentContext()?.triggeredBy) {
                         console.debug('handleKeyDown with not repeated space');
-                        recorder.start({triggeredBy: 'spacebar'}).catch((e) => {
-                            console.error("failed to start recorder", e)
-                        })
+                        recorder.start({triggeredBy: 'spacebar'})
+                            .then(() => {
+                                console.debug("then")
+                            })
+                            .catch((e) => {
+                                console.error("failed to start recorder", e)
+                            })
                     }
                 } else {
                     if (recorder.currentContext()?.triggeredBy === 'spacebar') {

@@ -1,4 +1,3 @@
-// import {RecordPlugin} from "wavesurfer.js/dist/wavesurfer.js";
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record'
 import {RecordingMimeType} from "../config.ts";
 
@@ -102,7 +101,7 @@ export class EnhancedRecorder<CTX> {
     }
 
     async start(context?: CTX): Promise<void> {
-        if(this.stopMicToo){
+        if (this.stopMicToo) {
             await this.r.startMic()
         }
         this.recodingStatus = 'recording'

@@ -1,6 +1,4 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
-import {useSnapshot} from "valtio/react";
-import {controlState} from "../../../../state/control-state.ts";
 
 type Props = {
     title: string
@@ -18,12 +16,10 @@ export const SliderRange: React.FC<Props> = ({
                                                  range,
                                              }) => {
 
-    const controlSnap= useSnapshot(controlState)
-
     const inputBoxRef = useRef<HTMLInputElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
     const [longValue, setLongValue] = useState(0)
-
+    const [mouseDown, setMouseDown] = useState(false)
     // init
     useEffect(() => {
         if (value < range.start || value > range.end) {
@@ -34,10 +30,8 @@ export const SliderRange: React.FC<Props> = ({
         }
     }, []);
 
-    // if use is clicking, global controlSnap.isMouseLeftDown won't be updated before this event is propagated,
-    // in such case, set clicking = true can help
-    const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, clicking: boolean = false) => {
-            if (sliderRef.current && (clicking || controlSnap.isMouseLeftDown)) {
+    const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            if (sliderRef.current) {
                 const clientWidth = sliderRef.current.clientWidth
                 const {left, right} = sliderRef.current.getBoundingClientRect()
                 let res
@@ -68,7 +62,7 @@ export const SliderRange: React.FC<Props> = ({
                     setValue(res)
                 }
             }
-        }, [controlSnap.isMouseLeftDown, setValue, range.start, range.end]
+        }, [setValue, range.start, range.end]
     )
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -176,6 +170,7 @@ export const SliderRange: React.FC<Props> = ({
             <div className="flex max-h-10 items-center justify-between">
                 <p className="text-neutral-600">{title}</p>
                 <input
+                    name={"title"}
                     ref={inputBoxRef}
                     className="min-w-11 max-h-6 text-center px-0.5 align-middle outline-0 overflow-hidden border
                         border-neutral-500 rounded-xl resize-none bg-transparent"
@@ -192,11 +187,13 @@ export const SliderRange: React.FC<Props> = ({
             <div
                 className="relative flex w-full gap-0.5 justify-center overflow-hidden rounded-xl"
                 ref={sliderRef}
-                onMouseDown={e => handleMouseAction(e, true)}
-                // https://stackoverflow.com/questions/4770025/how-to-disable-scrolling-temporarily
-                // todo support onWheel, onScroll, onTouchMove
-                onMouseMove={handleMouseAction}
-                onMouseLeave={handleMouseAction}
+                onMouseDown={e => {
+                    setMouseDown(true)
+                    handleMouseAction(e)
+                }}
+                onMouseUp={() => setMouseDown(false)}
+                onMouseMove={(e) => mouseDown && handleMouseAction(e)}
+                onMouseLeave={(e) => mouseDown && handleMouseAction(e)}
                 onContextMenu={onContextMenu}
             >
                 {/*slider color block*/}
