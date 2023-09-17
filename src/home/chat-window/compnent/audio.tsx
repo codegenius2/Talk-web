@@ -119,15 +119,16 @@ export const Audio: React.FC<AudioProps> = ({
                     }
                 }
         }
+        let unSub: () => void;
         current.on('ready', () => {
             syncWithPlayer()
-            subscribe(controlState.player, () => {
+            unSub = subscribe(controlState.player, () => {
                 syncWithPlayer()
             })
         })
 
         return () => {
-            // ons()
+            unSub && unSub()
             onFinish(audioSnap.id)
             current.destroy();
         };
