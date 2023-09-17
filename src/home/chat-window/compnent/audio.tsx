@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import {useSnapshot} from "valtio/react";
 import {Message, MessageAudio} from "../../../data-structure/message.tsx";
 import {audioDb} from "../../../state/db.ts";
-import {clear, onPrevFinish, pause, play, playerState} from "../../../state/control-state.ts";
+import {clearPlayList, controlState, onFinish, pauseMe, play} from "../../../state/control-state.ts";
 import Hover from 'wavesurfer.js/dist/plugins/hover'
 import {Theme} from "./theme.ts";
 import {cx, formatAgo, formatAudioDuration} from "../../../util/util.tsx";
 import {BsCheck2Circle} from "react-icons/bs";
 import {MySpin} from "./widget/icon.tsx";
 import {CgDanger} from "react-icons/cg";
+import {subscribe} from "valtio";
 
 interface AudioProps {
     audioSnap: MessageAudio
@@ -22,7 +22,6 @@ export const Audio: React.FC<AudioProps> = ({
                                                 audioSnap, messageSnap, loadAudio, theme
                                             }) => {
 
-    const playerSnap = useSnapshot(playerState)
     const wavesurfer = useRef<WaveSurfer>();
     const container = useRef(null);
     const [amIPlaying, setAmIPlaying] = useState(false)
@@ -79,53 +78,60 @@ export const Audio: React.FC<AudioProps> = ({
                 }),
             ],
         })
+        const current = wavesurfer.current
 
-        wavesurfer.current!.on('interaction', () => {
-            wavesurfer.current!.play().catch((e) => {
+        current.on('interaction', () => {
+            clearPlayList()
+            current!.play().catch((e) => {
                 console.error("can't play", e)
             })
         })
 
-        wavesurfer.current.on('play', () => {
+        current.on('play', () => {
             play(audioSnap.id)
+            setAmIPlaying(true)
         })
 
-        wavesurfer.current.on('pause', () => {
-            pause()
+        current.on('pause', () => {
+            pauseMe(audioSnap.id)
+            setAmIPlaying(false)
         })
 
-        wavesurfer.current.on('finish', () => {
-            onPrevFinish()
+        current.on('finish', () => {
+            onFinish(audioSnap.id)
+            setAmIPlaying(false)
         })
 
-        wavesurfer.current.on('destroy', () => {
-            clear()
+
+        const player = controlState.player
+
+        const syncWithPlayer = () => {
+            if (player.isPlaying)
+                if (player.current === audioSnap.id) {
+                    if (!current.isPlaying()) {
+                        current.play().catch((e) => {
+                            console.error("can't play", e)
+                        })
+                    }
+                } else {
+                    if (current.isPlaying()) {
+                        current.pause()
+                    }
+                }
+        }
+        current.on('ready', () => {
+            syncWithPlayer()
+            subscribe(controlState.player, () => {
+                syncWithPlayer()
+            })
         })
 
-        // wavesurfer.current!
         return () => {
-            wavesurfer.current && wavesurfer.current.destroy();
+            // ons()
+            onFinish(audioSnap.id)
+            current.destroy();
         };
     }, [audioSnap.id, theme, url, load]);
-
-    useEffect(() => {
-        // eslint-disable-next-line valtio/state-snapshot-rule
-        setAmIPlaying(playerSnap.isPlaying && playerSnap.current === audioSnap.id)
-    }, [audioSnap.id, playerSnap]);
-
-    useEffect(() => {
-        if (wavesurfer.current) {
-            if (amIPlaying) {
-                if (!wavesurfer.current.isPlaying()) {
-                    wavesurfer.current.play()
-                }
-            } else {
-                if (wavesurfer.current.isPlaying()) {
-                    wavesurfer.current.pause()
-                }
-            }
-        }
-    }, [amIPlaying]);
 
     const togglePlay = () => {
         if (!wavesurfer.current) {
@@ -172,7 +178,7 @@ export const Audio: React.FC<AudioProps> = ({
             <div className={"flex pl-1 pr-3 justify-between gap-1 "}>
                 <p className="text-xs inline w-10 text-center">{formatAudioDuration(audioSnap.durationMs)}</p>
                 <div className="flex justify-end items-center gap-1">
-                    <p className="text-xs inline ">{formatAgo(messageSnap.createdAt)}</p>
+                    <p className="text-xs inline select-none">{formatAgo(messageSnap.createdAt)}</p>
                     {['sent', 'received'].includes(messageSnap.status) &&
                         <BsCheck2Circle className={"h-4 w-4 " + theme.normalIcon}/>
                     }

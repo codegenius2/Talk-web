@@ -1,4 +1,4 @@
-import {proxy, ref} from "valtio";
+import {proxy, ref, subscribe} from "valtio";
 import {EnhancedRecorder} from "../util/enhanced-recorder.ts";
 import {popularMimeTypes, RecordingMimeType} from "../config.ts";
 import {chooseAudioMimeType} from "../util/util.tsx";
@@ -50,16 +50,23 @@ export const controlState = proxy<ControlState>({
 
 export const playerState = controlState.player
 
+subscribe(playerState, () => {
+    console.debug("playerState", playerState)
+})
+
 // but ignore the audio if auto-play is not enabled
 export const addToPlayList = (audioId: string) => {
+    console.debug("adding audio to playlist,autoPlay: ", playerState.autoPlay)
     if (!playerState.autoPlay) {
         return
     }
 
     if (playerState.current === "") {
+        console.debug("adding audio to playlist,confirmed, now playing")
         playerState.isPlaying = true
         playerState.current = audioId
     } else {
+        console.debug("adding audio to playlist,confirmed, add te queue")
         // if playing === false, it's pause by user.
         // so don't play the audio now
         playerState.playList.push(audioId)
@@ -67,7 +74,10 @@ export const addToPlayList = (audioId: string) => {
 }
 
 // if prev audio is finished, auto play the next audio if auto-play is not enabled
-export const onPrevFinish = () => {
+export const onFinish = (audioId: string) => {
+    if (playerState.current != audioId) {
+        return;
+    }
     if (!playerState.autoPlay || playerState.playList.length == 0) {
         playerState.isPlaying = false
         playerState.current = ""
@@ -78,8 +88,10 @@ export const onPrevFinish = () => {
     playerState.isPlaying = true
 }
 
-export const pause = () => {
-    playerState.isPlaying = false
+export const pauseMe = (audioId: string) => {
+    if (playerState.current === audioId) {
+        playerState.isPlaying = false
+    }
 }
 
 // clear playList if user ask to play a new audio
@@ -91,7 +103,7 @@ export const play = (audioId: string) => {
     playerState.isPlaying = true
 }
 
-export const clear = () => {
+export const clearPlayList = () => {
     playerState.isPlaying = false
     playerState.current = ""
     playerState.playList = []

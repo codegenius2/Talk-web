@@ -3,6 +3,7 @@ export type Theme = {
     text: string
     normalIcon: string
     warningIcon: string
+    historyIcon: string
     playBg: string
     play: string
     pause: string
@@ -14,10 +15,11 @@ export type Theme = {
 }
 
 export const blueColor: Theme = {
-    bg: 'bg-blue-700 bg-opacity-90',
+    bg: 'bg-blue-700 bg-opacity-99',
     text: 'text-violet-100',
     normalIcon: 'fill-violet-100',
     warningIcon: 'fill-yellow-500',
+    historyIcon: '-left-2 -top-2',
 
     playBg: 'bg-blue-grey',
     play: 'white',
@@ -31,9 +33,10 @@ export const blueColor: Theme = {
 
 export const neutralColor: Theme = {
     bg: 'bg-neutral-100 bg-opacity-80 backdrop-blur',
-    text: 'text-black',
-    normalIcon: 'fill-text-black',
+    text: 'text-neutral-800',
+    normalIcon: 'fill-neutral-800',
     warningIcon: 'fill-yellow-500',
+    historyIcon: '-right-2 -top-2 fill-neutral-800',
 
     playBg: 'bg-white',
     play: '#5e5e5e',

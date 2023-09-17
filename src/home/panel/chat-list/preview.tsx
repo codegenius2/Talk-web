@@ -1,5 +1,5 @@
 import React from "react";
-import {BsEmojiExpressionless, BsSoundwave} from "react-icons/bs";
+import {BsSoundwave} from "react-icons/bs";
 import {Chat} from "../../../state/app-state.ts";
 import {MySpin} from "../../chat-window/compnent/widget/icon.tsx";
 
@@ -30,7 +30,7 @@ export const Preview: React.FC<Props> = ({chatSnap}) => {
             }
             break;
         case "error":
-            content = <div className=""><BsEmojiExpressionless className="text-yellow-500"/></div>
+            content = <div className="text-yellow-500">☹️</div>
             break;
     }
     return <div className="flex items-center gap-2">

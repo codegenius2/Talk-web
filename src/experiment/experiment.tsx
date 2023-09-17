@@ -1,15 +1,12 @@
 // 4. to always get the latest updates on a state.field alternation, you must subscribe root state
+import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper.tsx";
+
 export const Experiment = () => {
     // const personSnp =  useSnapshot(expState.person)
     // const expSnp =  useSnapshot(expState)
 
     return (
-        <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
-            <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
-                <div className="w-96 border-black border-2">
-                </div>
-            </div>
-        </div>
+                <WallpaperSimultaneousCounter/>
     )
 }
 

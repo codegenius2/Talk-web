@@ -30,8 +30,8 @@ export const SliderRange: React.FC<Props> = ({
         }
     }, []);
 
-    const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            if (sliderRef.current) {
+    const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, forceMouseDown?: boolean) => {
+            if (sliderRef.current && (forceMouseDown || mouseDown)) {
                 const clientWidth = sliderRef.current.clientWidth
                 const {left, right} = sliderRef.current.getBoundingClientRect()
                 let res
@@ -188,10 +188,11 @@ export const SliderRange: React.FC<Props> = ({
                 className="relative flex w-full gap-0.5 justify-center overflow-hidden rounded-xl"
                 ref={sliderRef}
                 onMouseDown={e => {
-                    setMouseDown(true)
-                    handleMouseAction(e)
+                    e.button === 0 && setMouseDown(true)
+                    handleMouseAction(e, true)
                 }}
                 onMouseUp={() => setMouseDown(false)}
+                onBlur={() => setMouseDown(false)}
                 onMouseMove={(e) => mouseDown && handleMouseAction(e)}
                 onMouseLeave={(e) => mouseDown && handleMouseAction(e)}
                 onContextMenu={onContextMenu}

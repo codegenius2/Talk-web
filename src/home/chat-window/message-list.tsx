@@ -17,6 +17,7 @@ import {BsTrash3} from "react-icons/bs";
 import {DropDownMenu} from "./compnent/drop-down-menu.tsx";
 import {PiDownloadSimpleLight} from "react-icons/pi";
 import {audioDb} from "../../state/db.ts";
+import {addToPlayList, clearPlayList} from "../../state/control-state.ts";
 
 type MLProps = {
     chatProxy: Chat
@@ -32,6 +33,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const [messageCount, setMessageCount] = useState(0)
     const [lastState, setLastState] =
         useState<{ id: string, updatedAt: number }>({id: "", updatedAt: 0})
+    const [hasUpdate, setHasUpdate] = useState(0)
+    const [hasNewAudio, setHasNewAudio] = useState("")
 
     const [isAtBottom, setIsAtBottom] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -49,7 +52,6 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             if (container) {
                 const {scrollTop, scrollHeight, clientHeight} = container;
                 const isBottom = scrollTop + clientHeight >= scrollHeight;
-                console.debug("isBottom", isBottom)
                 setIsAtBottom(isBottom);
             }
         };
@@ -62,30 +64,37 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     }, []);
 
     useEffect(() => {
-        if (!scrollEndRef.current) {
-            return
-        }
-
-        if (messageCount > 0 && !isAtBottom) {
-            return
-        }
         const len = messages.length
-        const behavior = messageCount === 0 ? 'smooth' : 'instant'
-        if (len > messageCount) {
-            // scroll to bottom if new messages arrive
-            scrollEndRef.current.scrollIntoView({behavior: behavior})
-        } else {
-            if (len > 0) {
-                // scroll to bottom if last message was updated
-                const lastMsg = messages[len - 1]
-                if (lastMsg.lastUpdatedAt > lastState.updatedAt) {
-                    scrollEndRef.current.scrollIntoView({behavior: behavior})
+        if (len > 0) {
+            const lastMsg = messages[len - 1]
+            if (lastMsg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
+                lastMsg.id === lastState.id && lastMsg.lastUpdatedAt > lastState.updatedAt) {
+                setHasUpdate(hasUpdate + 1)
+                if (lastMsg.audio?.id && lastMsg.status === "received") {
+                    setHasNewAudio(lastMsg.audio.id)
                 }
-                setLastState({id: lastMsg.id, updatedAt: lastMsg.lastUpdatedAt})
             }
+            setLastState({id: lastMsg.id, updatedAt: lastMsg.lastUpdatedAt})
         }
         setMessageCount(len)
     }, [messages]);
+
+    useEffect(() => {
+        if (scrollEndRef.current && isAtBottom && hasUpdate > 0) {
+            scrollEndRef.current.scrollIntoView({behavior: 'smooth'})
+        }
+    }, [hasUpdate]);
+
+    useEffect(() => {
+        if (hasNewAudio) {
+            addToPlayList(hasNewAudio)
+        }
+    }, [hasNewAudio]);
+
+    useEffect(() => {
+        return () => clearPlayList()
+    }, []);
+
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
@@ -149,7 +158,7 @@ const Row: React.FC<Props> = ({
                                   shouldLoadAudio
                               }) => {
 
-    const {showBorderAroundHistoryMessage} = useSnapshot(appState.pref)
+    const {emojiOnHistoryMessage} = useSnapshot(appState.pref)
 
     const [theme, setTheme] = useState(neutralColor)
     const [hoveringOnRow, setHoveringOnRow] = useState(false)
@@ -212,12 +221,11 @@ const Row: React.FC<Props> = ({
                 </div>
             }
             {messageSnap.text &&
-                <div className={cx("rounded-2xl max-w-3/4",
-                    showBorderAroundHistoryMessage && "p-1 border-2 border-dashed",
-                    shouldBeInHistory ? "border-white" : "border-transparent")
-                }
-                >
+                <div className="relative rounded-2xl max-w-3/4">
                     <MyText messageSnap={messageSnap} theme={theme}/>
+                    {shouldBeInHistory && emojiOnHistoryMessage &&
+                        <div className={cx("absolute text-xl",theme.historyIcon)}>👌</div>
+                    }
                 </div>
             }
             {messageSnap.status === 'error' && !messageSnap.text && !messageSnap.audio &&

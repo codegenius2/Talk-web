@@ -21,7 +21,7 @@ export type Chat = {
 export type PanelSelection = 'chats' | 'global' | 'current'
 
 export type UserPreference = {
-    showBorderAroundHistoryMessage: boolean
+    emojiOnHistoryMessage: boolean
 }
 
 export interface AppState {
@@ -49,7 +49,7 @@ export const appState = proxy<AppState>({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        showBorderAroundHistoryMessage: false
+        emojiOnHistoryMessage: false
     }
 })
 
@@ -64,7 +64,7 @@ const defaultAppState = (): AppState => ({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        showBorderAroundHistoryMessage: false
+        emojiOnHistoryMessage: false
     }
 })
 

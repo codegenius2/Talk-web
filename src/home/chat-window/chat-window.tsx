@@ -8,7 +8,7 @@ import {snapshot} from "valtio";
 
 export const ChatWindow: React.FC = () => {
 
-    const {currentChatId,chats} = useSnapshot(appState)
+    const {currentChatId, chats} = useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat | undefined>(undefined)
     const [chatSnap, setChatSnap] = useState<Chat | undefined>(undefined)
 
@@ -27,7 +27,7 @@ export const ChatWindow: React.FC = () => {
         {chatSnap === undefined && <></>}
         {chatSnap !== undefined && chatProxy !== undefined &&
             <>
-                <MessageList chatProxy={chatProxy}/>
+                <MessageList chatProxy={chatProxy} key={chatProxy.id}/>
                 <div
                     className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2">
                     <TextArea chatProxy={chatProxy}/>

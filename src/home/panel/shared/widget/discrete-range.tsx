@@ -190,10 +190,10 @@ export function DiscreteRange<T extends string | number>({
 
             <div
                 className="flex justify-center items-center w-full border border-neutral-500 rounded-xl overflow-hidden"
-                onContextMenu={onContextMenu}
             >
                 <div
                     className="flex justify-start items-center w-full overflow-auto scrollbar-gone"
+                    onContextMenu={onContextMenu}
                     onMouseMove={handleMouseMove}
                     ref={scrollBarRef}
                 >
