@@ -20,14 +20,14 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         <div className="flex justify-end items-center gap-1 select-none">
             <p className="text-xs inline">{formatAgo(messageSnap.createdAt)}</p>
             {['sent', 'received'].includes(messageSnap.status) &&
-                <BsCheck2Circle className={"h-4 w-4" + theme.text}/>
+                <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
             }
             {messageSnap.status === 'sending' &&
-                <MySpin className={"h-4 w-4" + theme.text}/>
+                <MySpin className={"h-4 w-4 " + theme.normalIcon}/>
             }
             {messageSnap.status === 'error' &&
                 <div className="leading-none">
-                    <CgDanger className={"w-4 h-4 mr-1 inline " + theme.warning}/>
+                    <CgDanger className={"w-4 h-4 mr-1 inline " + theme.warningIcon}/>
                     <p className="text-xs inline">{messageSnap.errorMessage}</p>
                 </div>
             }

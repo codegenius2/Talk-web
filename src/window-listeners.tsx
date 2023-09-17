@@ -10,15 +10,18 @@ export const WindowListeners: React.FC = () => {
     useEffect(() => {
 
             // spacebar has the lowest priority on starting/ending a recording
-
             const handleKeyUp = (event: KeyboardEvent) => {
                 if (event.key == ' ' && recorder.currentContext()?.triggeredBy === 'spacebar') {
+                    // prevent space from scrolling message list
+                    event.preventDefault();
                     recorder.done()
                 }
             }
 
             const handleKeyDown = (event: KeyboardEvent) => {
                 if (event.key === ' ') {
+                    // prevent space from scrolling message list
+                    event.preventDefault();
                     if (event.repeat) {
                         return
                     }
@@ -26,15 +29,21 @@ export const WindowListeners: React.FC = () => {
                         console.debug('handleKeyDown with not repeated space');
                         recorder.start({triggeredBy: 'spacebar'})
                             .then(() => {
-                                console.debug("then")
+                                return true
                             })
                             .catch((e) => {
                                 console.error("failed to start recorder", e)
+                                return true
                             })
+                    }
+                } else if (event.key === 'Escape') {
+                    if (recorder.currentContext()) {
+                        // press Escape to cancel the recording
+                        recorder.cancel()
                     }
                 } else {
                     if (recorder.currentContext()?.triggeredBy === 'spacebar') {
-                        // press any key other spacebar to cancel the recording
+                        // press any key other spacebar to cancel the recording started by spacebar
                         recorder.cancel()
                     }
                 }
@@ -43,14 +52,12 @@ export const WindowListeners: React.FC = () => {
             const handleMouseDown = (event: MouseEvent) => {
                 if (event.button === 0) {
                     setMouseDown(true)
-                    console.debug("mouse left is down")
                 }
             }
 
             const handleMouseUp = (event: MouseEvent) => {
                 if (event.button === 0) {
                     setMouseDown(false)
-                    console.debug("mouse left is up")
                 }
             }
 

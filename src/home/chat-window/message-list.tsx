@@ -24,16 +24,68 @@ type MLProps = {
 
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const {id, messages, option} = useSnapshot(chatProxy)
-    const scrollRef = useRef<HTMLDivElement>(null);
+    const scrollEndRef = useRef<HTMLDivElement>(null);
 
     const [shouldBeInHistory, setShouldBeInHistory] = useState<Set<number>>(new Set())
     const [shouldLoadVoice, setShouldLoadVoice] = useState<Set<number>>(new Set())
 
+    const [messageCount, setMessageCount] = useState(0)
+    const [lastState, setLastState] =
+        useState<{ id: string, updatedAt: number }>({id: "", updatedAt: 0})
+
+    const [isAtBottom, setIsAtBottom] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current!.scrollIntoView({behavior: 'instant'})
+        if (scrollEndRef.current) {
+            scrollEndRef.current.scrollIntoView({behavior: "instant"})
         }
-    }, []); // run once on mount
+    }, [id]);
+
+    useEffect(() => {
+        const container = containerRef.current;
+
+        const handleScroll = () => {
+            if (container) {
+                const {scrollTop, scrollHeight, clientHeight} = container;
+                const isBottom = scrollTop + clientHeight >= scrollHeight;
+                console.debug("isBottom", isBottom)
+                setIsAtBottom(isBottom);
+            }
+        };
+
+        container?.addEventListener('scroll', handleScroll);
+
+        return () => {
+            container?.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!scrollEndRef.current) {
+            return
+        }
+
+        if (messageCount > 0 && !isAtBottom) {
+            return
+        }
+        const len = messages.length
+        const behavior = messageCount === 0 ? 'smooth' : 'instant'
+        if (len > messageCount) {
+            // scroll to bottom if new messages arrive
+            scrollEndRef.current.scrollIntoView({behavior: behavior})
+        } else {
+            if (len > 0) {
+                // scroll to bottom if last message was updated
+                const lastMsg = messages[len - 1]
+                if (lastMsg.lastUpdatedAt > lastState.updatedAt) {
+                    scrollEndRef.current.scrollIntoView({behavior: behavior})
+                }
+                setLastState({id: lastMsg.id, updatedAt: lastMsg.lastUpdatedAt})
+            }
+        }
+        setMessageCount(len)
+    }, [messages]);
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
@@ -63,8 +115,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     }, [messages, option.llm.maxHistory])
 
     return (
-        <div
-            className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
+        <div ref={containerRef}
+             className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
             <div className="flex w-full select-text flex-col justify-end gap-5 rounded-2xl">
                 {/*crucial; don't merge the 2 divs above*/}
                 {messages.map((msg, index) =>
@@ -78,7 +130,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                     </ErrorBoundary>
                 )}
             </div>
-            <div ref={scrollRef}/>
+            <div ref={scrollEndRef}/>
         </div>
     )
 };
@@ -175,7 +227,7 @@ const Row: React.FC<Props> = ({
             }
 
             {messageSnap.role === "assistant" && messageSnap.status !== 'thinking' && hoveringOnRow &&
-                <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer">
+                <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer ">
                     {messageSnap.text && <MyCopy text={messageSnap.text}></MyCopy>}
                     {
                         messageSnap.audio &&

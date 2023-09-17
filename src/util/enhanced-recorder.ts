@@ -24,7 +24,7 @@ export class EnhancedRecorder<CTX> {
     private readonly stopMicToo: boolean // todo cannot start RecordPlugin after calling stopMic once, RecordPlugin should be replaced
     /**
      * Callers should not access recodingStatus field. Callers can only be notified about recodingStatus in callbacks.
-     * The reason is that recodingStatus does not reflect the real state RecordPlugin
+     * The reason is that recodingStatus does not reflect the real of state RecordPlugin
      */
     private recodingStatus: RecordingStatus
     private startedAt?: Date
@@ -95,7 +95,8 @@ export class EnhancedRecorder<CTX> {
         }
     }
 
-    // todo delete me if not referred
+    // context !== undefined --> recorder is working
+    // context === undefined --> not recording
     currentContext(): CTX | undefined {
         return this.context
     }

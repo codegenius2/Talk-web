@@ -31,7 +31,7 @@ export const ChatWindow: React.FC = () => {
                 <div
                     className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2">
                     <TextArea chatProxy={chatProxy}/>
-                    <div className="my-1 flex w-full items-center justify-center">
+                    <div className="flex w-full items-center justify-center">
                         <Recorder chatId={chatProxy.id}/>
                     </div>
                 </div>

@@ -1,7 +1,8 @@
 export type Theme = {
     bg: string
     text: string
-    warning: string
+    normalIcon: string
+    warningIcon: string
     playBg: string
     play: string
     pause: string
@@ -15,7 +16,8 @@ export type Theme = {
 export const blueColor: Theme = {
     bg: 'bg-blue-700 bg-opacity-90',
     text: 'text-violet-100',
-    warning: 'text-yellow-500',
+    normalIcon: 'fill-violet-100',
+    warningIcon: 'fill-yellow-500',
 
     playBg: 'bg-blue-grey',
     play: 'white',
@@ -30,7 +32,8 @@ export const blueColor: Theme = {
 export const neutralColor: Theme = {
     bg: 'bg-neutral-100 bg-opacity-80 backdrop-blur',
     text: 'text-black',
-    warning: 'text-yellow-500',
+    normalIcon: 'fill-text-black',
+    warningIcon: 'fill-yellow-500',
 
     playBg: 'bg-white',
     play: '#5e5e5e',

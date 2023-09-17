@@ -45,22 +45,26 @@ export const DropDownMenu: React.FC<Props> = ({list}) => {
                 onClick={toggleMenu}
                 className="h-8 w-8 p-1 text-violet-50 transition-all duration-100 hover:text-violet-200"
             />
-            {open && (
-                <div
-                    className="absolute top-8 left-0 flex w-32 flex-col overflow-hidden rounded-lg text-neutral-800">
-                    {list.map(item =>
-                        <a key={item.name} href={item.download?.url} download={item.download?.fileName} target="_blank">
-                            <div
-                                onClick={item.action}
-                                className="flex items-center gap-1 bg-neutral-100 px-1 py-2 hover:bg-neutral-300"
-                            >
-                                <div className="flex justify-center items-center h-6 w-6 ">{item.icon}</div>
-                                {item.name}
-                            </div>
-                        </a>
-                    )}
+            {open &&
+                //add extra content to bottom, so that menu doesn't disappear immediately when cursor leaves the last option
+                <div className="absolute top-8 left-0 flex flex-col pb-10">
+                    <div
+                        className="flex w-32 flex-col overflow-hidden rounded-lg text-neutral-800">
+                        {list.map(item =>
+                            <a key={item.name} href={item.download?.url} download={item.download?.fileName}
+                               target="_blank">
+                                <div
+                                    onClick={item.action}
+                                    className="flex items-center gap-1 bg-neutral-100 px-1 py-2 hover:bg-neutral-300"
+                                >
+                                    <div className="flex justify-center items-center h-6 w-6 ">{item.icon}</div>
+                                    {item.name}
+                                </div>
+                            </a>
+                        )}
+                    </div>
                 </div>
-            )}
+            }
         </div>
     );
 };

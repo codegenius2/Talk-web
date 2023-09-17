@@ -1,7 +1,7 @@
 import React from "react";
 import {BsEmojiExpressionless, BsSoundwave} from "react-icons/bs";
 import {Chat} from "../../../state/app-state.ts";
-import {ThinkingIcon} from "../../chat-window/compnent/widget/icon.tsx";
+import {MySpin} from "../../chat-window/compnent/widget/icon.tsx";
 
 type Props = {
     chatSnap: Chat
@@ -18,7 +18,7 @@ export const Preview: React.FC<Props> = ({chatSnap}) => {
     switch (message.status) {
         case "sending":
         case "thinking":
-            content = <ThinkingIcon/>
+            content = <MySpin className="h-4 w-4"/>
             break;
         case "sent":
         case "typing":
@@ -30,7 +30,7 @@ export const Preview: React.FC<Props> = ({chatSnap}) => {
             }
             break;
         case "error":
-            content = <div className=""><BsEmojiExpressionless/></div>
+            content = <div className=""><BsEmojiExpressionless className="text-yellow-500"/></div>
             break;
     }
     return <div className="flex items-center gap-2">
