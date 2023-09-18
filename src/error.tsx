@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {useLocation, useNavigate, useRouteError} from "react-router-dom";
+import {useNavigate, useRouteError} from "react-router-dom";
 import {CountDownButton, ResetButton} from "./home/panel/shared/widget/button.tsx";
 import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts";
 import {IoRefreshSharp} from "react-icons/io5";
@@ -13,7 +13,6 @@ export default function Error() {
 
     const [textLight, setTextLight] = useState(false)
     const navigate = useNavigate();
-    const location = useLocation();
     const error = useRouteError() as Record<string, string>;
 
     const onDark = useCallback((isDark: boolean) => {
@@ -40,7 +39,7 @@ export default function Error() {
                 <CountDownButton text={"Refresh"}
                                  countDownMs={0}
                                  color="blue"
-                                 action={() => navigate(location.pathname, {replace: true})}
+                                 action={() => navigate("/")}
                                  icon={<IoRefreshSharp className="text-lg"/>}
                 />
                 <CountDownButton
@@ -53,7 +52,7 @@ export default function Error() {
                         if (chat) {
                             chat.messages = []
                         }
-                        navigate("/", {replace: true})
+                        navigate("/")
                     }}
                 />
                 <CountDownButton
@@ -63,7 +62,7 @@ export default function Error() {
                     icon={<BsTrash3 className="text-lg"/>}
                     action={() => {
                         clearChats()
-                        navigate("/", {replace: true})
+                        navigate("/")
                     }}
                 />
                 <CountDownButton
@@ -73,7 +72,7 @@ export default function Error() {
                     icon={<BsTrash3 className="text-lg"/>}
                     action={() => {
                         clearSettings()
-                        navigate("/", {replace: true})
+                        navigate("/")
                     }}
                 />
                 <ResetButton countDownMs={2000}/>

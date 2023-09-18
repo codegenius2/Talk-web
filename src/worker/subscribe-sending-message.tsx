@@ -20,7 +20,7 @@ const systemMessage: LLMMessage = {
 
 export const SubscribeSendingMessage: React.FC = () => {
 
-    const { sendingMessageSignal} = useSnapshot(controlState)
+    const {sendingMessageSignal} = useSnapshot(controlState)
     useEffect(() => {
         if (controlState.sendingMessages.length === 0) {
             return;
@@ -29,6 +29,8 @@ export const SubscribeSendingMessage: React.FC = () => {
         if (!sm) {
             return
         }
+        // in case there are more messages in the queue
+        controlState.sendingMessageSignal++
 
         if (sm.audioBlob) {
             if (sm.durationMs! < minSpeakTimeMillis) {
