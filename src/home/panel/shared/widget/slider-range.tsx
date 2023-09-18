@@ -196,7 +196,10 @@ export const SliderRange: React.FC<Props> = ({
                 onMouseUp={() => setMouseDown(false)}
                 onBlur={() => setMouseDown(false)}
                 onMouseMove={(e) => mouseDown && handleMouseAction(e)}
-                onMouseLeave={(e) => mouseDown && handleMouseAction(e)}
+                onMouseLeave={(e) => {
+                    mouseDown && handleMouseAction(e)
+                    setMouseDown(false)
+                }}
                 onContextMenu={onContextMenu}
             >
                 {/*slider color block*/}
