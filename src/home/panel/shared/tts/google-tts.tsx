@@ -31,6 +31,7 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
     }, [googleTTSSnap])
 
     useEffect(() => {
+        // eslint-disable-next-line valtio/state-snapshot-rule
         const lang = googleTTSSnap.languageCode
         if (lang) {
             const filtered = _.filter(appState.ability.tts.google.voices,

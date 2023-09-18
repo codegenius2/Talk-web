@@ -2,13 +2,13 @@ import {Panel} from "./panel/panel.tsx";
 import {SSE} from "../api/sse/sse.tsx";
 import {Workers} from "../worker/workers.tsx";
 import {WindowListeners} from "../window-listeners.tsx";
-import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper.tsx";
 import {ChatWindow} from "./chat-window/chat-window.tsx";
 import {useEffect} from "react";
 import {useSnapshot} from "valtio/react";
 import {appState, hydrationState} from "../state/app-state.ts";
 import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
+import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper-simultaneous-counter.tsx";
 
 
 export default function Home() {

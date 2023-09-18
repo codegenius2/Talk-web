@@ -47,6 +47,7 @@ export const SSE = () => {
                 if (msg.event === EventSystemAbility) {
                     const sa = data as ServerAbility
                     adjustOption(appState.option, sa)
+                    // eslint-disable-next-line valtio/state-snapshot-rule
                     appState.ability = sa
                     return;
                 }

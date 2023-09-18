@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {useLocation, useNavigate, useRouteError} from "react-router-dom";
-import {WallpaperGranim} from "./wallpaper/wallpaper.tsx";
 import {CountDownButton, ResetButton} from "./home/panel/shared/widget/button.tsx";
 import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts";
 import {IoRefreshSharp} from "react-icons/io5";
@@ -8,6 +7,7 @@ import {BsTrash3} from "react-icons/bs";
 import {cx} from "./util/util.tsx";
 import {Helmet} from 'react-helmet-async';
 import * as packageJson from '../package.json';
+import {WallpaperGranim} from "./wallpaper/wallpaper-granim.tsx";
 
 export default function Error() {
 

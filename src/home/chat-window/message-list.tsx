@@ -70,7 +70,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             const msg = messages[len - 1]
             if (msg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
                 msg.id === lastState.id && msg.lastUpdatedAt > lastState.updatedAt) {
-                setHasUpdate(hasUpdate + 1)
+                setHasUpdate(h=>h + 1)
                 console.debug("has update")
                 if (msg.audio?.id && msg.status === "received") {
                     setHasNewAudio(msg.audio.id)
@@ -79,12 +79,16 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             setLastState({id: msg.id, updatedAt: msg.lastUpdatedAt})
         }
         setMessageCount(len)
+        // should only run when messages change
+        // eslint-disable-next-line
     }, [messages]);
 
     useEffect(() => {
         if (scrollEndRef.current && isAtBottom && hasUpdate > 0) {
             scrollEndRef.current.scrollIntoView({behavior: 'instant'})
         }
+        // Modifications to isAtBottom should not trigger useEffect
+        // eslint-disable-next-line
     }, [hasUpdate]);
 
     useEffect(() => {
@@ -105,20 +109,20 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             }
             event.preventDefault();
         };
-        if (containerRef.current) {
-            containerRef.current.addEventListener('copy', copyListener);
+        const current = containerRef.current
+        if (current) {
+            current.addEventListener('copy', copyListener);
         }
 
         return () => {
-            if (containerRef.current) {
-                containerRef.current.removeEventListener('copy', copyListener)
+            if (current) {
+                current.removeEventListener('copy', copyListener)
             }
         };
     }, []);
 
 
     useEffect(() => {
-        // eslint-disable-next-line valtio/state-snapshot-rule
         const mh = option.llm.maxHistory
         const hist: Set<number> = new Set()
         const load: Set<number> = new Set()

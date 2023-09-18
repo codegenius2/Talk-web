@@ -5,6 +5,7 @@ import {Identifier, XYCoord} from "dnd-core";
 import {ChatComponent} from "./chat-component.tsx";
 import {cx} from "../../../util/util.tsx";
 import {controlState} from "../../../state/control-state.ts";
+import {DragSourceMonitor} from "react-dnd/src/types";
 
 export const ItemTypes = {
     CARD: 'card',
@@ -89,7 +90,7 @@ export const DraggableChat: React.FC<Props> = ({chatSnap, index}) => {
         item: () => {
             return {chatSnap, index}
         },
-        collect: (monitor: any) => ({
+        collect: (monitor: DragSourceMonitor) => ({
             isDragging: monitor.isDragging(),
         }),
     })

@@ -143,7 +143,10 @@ export const Audio: React.FC<AudioProps> = ({
                 onFinish(audioSnap.id)
                 current.destroy();
             };
-        }, [audioSnap.id, theme, url, load]
+
+            // exclude audioSnap.durationMS from deps
+            // eslint-disable-next-line
+        }, [audioSnap.id, theme, url, load, chatId, messageSnap.id]
     )
     ;
 
@@ -190,7 +193,8 @@ export const Audio: React.FC<AudioProps> = ({
                 }
             </div>
             <div className={"flex pl-1 pr-3 justify-between gap-1 pointer-events-none"}>
-                <p className="text-xs inline w-10 text-center" data-pseudo-content={formatAudioDuration(audioSnap.durationMs)}></p>
+                <p className="text-xs inline w-10 text-center"
+                   data-pseudo-content={formatAudioDuration(audioSnap.durationMs)}></p>
                 <div className="flex justify-end items-center gap-1">
                     <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
                     {['sent', 'received'].includes(messageSnap.status) &&

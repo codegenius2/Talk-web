@@ -4,9 +4,9 @@ import {AxiosError, AxiosResponse} from "axios";
 import {useNavigate} from "react-router-dom";
 import {login} from "../api/restful/api.ts";
 import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
-import {WallpaperGranim} from "../wallpaper/wallpaper.tsx";
 import {cx} from "../util/util.tsx";
 import {Helmet} from 'react-helmet-async';
+import {WallpaperGranim} from "../wallpaper/wallpaper-granim.tsx";
 
 const detectDelay = 1000
 const fadeOutDuration = 1500

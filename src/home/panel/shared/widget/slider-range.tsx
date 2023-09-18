@@ -28,7 +28,9 @@ export const SliderRange: React.FC<Props> = ({
         } else {
             setLongValue(value)
         }
-    }, []);
+        // changes of value should not trigger useEffect
+        // eslint-disable-next-line
+    }, [range.start, range.end, setValue]);
 
     const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, forceMouseDown?: boolean) => {
             if (sliderRef.current && (forceMouseDown || mouseDown)) {
@@ -62,7 +64,7 @@ export const SliderRange: React.FC<Props> = ({
                     setValue(res)
                 }
             }
-        }, [setValue, range.start, range.end]
+        }, [mouseDown, setValue, range.start, range.end]
     )
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {

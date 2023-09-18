@@ -1,5 +1,6 @@
 // 4. to always get the latest updates on a state.field alternation, you must subscribe root state
-import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper.tsx";
+
+import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper-simultaneous-counter.tsx";
 
 export const Experiment = () => {
     // const personSnp =  useSnapshot(expState.person)
