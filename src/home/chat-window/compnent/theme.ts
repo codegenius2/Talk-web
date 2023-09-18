@@ -18,7 +18,7 @@ export const blueColor: Theme = {
     bg: 'bg-blue-700 bg-opacity-99',
     text: 'text-violet-100',
     normalIcon: 'fill-violet-100',
-    warningIcon: 'fill-yellow-500',
+    warningIcon: 'text-yellow-500',
     historyIcon: '-left-2 -top-2',
 
     playBg: 'bg-blue-grey',
@@ -35,7 +35,7 @@ export const neutralColor: Theme = {
     bg: 'bg-neutral-100 bg-opacity-80 backdrop-blur',
     text: 'text-neutral-800',
     normalIcon: 'fill-neutral-800',
-    warningIcon: 'fill-yellow-500',
+    warningIcon: 'text-yellow-500',
     historyIcon: '-right-2 -top-2 fill-neutral-800',
 
     playBg: 'bg-white',

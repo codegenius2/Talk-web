@@ -148,7 +148,6 @@ export const Audio: React.FC<AudioProps> = ({
             // eslint-disable-next-line
         }, [audioSnap.id, theme, url, load, chatId, messageSnap.id]
     )
-    ;
 
     const togglePlay = () => {
         if (!wavesurfer.current) {
