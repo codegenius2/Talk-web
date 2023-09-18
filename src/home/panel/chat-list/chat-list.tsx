@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useSnapshot} from "valtio/react";
 import {proxy} from "valtio";
 import _ from "lodash"
@@ -9,11 +9,17 @@ import {randomHash16Char} from "../../../util/util.tsx";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {DraggableChat} from "./draggable-chat.tsx";
+import {motion} from "framer-motion";
+
+const animation = {
+    x: [0, -10, 10, -10, 10, 0],
+    y: [0, 0, 0, 0, 0, 0],
+};
 
 export const ChatList = () => {
     const {currentChatId, chats} = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
-
+    const [showSearch, setShowSearch] = useState(true)
     const newChat = useCallback((): void => {
         const optionClone = _.cloneDeep(appState.option)
         const chat = proxy<Chat>({
@@ -42,9 +48,18 @@ export const ChatList = () => {
         <div className="flex h-full w-full flex-col gap-4">
             <div className="flex items-center justify-between gap-2">
                 <div
+                    onClick={() => setShowSearch(!showSearch)}
                     className="mr-auto flex w-full items-center justify-center gap-2 rounded-xl bg-white bg-opacity-40 backdrop-blur">
-                    <CiSearch/>
-                    <p className="text-neutral-600 prose">Search</p>
+                    {showSearch && <CiSearch/>}
+                    {showSearch && <p className="text-neutral-600 prose">Search</p>}
+                    {!showSearch &&
+                        <motion.p
+                            animate={animation}
+                            transition={{stiffness: 300, damping: 30}}
+                            className="text-neutral-600 prose">
+                            Come see me in '24 😬
+                        </motion.p>
+                    }
                 </div>
                 <div
                     className="flex justify-center items-center rounded-xl stroke-white text-neutral-500

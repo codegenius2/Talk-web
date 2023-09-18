@@ -164,7 +164,7 @@ export function DiscreteRange<T extends string | number>({
     }
 
     const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
-        if (event.code == 'Escape') {
+        if (event.key == 'Escape') {
             inputBoxRef.current?.blur()
         }
     }

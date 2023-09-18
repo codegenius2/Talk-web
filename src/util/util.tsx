@@ -143,7 +143,7 @@ export function compareSlices<T>(arr1: T[], arr2: T[]): boolean {
 }
 
 export const escapeSpaceKey: KeyboardEventHandler<HTMLElement> = (event) => {
-    if (event.code === 'Space') {
+    if (event.key === ' ') {
         event.stopPropagation();
     }
 }

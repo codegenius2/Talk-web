@@ -166,7 +166,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             </div>
             <div
                 ref={scrollEndRef}
-                className="h-10 text-transparent bg-transparent select-none" data-pseudo-content="ninja"></div>
+                className="h-10 select-none bg-transparent text-transparent" data-pseudo-content="ninja"></div>
         </div>
     )
 };
@@ -219,7 +219,7 @@ const Row: React.FC<Props> = ({
             }
 
             {messageSnap.status === 'thinking' &&
-                <MySpin className="ml-2 h-5 w-5 text-white fill-white select-none"/>
+                <MySpin className="ml-2 h-5 w-5 select-none fill-white text-white"/>
             }
 
             {messageSnap.audio &&
@@ -233,7 +233,7 @@ const Row: React.FC<Props> = ({
                 </div>
             }
             {messageSnap.text &&
-                <div className="relative rounded-2xl max-w-3/4 transition-all duration-200">
+                <div className="relative rounded-2xl transition-all duration-200 max-w-3/4">
                     <MyText messageSnap={messageSnap} theme={theme}/>
                     {shouldBeInHistory && emojiOnHistoryMessage &&
                         <PiButterflyThin className={cx("absolute w-6 h-6 select-none", theme.historyIcon)}/>
@@ -247,7 +247,7 @@ const Row: React.FC<Props> = ({
             }
 
             {messageSnap.role === "assistant" && messageSnap.status !== 'thinking' && hoveringOnRow &&
-                <div className="flex cursor-pointer items-center gap-1 rounded px-2 text-neutral-200 select-none">
+                <div className="flex cursor-pointer select-none items-center gap-1 rounded px-2 text-neutral-200">
                     {messageSnap.text && <MyCopy text={messageSnap.text}></MyCopy>}
                     {
                         messageSnap.audio &&

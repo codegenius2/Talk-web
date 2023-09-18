@@ -20,7 +20,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         const [isComposing, setIsComposing] = useState(false);
 
         const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-            console.debug('stopPropagation', event.code);
+            console.debug('stopPropagation', event.key);
             event.stopPropagation();
         }, []);
 
@@ -40,9 +40,9 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             event.stopPropagation();
             if (isComposing) {
                 return
-            } else if ((event.ctrlKey || event.metaKey) && event.code === 'Enter') {
+            } else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
                 sendAndClearText();
-            } else if (event.code === 'Escape') {
+            } else if (event.key === 'Escape') {
                 if (textAreaRef.current) {
                     textAreaRef.current!.blur()
                 }

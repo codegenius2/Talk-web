@@ -70,9 +70,11 @@ export const SliderRange: React.FC<Props> = ({
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
         const text = e.currentTarget.value
         const parse = Number.parseFloat(text)
+        console.debug("parse:", parse)
         let res: number
         if (isNaN(parse)) {
             res = defaultValue
+            e.currentTarget.value = defaultValue.toString()
         } else if (parse < range.start || parse > range.end) {
             res = defaultValue
         } else {
