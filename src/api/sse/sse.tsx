@@ -4,7 +4,7 @@ import {useSnapshot} from "valtio/react";
 import {networkState} from "../../state/network-state.ts";
 import {appState, findChatProxy, findMessage} from "../../state/app-state.ts";
 import {ServerAbility} from "./server-ability.ts";
-import {newThinking, onAudio, onEOF, onError, onTyping} from "../../data-structure/message.tsx";
+import {newError, newThinking, onAudio, onEOF, onError, onTyping} from "../../data-structure/message.tsx";
 import {
     EventMessageAudio,
     EventMessageError,
@@ -67,7 +67,7 @@ export const SSE = () => {
                         console.info("duplicated thinking: ", chatId, meta.messageID)
                         return
                     }
-                    const message = newThinking(meta.messageID, meta.role)
+                    const message = newThinking(meta.messageID, meta.ticketId, meta.role)
                     chatProxy.messages.push(message)
                 } else if (msg.event == EventMessageTextTyping) {
                     const found = findMessage(chatProxy, meta.messageID);
@@ -98,13 +98,14 @@ export const SSE = () => {
                         onAudio(found!, {id: audioId, durationMs: audio.durationMs})
                     })
                 } else if (msg.event === EventMessageError) {
-                    const found = findMessage(chatProxy, meta.messageID);
-                    if (!found) {
-                        console.info("can't find a message to deal with, skipping... chatId,messageId: ", chatId, meta.messageID)
-                        return
-                    }
                     const error = data as SSEMsgError
-                    onError(found, error.errMsg)
+                    let msg = findMessage(chatProxy, meta.messageID);
+                    if (msg) {
+                        onError(msg, error.errMsg)
+                    } else {
+                        msg = newError(error.messageID, error.ticketId, error.role, error.errMsg)
+                        chatProxy.messages.push(msg)
+                    }
                 } else {
                     console.warn("unknown event type:", msg.event)
                 }

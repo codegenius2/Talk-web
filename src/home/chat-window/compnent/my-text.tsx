@@ -13,12 +13,12 @@ interface TextProps {
 
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     return <div
-        className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
+        className={cx(" select-none flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
         )}>
-        <p className="">{messageSnap.text}</p>
-        <div className="flex justify-end items-center gap-1 select-none">
-            <p className="text-xs inline select-none">{formatAgo(messageSnap.createdAt)}</p>
+        <p className="select-text">{messageSnap.text}</p>
+        <div className="flex justify-end items-center gap-1 pointer-events-none">
+            <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
             {['sent', 'received'].includes(messageSnap.status) &&
                 <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
             }

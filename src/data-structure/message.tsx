@@ -20,6 +20,7 @@ export type MessageAudio = {
 
 export type Message = {
     id: string
+    ticketId: string
     role: Role
     status: MessageStatus
     audio?: MessageAudio
@@ -29,8 +30,9 @@ export type Message = {
     lastUpdatedAt: number
 }
 
-export const newThinking = (id: string, role: Role): Message => ({
+export const newThinking = (id: string, ticketId: string, role: Role): Message => ({
     id: id,
+    ticketId: ticketId,
     role: role,
     status: "thinking",
     text: "",
@@ -38,8 +40,20 @@ export const newThinking = (id: string, role: Role): Message => ({
     lastUpdatedAt: Date.now()
 })
 
+export const newError = (id: string, ticketId: string,role: Role, errorMessage:string): Message => ({
+    id: id,
+    ticketId: ticketId,
+    role: role,
+    status: "thinking",
+    text: "",
+    errorMessage:errorMessage,
+    createdAt: Date.now(),
+    lastUpdatedAt: Date.now()
+})
+
 export const newSending = (): Message => ({
     id: randomHash16Char(),
+    ticketId: randomHash16Char(),
     role: 'user',
     status: "sending",
     text: "",
@@ -125,14 +139,14 @@ export const onAudio = (message: Message, audio: MessageAudio): void => {
     }
 }
 
-export const onError = (message: Message, errMsg: string): void => {
+export const onError = (message: Message, errorMessage: string): void => {
     switch (message.status) {
         case "sending":
         case "sent":
         case "thinking":
         case "typing":
             message.status = 'error'
-            message.errorMessage = errMsg
+            message.errorMessage = errorMessage
             message.lastUpdatedAt = Date.now()
             break
         case "error":

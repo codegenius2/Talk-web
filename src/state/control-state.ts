@@ -1,4 +1,4 @@
-import {proxy, ref, subscribe} from "valtio";
+import {proxy, ref} from "valtio";
 import {EnhancedRecorder} from "../util/enhanced-recorder.ts";
 import {popularMimeTypes, RecordingMimeType} from "../config.ts";
 import {chooseAudioMimeType} from "../util/util.tsx";
@@ -23,6 +23,12 @@ export type SendingMessage = {
     durationMs?: number
 }
 
+export type AudioDurationUpdate = {
+    chatId: string
+    messageId: string
+    durationMs: number
+}
+
 type ControlState = {
     isMouseLeftDown: boolean
     isMouseDragging: boolean
@@ -31,6 +37,8 @@ type ControlState = {
     recorder: EnhancedRecorder<RecordingCtx>
     sendingMessages: SendingMessage[]
     sendingMessageSignal: number
+    audioDurationUpdates: AudioDurationUpdate[]
+    audioDurationUpdateSignal: number
 }
 
 export const controlState = proxy<ControlState>({
@@ -45,14 +53,12 @@ export const controlState = proxy<ControlState>({
     recordingMimeType: chooseAudioMimeType(popularMimeTypes),
     recorder: ref<EnhancedRecorder<RecordingCtx>>(new EnhancedRecorder(false)),
     sendingMessages: ref([]),
-    sendingMessageSignal: 0
+    sendingMessageSignal: 0,
+    audioDurationUpdates: ref([]),
+    audioDurationUpdateSignal: 0
 })
 
 export const playerState = controlState.player
-
-subscribe(playerState, () => {
-    console.debug("playerState", playerState)
-})
 
 // but ignore the audio if auto-play is not enabled
 export const addToPlayList = (audioId: string) => {

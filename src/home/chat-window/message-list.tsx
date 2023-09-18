@@ -51,7 +51,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         const handleScroll = () => {
             if (container) {
                 const {scrollTop, scrollHeight, clientHeight} = container;
-                const isBottom = scrollTop + clientHeight >= scrollHeight;
+                const isBottom = scrollTop + clientHeight + 50 >= scrollHeight;
+                console.debug("isBottom", isBottom)
                 setIsAtBottom(isBottom);
             }
         };
@@ -66,22 +67,23 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     useEffect(() => {
         const len = messages.length
         if (len > 0) {
-            const lastMsg = messages[len - 1]
-            if (lastMsg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
-                lastMsg.id === lastState.id && lastMsg.lastUpdatedAt > lastState.updatedAt) {
+            const msg = messages[len - 1]
+            if (msg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
+                msg.id === lastState.id && msg.lastUpdatedAt > lastState.updatedAt) {
                 setHasUpdate(hasUpdate + 1)
-                if (lastMsg.audio?.id && lastMsg.status === "received") {
-                    setHasNewAudio(lastMsg.audio.id)
+                console.debug("has update")
+                if (msg.audio?.id && msg.status === "received") {
+                    setHasNewAudio(msg.audio.id)
                 }
             }
-            setLastState({id: lastMsg.id, updatedAt: lastMsg.lastUpdatedAt})
+            setLastState({id: msg.id, updatedAt: msg.lastUpdatedAt})
         }
         setMessageCount(len)
     }, [messages]);
 
     useEffect(() => {
         if (scrollEndRef.current && isAtBottom && hasUpdate > 0) {
-            scrollEndRef.current.scrollIntoView({behavior: 'smooth'})
+            scrollEndRef.current.scrollIntoView({behavior: 'instant'})
         }
     }, [hasUpdate]);
 
@@ -93,6 +95,25 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
     useEffect(() => {
         return () => clearPlayList()
+    }, []);
+
+    useEffect(() => {
+        const copyListener = (event: ClipboardEvent) => {
+            const selection = document.getSelection();
+            if (selection) {
+                event.clipboardData?.setData('text/plain', selection.toString().trim());
+            }
+            event.preventDefault();
+        };
+        if (containerRef.current) {
+            containerRef.current.addEventListener('copy', copyListener);
+        }
+
+        return () => {
+            if (containerRef.current) {
+                containerRef.current.removeEventListener('copy', copyListener)
+            }
+        };
     }, []);
 
 
@@ -126,7 +147,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     return (
         <div ref={containerRef}
              className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
-            <div className="flex w-full select-text flex-col justify-end gap-5 rounded-2xl">
+            <div className="flex w-full select-text flex-col justify-end gap-3 rounded-2xl">
                 {/*crucial; don't merge the 2 divs above*/}
                 {messages.map((msg, index) =>
                     msg.status !== 'deleted' &&
@@ -139,7 +160,9 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                     </ErrorBoundary>
                 )}
             </div>
-            <div ref={scrollEndRef}/>
+            <div
+                 ref={scrollEndRef}
+                className="h-10 text-transparent bg-transparent select-none" data-pseudo-content="ninja"></div>
         </div>
     )
 };
@@ -167,34 +190,18 @@ const Row: React.FC<Props> = ({
         markMessageAsDeleted(chatId, messageSnap.id)
     }, [chatId, messageSnap.id])
 
-    switch (messageSnap.status) {
-        case "sending":
-            break;
-        case "sent":
-            break;
-        case "thinking":
-            break;
-        case "typing":
-            break;
-        case "received":
-            break;
-        case "error":
-            break;
-    }
-
     useEffect(() => {
         setTheme(messageSnap.role === "user" ? blueColor : neutralColor)
     }, [messageSnap.role]);
 
-
     return (
-        <div className={cx("flex items-center gap-1 w-full",
+        <div className={cx("flex items-center w-full",
             messageSnap.role === "user" && "justify-end")}
              onMouseOver={() => setHoveringOnRow(true)}
              onMouseLeave={() => setHoveringOnRow(false)}
         >
             {messageSnap.role === "user" && messageSnap.status !== 'thinking' && hoveringOnRow &&
-                <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer">
+                <div className="flex cursor-pointer select-none items-center gap-1 rounded px-2 text-neutral-200">
                     {
                         messageSnap.audio &&
                         <AudioMenu deleteAction={markAsDeleted} audioId={messageSnap.audio.id}/>
@@ -208,12 +215,13 @@ const Row: React.FC<Props> = ({
             }
 
             {messageSnap.status === 'thinking' &&
-                <MySpin className={"ml-2 h-5 w-5 text-white fill-white"}/>
+                <MySpin className="ml-2 h-5 w-5 text-white fill-white select-none"/>
             }
 
             {messageSnap.audio &&
                 <div className="w-2/5 self-end rounded-lg sm:w-1/2">
                     <Audio audioSnap={messageSnap.audio}
+                           chatId={chatId}
                            messageSnap={messageSnap}
                            theme={theme}
                            loadAudio={shouldLoadAudio}
@@ -221,10 +229,12 @@ const Row: React.FC<Props> = ({
                 </div>
             }
             {messageSnap.text &&
-                <div className="relative rounded-2xl max-w-3/4">
+                <div className="relative rounded-2xl max-w-3/4 transition-all duration-200">
                     <MyText messageSnap={messageSnap} theme={theme}/>
                     {shouldBeInHistory && emojiOnHistoryMessage &&
-                        <div className={cx("absolute text-xl",theme.historyIcon)}>👌</div>
+                        <div className={cx("absolute text-xl select-none", theme.historyIcon)}
+                             data-pseudo-content="👌"
+                        ></div>
                     }
                 </div>
             }
@@ -235,7 +245,7 @@ const Row: React.FC<Props> = ({
             }
 
             {messageSnap.role === "assistant" && messageSnap.status !== 'thinking' && hoveringOnRow &&
-                <div className="px-2 select-none flex gap-1 items-center text-neutral-200 rounded cursor-pointer ">
+                <div className="flex cursor-pointer items-center gap-1 rounded px-2 text-neutral-200 select-none">
                     {messageSnap.text && <MyCopy text={messageSnap.text}></MyCopy>}
                     {
                         messageSnap.audio &&
@@ -323,7 +333,7 @@ export const AudioMenu: React.FC<AudioMenuProps> = ({deleteAction, audioId}) => 
                 url: url,
                 fileName: audioId
             },
-            icon: <PiDownloadSimpleLight className="w-5 h-5"/>
+            icon: <PiDownloadSimpleLight className="h-5 w-5"/>
         }, {
             name: "Delete",
             action: deleteAction,

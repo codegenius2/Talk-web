@@ -13,13 +13,14 @@ import {subscribe} from "valtio";
 
 interface AudioProps {
     audioSnap: MessageAudio
+    chatId: string
     messageSnap: Message
     loadAudio: boolean
     theme: Theme
 }
 
 export const Audio: React.FC<AudioProps> = ({
-                                                audioSnap, messageSnap, loadAudio, theme
+                                                audioSnap, chatId, messageSnap, loadAudio, theme
                                             }) => {
 
     const wavesurfer = useRef<WaveSurfer>();
@@ -52,87 +53,99 @@ export const Audio: React.FC<AudioProps> = ({
     }, [loadAudio]);
 
     useEffect(() => {
-        if (!load || !url) {
-            return
-        }
-        wavesurfer.current = WaveSurfer.create({
-            container: container.current!,
-            waveColor: theme.wave,
-            progressColor: theme.progress,
-            cursorWidth: 0,
-            barWidth: 4,
-            dragToSeek: true,
-            autoScroll: false,
-            hideScrollbar: true,
-            barGap: 2,
-            barRadius: 10,
-            height: 'auto',
-            url: url,
-            plugins: [
-                Hover.create({
-                    lineColor: theme.hoverLine,
-                    lineWidth: 1,
-                    labelBackground: theme.labelBg,
-                    labelColor: theme.label,
-                    labelSize: '11px',
-                }),
-            ],
-        })
-        const current = wavesurfer.current
-
-        current.on('interaction', () => {
-            clearPlayList()
-            current!.play().catch((e) => {
-                console.error("can't play", e)
+            if (!load || !url) {
+                return
+            }
+            wavesurfer.current = WaveSurfer.create({
+                container: container.current!,
+                waveColor: theme.wave,
+                progressColor: theme.progress,
+                cursorWidth: 0,
+                barWidth: 4,
+                dragToSeek: true,
+                autoScroll: false,
+                hideScrollbar: true,
+                barGap: 2,
+                barRadius: 10,
+                height: 'auto',
+                url: url,
+                plugins: [
+                    Hover.create({
+                        lineColor: theme.hoverLine,
+                        lineWidth: 1,
+                        labelBackground: theme.labelBg,
+                        labelColor: theme.label,
+                        labelSize: '11px',
+                    }),
+                ],
             })
-        })
+            const current = wavesurfer.current
 
-        current.on('play', () => {
-            play(audioSnap.id)
-            setAmIPlaying(true)
-        })
+            current.on('interaction', () => {
+                clearPlayList()
+                current!.play().catch((e) => {
+                    console.error("can't play", e)
+                })
+            })
 
-        current.on('pause', () => {
-            pauseMe(audioSnap.id)
-            setAmIPlaying(false)
-        })
+            current.on('play', () => {
+                play(audioSnap.id)
+                setAmIPlaying(true)
+            })
 
-        current.on('finish', () => {
-            onFinish(audioSnap.id)
-            setAmIPlaying(false)
-        })
+            current.on('pause', () => {
+                pauseMe(audioSnap.id)
+                setAmIPlaying(false)
+            })
 
+            current.on('finish', () => {
+                onFinish(audioSnap.id)
+                setAmIPlaying(false)
+            })
 
-        const player = controlState.player
+            const player = controlState.player
 
-        const syncWithPlayer = () => {
-            if (player.isPlaying)
-                if (player.current === audioSnap.id) {
-                    if (!current.isPlaying()) {
-                        current.play().catch((e) => {
-                            console.error("can't play", e)
-                        })
-                    }
-                } else {
-                    if (current.isPlaying()) {
-                        current.pause()
-                    }
+            const syncWithPlayer = () => {
+                if (player.current === audioSnap.id
+                    && player.isPlaying
+                    && !current.isPlaying()) {
+                    console.debug(audioSnap.id + " want to play ", player)
+                    current.play().catch((e) => {
+                        console.error("can't play", e)
+                    })
+                } else if (player.current !== audioSnap.id &&
+                    current.isPlaying()) {
+                    console.debug(audioSnap.id + " want to pause, ", player)
+                    current.pause()
                 }
-        }
-        let unSub: () => void;
-        current.on('ready', () => {
-            syncWithPlayer()
-            unSub = subscribe(controlState.player, () => {
+            }
+            let unSub: () => void;
+            current.on('ready', () => {
                 syncWithPlayer()
+                unSub = subscribe(controlState.player, () => {
+                    syncWithPlayer()
+                })
+                const durationSec = current?.getDuration()
+                if (durationSec && audioSnap.durationMs === undefined) {
+                    controlState.audioDurationUpdates.push(
+                        {
+                            chatId: chatId,
+                            messageId: messageSnap.id,
+                            durationMs: durationSec * 1000
+                        }
+                    )
+                    controlState.audioDurationUpdateSignal++
+                }
             })
-        })
 
-        return () => {
-            unSub && unSub()
-            onFinish(audioSnap.id)
-            current.destroy();
-        };
-    }, [audioSnap.id, theme, url, load]);
+            return () => {
+                unSub && unSub()
+                onFinish(audioSnap.id)
+                current.destroy();
+            };
+        }, [audioSnap.id, theme, url, load]
+    )
+    ;
 
     const togglePlay = () => {
         if (!wavesurfer.current) {
@@ -176,12 +189,12 @@ export const Audio: React.FC<AudioProps> = ({
                     </div>
                 }
             </div>
-            <div className={"flex pl-1 pr-3 justify-between gap-1 "}>
-                <p className="text-xs inline w-10 text-center">{formatAudioDuration(audioSnap.durationMs)}</p>
+            <div className={"flex pl-1 pr-3 justify-between gap-1 pointer-events-none"}>
+                <p className="text-xs inline w-10 text-center" data-pseudo-content={formatAudioDuration(audioSnap.durationMs)}></p>
                 <div className="flex justify-end items-center gap-1">
-                    <p className="text-xs inline select-none">{formatAgo(messageSnap.createdAt)}</p>
+                    <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
                     {['sent', 'received'].includes(messageSnap.status) &&
-                        <BsCheck2Circle className={"h-4 w-4 " + theme.normalIcon}/>
+                        <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
                     }
                     {messageSnap.status === 'sending' &&
                         <MySpin className={"h-4 w-4 " + theme.normalIcon}/>

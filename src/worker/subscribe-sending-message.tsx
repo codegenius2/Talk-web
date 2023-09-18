@@ -7,7 +7,7 @@ import {findChatProxy, findMessage} from "../state/app-state.ts";
 import {historyMessages} from "../api/restful/util.ts";
 import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx";
 import {postAudioChat, postChat} from "../api/restful/api.ts";
-import {generateUudioId, randomHash16Char} from "../util/util.tsx";
+import {generateUudioId} from "../util/util.tsx";
 import {audioDb} from "../state/db.ts";
 import {LLMMessage} from "../shared-types.ts";
 import {minSpeakTimeMillis} from "../config.ts";
@@ -20,7 +20,7 @@ const systemMessage: LLMMessage = {
 
 export const SubscribeSendingMessage: React.FC = () => {
 
-    const controlSnp = useSnapshot(controlState)
+    const { sendingMessageSignal} = useSnapshot(controlState)
     useEffect(() => {
         if (controlState.sendingMessages.length === 0) {
             return;
@@ -29,7 +29,6 @@ export const SubscribeSendingMessage: React.FC = () => {
         if (!sm) {
             return
         }
-        controlState.sendingMessageSignal++
 
         if (sm.audioBlob) {
             if (sm.durationMs! < minSpeakTimeMillis) {
@@ -57,9 +56,9 @@ export const SubscribeSendingMessage: React.FC = () => {
             chatProxy.messages.push(nonProxyMessage)
 
             console.debug("sending audio and chat, chatId,messages: ", chatProxy.id, messages)
-            postPromise = postAudioChat(sm.audioBlob as Blob, controlSnp.recordingMimeType?.fileName ?? "audio.webm", {
+            postPromise = postAudioChat(sm.audioBlob as Blob, controlState.recordingMimeType?.fileName ?? "audio.webm", {
                 chatId: chatProxy.id,
-                ticketId: randomHash16Char(),
+                ticketId: nonProxyMessage.ticketId,
                 ms: messages,
                 talkOption: talkOption
             });
@@ -70,7 +69,7 @@ export const SubscribeSendingMessage: React.FC = () => {
             console.debug("sending chat, chatId,messages: ", chatProxy.id, messages)
             postPromise = postChat({
                 chatId: chatProxy.id,
-                ticketId: randomHash16Char(),
+                ticketId: nonProxyMessage.ticketId,
                 ms: messages,
                 talkOption: talkOption
             });
@@ -114,6 +113,6 @@ export const SubscribeSendingMessage: React.FC = () => {
                 }
             )
         }
-    }, [controlSnp.recordingMimeType?.fileName, controlSnp.sendingMessageSignal]);
+    }, [sendingMessageSignal]);
     return null
 }

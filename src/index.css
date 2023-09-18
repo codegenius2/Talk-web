@@ -107,3 +107,8 @@ https://benborgers.com/posts/tailwind-h-screen
 .brightness-200 {
     -webkit-filter: brightness(150%);
 }
+
+/*Prevent an element from being selected and copied with CSS. see https://danoc.me/blog/css-prevent-copy*/
+[data-pseudo-content]::before {
+  content: attr(data-pseudo-content);
+}

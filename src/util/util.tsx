@@ -1,5 +1,5 @@
 import {SHA256} from 'crypto-js';
-import {KeyboardEventHandler} from "react";
+import {KeyboardEventHandler, useEffect, useRef} from "react";
 import {format} from 'date-fns'
 import {RecordingMimeType} from "../config.ts";
 import {floor} from "lodash";
@@ -174,3 +174,11 @@ function randomString(length: number): string {
 export function generateHash(input: string): string {
     return SHA256(input).toString();
 }
+
+export const usePrevious = <T extends unknown>(value: T): T | undefined => {
+    const ref = useRef<T>();
+    useEffect(() => {
+        ref.current = value;
+    });
+    return ref.current;
+};
