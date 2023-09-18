@@ -6,7 +6,8 @@ import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts"
 import {IoRefreshSharp} from "react-icons/io5";
 import {BsTrash3} from "react-icons/bs";
 import {cx} from "./util/util.tsx";
-import {Helmet} from "react-helmet";
+import {Helmet} from 'react-helmet-async';
+import * as packageJson from '../package.json';
 
 export default function Error() {
 
@@ -82,7 +83,7 @@ export default function Error() {
                 "scrollbar-visible-neutral-300")}>
                 <div className="flex flex-col gap-1 whitespace-pre-line">
                     <p className="text-xl text-[#AA2C2C] brightness-75">Version</p>
-                    <p className="">{"Not Available"}</p>
+                    <p className="">{packageJson.version}</p>
                 </div>
                 <div className="flex flex-col gap-1 whitespace-pre-line">
                     <p className="text-xl text-[#AA2C2C] brightness-75">Status</p>

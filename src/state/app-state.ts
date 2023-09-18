@@ -4,6 +4,10 @@ import {Message, onMarkDeleted} from "../data-structure/message.tsx";
 import {ClientOption, defaultOption} from "../data-structure/client-option.tsx";
 import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts";
 import {generateHash} from "../util/util.tsx";
+import {migrate} from "./migration.ts";
+import * as packageJson from '../../package.json';
+
+const currentVersion = packageJson.version
 
 export type AuthState = {
     passwordHash: string,
@@ -25,6 +29,7 @@ export type UserPreference = {
 }
 
 export interface AppState {
+    version: string
     auth: AuthState
     ability: ServerAbility,
     option: ClientOption,
@@ -39,6 +44,7 @@ export const hydrationState = proxy({
 })
 
 export const appState = proxy<AppState>({
+    version: packageJson.version,
     auth: {
         passwordHash: "",
         loggedIn: false,
@@ -54,6 +60,7 @@ export const appState = proxy<AppState>({
 })
 
 const defaultAppState = (): AppState => ({
+    version: currentVersion,
     auth: {
         passwordHash: "",
         loggedIn: false,
@@ -68,22 +75,9 @@ const defaultAppState = (): AppState => ({
     }
 })
 
-export const clearSettings = () => {
-    const dft = defaultAppState()
-    appState.auth = dft.auth
-    appState.ability = dft.ability
-    appState.option = dft.option
-    appState.panelSelection = dft.panelSelection
-}
-
-export const clearChats = () => {
-    const dft = defaultAppState()
-    appState.chats = dft.chats
-    appState.currentChatId = dft.currentChatId
-}
-
 export const resetAppState = () => {
     const dft = defaultAppState()
+    appState.version = dft.version
     appState.auth = dft.auth
     appState.ability = dft.ability
     appState.option = dft.option
@@ -99,6 +93,10 @@ appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
         const dft = defaultAppState()
         Object.keys(appState).forEach((key) => {
             console.debug("restoring from db, key:", key)
+            const error = migrate(as)
+            if(error){
+                throw error
+            }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             appState[key as keyof AppState] = as[key] ?? dft[key]
@@ -121,6 +119,20 @@ subscribe(appState, () => {
         console.debug("saved")
     })
 })
+
+export const clearSettings = () => {
+    const dft = defaultAppState()
+    appState.auth = dft.auth
+    appState.ability = dft.ability
+    appState.option = dft.option
+    appState.panelSelection = dft.panelSelection
+}
+
+export const clearChats = () => {
+    const dft = defaultAppState()
+    appState.chats = dft.chats
+    appState.currentChatId = dft.currentChatId
+}
 
 export const findMessage = (chatProxy: Chat, messageId: string): Message | undefined => {
     return chatProxy.messages.find(m => m.id === messageId)

@@ -8,7 +8,7 @@ import {useEffect} from "react";
 import {useSnapshot} from "valtio/react";
 import {appState, hydrationState} from "../state/app-state.ts";
 import {useNavigate} from "react-router-dom";
-import {Helmet} from 'react-helmet';
+import {Helmet} from 'react-helmet-async';
 
 
 export default function Home() {
