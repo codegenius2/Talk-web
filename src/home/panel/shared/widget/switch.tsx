@@ -24,7 +24,6 @@ export const MySwitch: React.FC<MySwitchProps> = ({enabled, setEnabled}) => {
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-white 
                 focus-visible:ring-opacity-75 border-2 border-neutral-600 border-dotted`}
             >
-                <span className="sr-only">Use setting</span>
                 <span
                     aria-hidden="true"
                     className={`${enabled ? 'translate-x-5' : 'translate-x-0'}

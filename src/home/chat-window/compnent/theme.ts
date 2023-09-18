@@ -19,7 +19,7 @@ export const blueColor: Theme = {
     text: 'text-violet-100',
     normalIcon: 'fill-violet-100',
     warningIcon: 'text-yellow-500',
-    historyIcon: '-left-2 -top-2',
+    historyIcon: 'fill-violet-100 -left-2 -top-1.5 rotate-45',
 
     playBg: 'bg-blue-grey',
     play: 'white',
@@ -36,7 +36,7 @@ export const neutralColor: Theme = {
     text: 'text-neutral-800',
     normalIcon: 'fill-neutral-800',
     warningIcon: 'text-yellow-500',
-    historyIcon: '-right-2 -top-2 fill-neutral-800',
+    historyIcon: '-right-2 -top-2 fill-neutral-800 -rotate-45',
 
     playBg: 'bg-white',
     play: '#5e5e5e',

@@ -54,7 +54,7 @@ export const Panel: React.FC = () => {
                     onMouseDown={() => onMouseUpOrDown("global")}
                     onMouseEnter={() => onMouseEnter("global")}
                 >
-                    <p className="text-center">Setting</p>
+                    <p className="text-center">Global</p>
                 </div>
                 <div className={
                     cx(

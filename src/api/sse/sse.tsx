@@ -17,29 +17,30 @@ import {
     SSEMsgMeta,
     SSEMsgText
 } from "./event.ts";
-import {base64ToBlob, generateUudioId} from "../../util/util.tsx";
+import {base64ToBlob, generateUudioId, randomHash32Char} from "../../util/util.tsx";
 import {audioDb} from "../../state/db.ts";
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts";
 import {adjustOption} from "../../data-structure/client-option.tsx";
 
 export const SSE = () => {
-    const networkSnp = useSnapshot(networkState)
-    const authSnp = useSnapshot(appState.auth)
+    const {passwordHash} = useSnapshot(appState.auth)
 
     useEffect(() => {
         const ep = SSEEndpoint()
-        const url = ep + "?stream=" + networkState.streamId
+        const streamId = randomHash32Char()
+        networkState.streamId = streamId
+        const url = ep + "?stream=" + streamId
 
         console.info("connecting to SSE: ", url);
         const ctrl = new AbortController();
         fetchEventSource(url, {
             signal: ctrl.signal,
             headers: {
-                'Authorization': 'Bearer ' + appState.auth.passwordHash,
+                'Authorization': 'Bearer ' + passwordHash,
             },
             keepalive: true,
             onopen: async (response: Response) => {
-                console.info("EventSource connected to server, response: ", response);
+                console.info("[SSE] connected to server, response: ", response);
             },
             onmessage: (msg) => {
                 console.debug("received an msg from SSE server", msg.event, msg.data.slice(0, 500))
@@ -112,13 +113,17 @@ export const SSE = () => {
                 }
             },
             onerror: (err) => {
-                console.error("SSE error:", err)
+                console.error("[SSE] error:", err)
+            },
+            onclose: () => {
+                console.debug("[SSE] closed")
             }
         })
         return () => {
-            ctrl.abort("reconnecting")
+            console.debug("[SSE] trying to abort")
+            ctrl.abort()
         }
-    }, [networkSnp, authSnp])
+    }, [passwordHash])
     return null
 }
 

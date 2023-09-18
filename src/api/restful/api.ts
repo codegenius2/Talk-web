@@ -1,5 +1,4 @@
 import axios, {AxiosError} from "axios";
-import {snapshot} from "valtio";
 import {ChatReq} from "./model.ts";
 import {generateHash} from "../../util/util.tsx";
 import {networkState} from "../../state/network-state.ts";
@@ -12,12 +11,10 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use((config) => {
-    const networkSnp = snapshot(networkState)
-    const authSnp = snapshot(appState.auth)
-    config.headers['Stream-ID'] = networkSnp.streamId;
+    config.headers['Stream-ID'] = networkState.streamId;
     if (!config.headers['Authorization']) {
         // do not override Authorization headerZ
-        config.headers['Authorization'] = 'Bearer ' + authSnp.passwordHash;
+        config.headers['Authorization'] = 'Bearer ' + appState.auth.passwordHash;
     }
     return config;
 });

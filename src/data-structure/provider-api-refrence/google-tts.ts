@@ -15,8 +15,8 @@ export const googleTTSAPIReference: GoogleTTSAPIReference = {
     language: {
         choices: googleTTSLanguageStrings,
         default: {
-            value: "en-US",
-            name: "English (United States)",
+            value: "en-GB",
+            name: "English (Great Britain)",
             tags: []
         },
     },

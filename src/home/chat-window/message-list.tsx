@@ -15,7 +15,7 @@ import {MdOutlineContentCopy} from "react-icons/md";
 import {CopyToClipboard} from "react-copy-to-clipboard";
 import {BsTrash3} from "react-icons/bs";
 import {DropDownMenu} from "./compnent/drop-down-menu.tsx";
-import {PiDownloadSimpleLight} from "react-icons/pi";
+import {PiButterflyThin, PiDownloadSimpleLight} from "react-icons/pi";
 import {audioDb} from "../../state/db.ts";
 import {addToPlayList, clearPlayList} from "../../state/control-state.ts";
 
@@ -236,9 +236,7 @@ const Row: React.FC<Props> = ({
                 <div className="relative rounded-2xl max-w-3/4 transition-all duration-200">
                     <MyText messageSnap={messageSnap} theme={theme}/>
                     {shouldBeInHistory && emojiOnHistoryMessage &&
-                        <div className={cx("absolute text-xl select-none", theme.historyIcon)}
-                             data-pseudo-content="👌"
-                        ></div>
+                        <PiButterflyThin className={cx("absolute w-6 h-6 select-none", theme.historyIcon)}/>
                     }
                 </div>
             }

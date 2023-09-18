@@ -23,7 +23,7 @@ export const OtherSetting: React.FC = () => {
             className="flex flex-col justify-start items-center gap-2 py-2 border-2 border-neutral-500 border-dashed
             rounded-lg px-3">
             <div className="flex justify-between items-center w-full ">
-                <p className="prose text text-neutral-600">Emoji on History</p>
+                <p className="prose text text-neutral-600">Butterfly on History</p>
                 <MySwitch enabled={refSnap.emojiOnHistoryMessage} setEnabled={showBorderAround}/>
             </div>
             <div className="flex flex-wrap py-2 w-full gap-2">

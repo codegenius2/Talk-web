@@ -3,7 +3,7 @@ import {currentProtocolHostPortPath, joinUrl} from "./util/util.tsx";
 export const StreamIdKey = "stream-id"
 export const audioPlayerMimeType = 'audio/mpeg'
 export const maxLoadedVoice = 6
-export const messageTimeoutSeconds = 30
+export const messageTimeoutSeconds = 60
 // a recoding which is less than minSpeakTimeMillis should be discarded
 export const minSpeakTimeMillis = 500
 
