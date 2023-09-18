@@ -13,14 +13,14 @@ import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper-simultaneous-
 
 export default function Home() {
     const hydrationSnap = useSnapshot(hydrationState)
-    const authSnap = useSnapshot(appState.auth)
+    const {auth} = useSnapshot(appState)
     const navigate = useNavigate()
 
     useEffect(() => {
         if (hydrationState.hydrated && !appState.auth.loggedIn) {
             navigate("/auth")
         }
-    }, [hydrationSnap, authSnap, navigate]);
+    }, [hydrationSnap, auth, navigate]);
 
     return (
         hydrationSnap.hydrated ?
