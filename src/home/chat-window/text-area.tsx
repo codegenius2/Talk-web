@@ -8,6 +8,10 @@ type Props = {
     chatProxy: Chat
 }
 
+const largeTextAreaMinHeight = "min-h-96"
+const smallTextAreaMinHeight = "min-h-24"
+const smallTextAreaMinHeightRem = "6rem"
+
 const TextArea: React.FC<Props> = ({chatProxy}) => {
         const chatSnap = useSnapshot(chatProxy)
         const {inputText} = useSnapshot(chatProxy, {sync: true})
@@ -61,10 +65,13 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }, [chatProxy]);
 
         const handleClick = useCallback(() => {
-            setInputAreaIsLarge(!inputAreaIsLarge)
-            if (arrowButtonRef) {
-                arrowButtonRef!.current!.blur();
+            if (inputAreaIsLarge && textAreaRef.current) {
+                const current = textAreaRef.current
+                console.debug("max height", current.style.maxHeight)
+                current.style.height = smallTextAreaMinHeightRem
             }
+            setInputAreaIsLarge(!inputAreaIsLarge)
+            arrowButtonRef.current?.blur();
         }, [inputAreaIsLarge]);
 
         useEffect(() => {
@@ -76,8 +83,13 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }, [inputAreaIsLarge])
 
         const autoGrowHeight = (e: React.BaseSyntheticEvent) => {
-            e.currentTarget.style.height = "5px"
-            e.currentTarget.style.height = e.currentTarget.scrollHeight + "px"
+            e.currentTarget.style.height = "auto";
+            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
+            if (textAreaRef.current) {
+                if (textAreaRef.current.scrollHeight > textAreaRef.current.clientHeight) {
+                    setInputAreaIsLarge(true)
+                }
+            }
         }
 
         return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
@@ -96,8 +108,10 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                     <textarea
                         name={"Message Input"}
                         ref={textAreaRef}
-                        className={cx("w-full outline-0 rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto",
-                            "placeholder:text-neutral-500 placeholder:select-none min-h-24 max-h-[30rem]")}
+                        className={cx("w-full outline-none rounded-xl resize-none bg-white pl-2 py-1 lg:p-3 mt-auto",
+                            "placeholder:text-neutral-500 placeholder:select-none max-h-96 transition-all duration-150",
+                            inputAreaIsLarge ? largeTextAreaMinHeight : smallTextAreaMinHeight
+                        )}
                         onKeyUp={stopPropagation}
                         value={inputText}
                         onInput={autoGrowHeight}

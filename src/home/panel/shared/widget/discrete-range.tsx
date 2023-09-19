@@ -1,6 +1,7 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
 import {controlState} from "../../../../state/control-state.ts";
+import {cx} from "../../../../util/util.tsx";
 
 type Props<T extends number | string> = {
     title: string
@@ -176,8 +177,9 @@ export function DiscreteRange<T extends string | number>({
                 <input
                     name={"title"}
                     ref={inputBoxRef}
-                    className={"min-w-11 max-h-6 text-center px-1 align-middle outline-0 overflow-hidden border border-neutral-500 rounded-xl resize-none "
-                        + (containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
+                    className={cx("min-w-11 max-h-6 text-center px-1 align-middle outline-none overflow-hidden border",
+                        " border-neutral-500 rounded-xl resize-none ",
+                        containsValue ? "bg-transparent" : "bg-blue-600 text-neutral-100")}
                     onBlur={onBlur}
                     onInput={(e) => e.currentTarget.size = e.currentTarget.value.length + 1}
                     onFocus={(e) => {

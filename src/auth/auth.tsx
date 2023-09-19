@@ -101,7 +101,7 @@ export default function Auth() {
                                 setInputValue(e.target.value);
                                 setShake(false);
                             }}
-                            className={cx("appearance-none w-full h-16 rounded-lg outline-0 caret-transparent",
+                            className={cx("appearance-none w-full h-16 rounded-lg outline-none caret-transparent",
                                 "text-6xl text-center tracking-widest bg-white backdrop-blur bg-opacity-10 transition duration-5000",
                                 textLight ? "text-neutral-200" : "text-neutral-800")}
                         />

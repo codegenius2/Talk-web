@@ -176,7 +176,7 @@ export const SliderRange: React.FC<Props> = ({
                 <input
                     name={"title"}
                     ref={inputBoxRef}
-                    className="min-w-11 max-h-6 text-center px-0.5 align-middle outline-0 overflow-hidden border
+                    className="min-w-11 max-h-6 text-center px-0.5 align-middle outline-none overflow-hidden border
                         border-neutral-500 rounded-xl resize-none bg-transparent"
                     onInput={(e) => e.currentTarget.size = e.currentTarget.value.length + 1}
                     onBlur={onBlur}
