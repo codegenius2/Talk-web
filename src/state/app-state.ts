@@ -25,7 +25,7 @@ export type Chat = {
 export type PanelSelection = 'chats' | 'global' | 'current'
 
 export type UserPreference = {
-    emojiOnHistoryMessage: boolean
+    butterflyOnHistoryMessage: boolean
 }
 
 export interface AppState {
@@ -55,7 +55,7 @@ export const appState = proxy<AppState>({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        emojiOnHistoryMessage: false
+        butterflyOnHistoryMessage: true
     }
 })
 
@@ -71,7 +71,7 @@ const defaultAppState = (): AppState => ({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        emojiOnHistoryMessage: false
+        butterflyOnHistoryMessage: true
     }
 })
 
@@ -94,7 +94,7 @@ appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
         Object.keys(appState).forEach((key) => {
             console.debug("restoring from db, key:", key)
             const error = migrate(as)
-            if(error){
+            if (error) {
                 throw error
             }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -10,7 +10,7 @@ export const OtherSetting: React.FC = () => {
     const refSnap = useSnapshot(appState.pref)
 
     const showBorderAround = useCallback((enabled: boolean) => {
-        appState.pref.emojiOnHistoryMessage = enabled
+        appState.pref.butterflyOnHistoryMessage = enabled
     }, []);
 
     return <div
@@ -24,7 +24,7 @@ export const OtherSetting: React.FC = () => {
             rounded-lg px-3">
             <div className="flex justify-between items-center w-full ">
                 <p className="prose text text-neutral-600">Butterfly on History</p>
-                <MySwitch enabled={refSnap.emojiOnHistoryMessage} setEnabled={showBorderAround}/>
+                <MySwitch enabled={refSnap.butterflyOnHistoryMessage} setEnabled={showBorderAround}/>
             </div>
             <div className="flex flex-wrap py-2 w-full gap-2">
                 <CountDownButton text={"Clear All Chats"}

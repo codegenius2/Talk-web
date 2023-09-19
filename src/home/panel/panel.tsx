@@ -1,6 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, {useCallback} from 'react';
 import {useSnapshot} from "valtio/react";
-import {appState, Chat, currentChatProxy, PanelSelection} from "../../state/app-state.ts";
+import {appState, PanelSelection} from "../../state/app-state.ts";
 import {controlState} from "../../state/control-state.ts";
 import {ChatList} from "./chat-list/chat-list.tsx";
 import {cx, escapeSpaceKey} from "../../util/util.tsx";
@@ -10,13 +11,7 @@ import {layoutState} from "../../state/layout-state.ts";
 
 export const Panel: React.FC = () => {
 
-    const {currentChatId,panelSelection} = useSnapshot(appState)
-    const [chatProxy, setChatProxy] = useState<Chat>()
-
-    useEffect(() => {
-        const p = currentChatProxy()
-        setChatProxy(p)
-    }, [currentChatId]);
+    const {currentChatId, panelSelection} = useSnapshot(appState)
 
     const onMouseUpOrDown = useCallback((p: PanelSelection) => {
         appState.panelSelection = p
@@ -89,6 +84,7 @@ export const Panel: React.FC = () => {
                 )}
             >
                 <Global optionProxy={appState.option}/>
+                {ninjia}
             </div>
             <div
                 onScroll={handleScroll}
@@ -97,10 +93,14 @@ export const Panel: React.FC = () => {
                     panelSelection !== "current" && "hidden"
                 )}
             >
-                {chatProxy &&
-                    <Current chatProxy={chatProxy}/>
+                {currentChatId !== "" &&
+                    <Current/>
                 }
+                {ninjia}
             </div>
         </div>
     )
 }
+
+
+const ninjia = <div className="min-h-[14rem] text-transparent select-none pointer-events-none">ninja</div>

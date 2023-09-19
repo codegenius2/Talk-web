@@ -5,6 +5,7 @@ import {googleTTSAPIReference} from "./provider-api-refrence/google-tts.ts";
 import {elevenlabsAPIReference} from "./provider-api-refrence/elevenlabs-tts.ts";
 import {Switchable} from "../shared-types.ts";
 import {llmAPIReference} from "./provider-api-refrence/llm.ts";
+import {googleSTTAPIReference} from "./provider-api-refrence/google-stt.ts";
 
 /**
  * Data structures embodying the parameters intended for the settings page display.
@@ -55,69 +56,92 @@ export const defaultOption = (): ClientOption => ({
         whisper: {
             available: false,
             enabled: true,
-        }
+        },
+        google: {
+            available: false,
+            enabled: true,
+            language: googleSTTAPIReference.language.default.value,
+            model: googleSTTAPIReference.models.default.value,
+        },
     }
 })
 
 // server tells client what models, languages and other parameters it supports
 export const adjustOption = (c: ClientOption, s: ServerAbility): void => {
     c.llm.chatGPT.available = s.llm.chatGPT.available
-    c.llm.chatGPT.model = pickOne(c.llm.chatGPT.model, s.llm.chatGPT.models)
+    c.llm.chatGPT.model = pickOne(c.llm.chatGPT.model, s.llm.chatGPT.models, m => m)
 
     c.tts.google.available = s.tts.google.available
     c.tts.elevenlabs.available = s.tts.elevenlabs.available
-    c.tts.elevenlabs.voiceId = pickOne(c.tts.elevenlabs.voiceId, s.tts.elevenlabs.voices, (voice) => voice.id)
+    c.tts.elevenlabs.voiceId = pickOne(c.tts.elevenlabs.voiceId, s.tts.elevenlabs.voices, voice => voice.id)
 
     c.stt.whisper.available = s.stt.whisper.available
-    c.stt.whisper.model = pickOne(c.stt.whisper.model, s.stt.whisper.models)
+    c.stt.whisper.model = pickOne(c.stt.whisper.model, s.stt.whisper.models, m => m)
+    c.stt.google.available = s.stt.google.available
+    c.stt.google.recognizer = pickOne(c.stt.google.recognizer, s.stt.google.recognizers, rec => rec.id)
 }
 
 export const toRestfulAPIOption = (c: ClientOption): api.TalkOption => {
     const opt: api.TalkOption = {
-        toSpeech: false, // maybe enable in the future
-        toText: true,
-        completion: true,
-        completionToSpeech: true,
+        toSpeech: false, // maybe support this in the future
+        toText: false,
+        completion: false,
+        completionToSpeech: false,
     }
 
     // LLM
     const chatGPT = c.llm.chatGPT
-    if (chatGPT.available && chatGPT.enabled && chatGPT.model) {
+    if (chatGPT.available && chatGPT.enabled) {
         opt.llmOption = {
             chatGPT: {
                 ...chatGPT,
-                model: chatGPT.model
+                model: chatGPT.model ?? ""
             }
         }
+        opt.completion = true
     }
 
     // TTS, only one provider should be used at a time 
-    const google = c.tts.google
+    const googleTTS = c.tts.google
     const elevenlabs = c.tts.elevenlabs
-    if (google.available && google.enabled) {
+    if (googleTTS.available && googleTTS.enabled) {
         opt.ttsOption = {
             google: {
-                ...google,
+                ...googleTTS,
             }
         }
-    } else if (elevenlabs.available && elevenlabs.enabled && elevenlabs.voiceId) {
+        opt.completionToSpeech = true
+    } else if (elevenlabs.available && elevenlabs.enabled) {
         opt.ttsOption = {
             elevenlabs: {
                 ...elevenlabs,
-                voiceId: elevenlabs.voiceId
+                voiceId: elevenlabs.voiceId ?? ""
             }
         }
+        opt.completionToSpeech = true
     }
 
     // STT
     const whisper = c.stt.whisper
-    if (whisper.available && whisper.enabled && whisper.model) {
+    const googleSTT = c.stt.google
+    if (whisper.available && whisper.enabled) {
         opt.sttOption = {
             whisper: {
                 ...whisper,
-                model: whisper.model
+                model: whisper.model ?? ""
             }
         }
+        opt.toText = true
+    } else if (googleSTT.available && googleSTT.enabled) {
+        opt.sttOption = {
+            google: {
+                ...googleSTT,
+                model: googleSTT.model,
+                language: googleSTT.language ?? "",
+                recognizer: googleSTT.recognizer ?? ""
+            }
+        }
+        opt.toText = true
     }
     return opt
 }
@@ -141,9 +165,16 @@ export type ClaudeOption = Switchable
 
 export type STTOption = {
     whisper: WhisperOption
+    google: GoogleOption
 }
 
 export type WhisperOption = Switchable & {
+    model?: string
+}
+
+export type GoogleOption = Switchable & {
+    recognizer?: string // mustn't be empty if enabled === true
+    language?: string
     model?: string
 }
 
@@ -183,11 +214,7 @@ export type ElevenlabsTTSOption = Switchable & {
     clarity: number
 }
 
-const pickOne = <V extends string | number, T>(current: V | undefined, pool: T[] | undefined, getValue?: (t: T) => V): V | undefined => {
-    if (getValue === undefined) {
-        getValue = (t: T | V): V => t as V
-    }
-
+const pickOne = <V extends string | number, T>(current: V | undefined, pool: T[] | undefined, getValue: (t: T) => V): V | undefined => {
     if (pool && pool.length > 0) {
         const values = pool.map(getValue)
         if (current && values.includes(current)) {

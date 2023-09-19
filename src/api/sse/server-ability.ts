@@ -14,12 +14,12 @@ export type ServerTTS = {
 
 export type ServerGoogleTTS = {
     available: boolean
-    voices?: Voice[]
+    voices?: TaggedItem[]
 }
 
 export type ServerElevenlabs = {
     available: boolean
-    voices?: Voice[]
+    voices?: TaggedItem[]
 }
 
 // STT
@@ -36,6 +36,7 @@ export type ServerWhisper = {
 
 export type ServerGoogleSTT = {
     available: boolean
+    recognizers?: TaggedItem[]
 }
 
 // LLM
@@ -50,7 +51,7 @@ export type ServerChatGPT = {
 }
 
 // other
-export type Voice = {
+export type TaggedItem = {
     id: string
     name: string
     tags?: string [] // gender, accent, age, etc

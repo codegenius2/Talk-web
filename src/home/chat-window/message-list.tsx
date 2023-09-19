@@ -185,7 +185,7 @@ const Row: React.FC<Props> = ({
                                   shouldLoadAudio
                               }) => {
 
-    const {emojiOnHistoryMessage} = useSnapshot(appState.pref)
+    const {butterflyOnHistoryMessage} = useSnapshot(appState.pref)
 
     const [theme, setTheme] = useState(neutralColor)
     const [hoveringOnRow, setHoveringOnRow] = useState(false)
@@ -235,7 +235,7 @@ const Row: React.FC<Props> = ({
             {messageSnap.text &&
                 <div className="relative rounded-2xl transition-all duration-200 max-w-3/4">
                     <MyText messageSnap={messageSnap} theme={theme}/>
-                    {shouldBeInHistory && emojiOnHistoryMessage &&
+                    {shouldBeInHistory && butterflyOnHistoryMessage &&
                         <PiButterflyThin className={cx("absolute w-6 h-6 select-none", theme.historyIcon)}/>
                     }
                 </div>

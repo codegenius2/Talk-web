@@ -13,7 +13,6 @@ type Props<T extends number | string> = {
 }
 
 export function SelectBox<T extends number | string>({choices, defaultValue, setValue}: Props<T>) {
-
     const {
         isOpen,
         selectedItem,
@@ -33,9 +32,12 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
 
     useEffect(() => {
         const found = choices.find(c => c.value === defaultValue)
-        selectItem(found || null)
+        if (found) {
+            selectItem(found)
+            setValue(found.value)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultValue]);
+    }, [defaultValue, choices]);
 
     const layoutSnap = useSnapshot(layoutState)
     const buttonRef = useRef<HTMLParagraphElement>(null);
@@ -62,7 +64,7 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
 
     return (
         <div className="">
-            <p className="relative prose border border-neutral-500 rounded-xl cursor-pointer text-neutral-800 px-1.5
+            <p className="prose border border-neutral-500 rounded-xl cursor-pointer text-neutral-800 px-1.5
              truncate ... outline-none bg-white bg-opacity-50 backdrop-blur"
                {...getToggleButtonProps({ref: buttonRef})}>
                 {selectedItem?.name ?? " "}
@@ -84,13 +86,15 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
                             className={cx(
                                 highlightedIndex === index && "bg-white/[0.5]",
                                 selectedItem?.value === c.value && 'bg-white/[1]',
-                                'rounded-lg py-1 px-1.5 flex flex-col',
+                                'relative rounded-lg py-1 px-1.5 flex flex-col',
                             )}
                             key={`${c.value}${index}`}
                             {...getItemProps({item: c, index})}
                         >
                             {selectedItem?.value === c.value && (
-                                <HiCheck className="absolute inset-x-0 left-0 h-5 w-5" aria-hidden="true"/>)
+                                <HiCheck
+                                    className="absolute inset-x-0 left-0  top-1/2 -translate-y-1/2 transform h-5 w-5"
+                                    aria-hidden="true"/>)
                             }
                             <div className="flex flex-nowrap items-center justify-between pr-1">
                                 <span

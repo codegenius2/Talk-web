@@ -22,3 +22,9 @@ export interface Choice<T extends number | string> {
     readonly value: T;
     readonly tags: string[];
 }
+
+export const emptyStringChoice: Choice<string> = {
+    name: "",
+    value: "",
+    tags: []
+}

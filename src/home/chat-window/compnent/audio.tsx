@@ -186,8 +186,9 @@ export const Audio: React.FC<AudioProps> = ({
                 <div ref={container} className="h-10 w-full">
                 </div>
                 {!load &&
-                    <div className={cx("absolute w-full h-full flex justify-center items-center", theme.text)}>
-                        Click to Load
+                    <div className={cx("absolute w-full h-full flex justify-center items-center", theme.text)}
+                         data-pseudo-content="Click to Load"
+                    >
                     </div>
                 }
             </div>

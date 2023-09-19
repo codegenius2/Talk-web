@@ -37,10 +37,17 @@ export type ChatGPTOption = {
 
 export type STTOption = {
     whisper?: WhisperOption
+    google?: GoogleSTTOption
 }
 
 export type WhisperOption = {
     model: string
+}
+
+export type GoogleSTTOption = {
+    recognizer: string
+    model?: string
+    language?: string
 }
 
 export type TTSOption = {

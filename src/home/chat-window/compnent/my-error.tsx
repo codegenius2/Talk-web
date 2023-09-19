@@ -11,15 +11,15 @@ interface TextProps {
 
 export const MyError: React.FC<TextProps> = ({messageSnap, theme}) => {
     return <div
-        className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5 select-none",
+        className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
         )}>
         <div className="leading-none">
-            <CgDanger className={"w-4 h-4 mr-1 inline " + theme.warningIcon}/>
+            <CgDanger className={"w-4 h-4 mr-1 inline select-none" + theme.warningIcon}/>
             <p className="inline">{messageSnap.errorMessage}</p>
         </div>
-        <div className="flex justify-end items-center gap-1">
-            <p className="text-xs inline">{formatAgo(messageSnap.createdAt)}</p>
+        <div className="flex justify-end items-center gap-1 select-none">
+            <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}/>
         </div>
     </div>
 }

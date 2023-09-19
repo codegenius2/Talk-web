@@ -25,7 +25,7 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
         if (enabled.length > 1) {
             enabled.slice(1).forEach(e => e.enabled = false)
         }
-    }, [llmSnap.chatGPT])
+    })
 
 
     return (

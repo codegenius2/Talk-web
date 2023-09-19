@@ -44,7 +44,7 @@ export const newError = (id: string, ticketId: string,role: Role, errorMessage:s
     id: id,
     ticketId: ticketId,
     role: role,
-    status: "thinking",
+    status: "error",
     text: "",
     errorMessage:errorMessage,
     createdAt: Date.now(),

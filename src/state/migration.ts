@@ -1,5 +1,6 @@
 import {AppState} from "./app-state.ts";
 import * as packageJson from '../../package.json';
+import {defaultOption} from "../data-structure/client-option.tsx";
 
 const currentVersion = packageJson.version
 
@@ -15,6 +16,18 @@ const steps: Step[] = [
         toVersion: "0.0.1",
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         action: (_app: AppState): Error | null => {
+            return null
+        }
+    },
+    {
+        fromVersion: "0.0.1",
+        toVersion: "0.0.2",
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        action: (_app: AppState): Error | null => {
+            _app.option.stt.google = defaultOption().tts.google
+            for (const chat of _app.chats) {
+                chat.option.stt.google = defaultOption().tts.google
+            }
             return null
         }
     }
