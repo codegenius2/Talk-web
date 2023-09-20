@@ -23,9 +23,13 @@ export type Chat = {
 }
 
 export type PanelSelection = 'chats' | 'global' | 'current'
-
+export type Wallpaper = {
+    index: number,
+    previewIndex?: number
+}
 export type UserPreference = {
     butterflyOnHistoryMessage: boolean
+    wallpaper: Wallpaper
 }
 
 export interface AppState {
@@ -55,7 +59,10 @@ export const appState = proxy<AppState>({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        butterflyOnHistoryMessage: true
+        butterflyOnHistoryMessage: true,
+        wallpaper: {
+            index: 0,
+        }
     }
 })
 
@@ -71,19 +78,21 @@ const defaultAppState = (): AppState => ({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        butterflyOnHistoryMessage: true
+        butterflyOnHistoryMessage: true,
+        wallpaper: {
+            index: 0,
+        }
     }
 })
 
 export const resetAppState = () => {
     const dft = defaultAppState()
-    appState.version = dft.version
-    appState.auth = dft.auth
-    appState.ability = dft.ability
-    appState.option = dft.option
-    appState.chats = dft.chats
-    appState.currentChatId = dft.currentChatId
-    appState.panelSelection = dft.panelSelection
+    Object.keys(appState).forEach((key) => {
+        console.debug("resetting appState, key:", key)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        appState[key as keyof AppState] =  dft[key]
+    })
 }
 
 appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {

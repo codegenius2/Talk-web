@@ -1,170 +1,45 @@
-// 4. to always get the latest updates on a state.field alternation, you must subscribe root state
+import {cx, getRandomElement} from "../util/util.tsx";
+import React from "react";
+import {Art, wikiarts} from "../wallpaper/art.tsx";
 
-import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper-simultaneous-counter.tsx";
 
 export const Experiment = () => {
-    // const personSnp =  useSnapshot(expState.person)
-    // const expSnp =  useSnapshot(expState)
-
+    const art = getRandomElement(...wikiarts)
     return (
-                <WallpaperSimultaneousCounter/>
+        <Wallpaper {...art}/>
     )
 }
 
-// 3. useSnapshot(state.field) only subscribe a single object, it doesn't know if state.field is alternated
-// if you want to get latest alternation of state.field, you can subscribe the whole state: useSnapshot(state)
-// or you have to trigger const fieldSnap = useSnapshot(state.field) to fresh again, the funny thing is this is usually
-// triggered by modifying the old proxy,
-// type Props = {
-//     personSnp: Person
-//     // personProxy: Person
-// }
-// export const PersonWindow: React.FC<Props> = ({personSnp}) => {
-//     return (
-//         <div className="flex flex-col justify-center items-center w-1/2 h-1/2">
-//             <div>
-//                 name: {personSnp.name}
-//             </div>
-//             <div>
-//                 name: {personSnp.age}
-//             </div>
-//         </div>
-//     )
-// }
-//
-// export const Experiment = () => {
-//     const personSnp =  useSnapshot(expState.person)
-//     const expSnp =  useSnapshot(expState)
-//
-//     const addClicked = useCallback(() => {
-//         expState.clicked ++
-//     }, []);
-//
-//     const personAddAge = useCallback(() => {
-//         expState.person.age++
-//     }, []);
-//
-//     const changePerson = useCallback(() => {
-//         expState.person = {
-//             name: "jack",
-//             age: 1999
-//         }
-//     }, []);
-//
-//     return (
-//         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
-//             <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
-//                 <div className="flex flex-col justify-center items-center">
-//                     <button
-//                         onClick={addClicked}
-//                     >
-//                         add clicked: {expState.clicked}
-//                     </button>
-//                     <button
-//                         onClick={changePerson}
-//                     >
-//                         change person
-//                     </button>
-//                     <button
-//                         onClick={personAddAge }
-//                     >
-//                         add age
-//                     </button>
-//                 </div>
-//                 <PersonWindow  personSnp={expState.person} />
-//             {/*    personProxy={expState.person}*/}
-//             </div>
-//         </div>
-//     )
-// }
-
-
-// 1. using proxy as pros fields, the result is random
-// export const Experiment = () => {
-//     const expSnp = useSnapshot(expState)
-//
-//     const addClicked = useCallback(() => {
-//         expState.clicked ++
-//     }, []);
-//
-//     const addPersonAddAge = useCallback(() => {
-//         expState.person.age++
-//     }, []);
-//
-//     const changePerson = useCallback(() => {
-//         expState.person = {
-//             name: "jack",
-//             age: 1999
-//         }
-//     }, []);
-//
-//     return (
-//         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
-//             <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
-//                 <div className="flex flex-col justify-center items-center">
-//                     <button
-//                         onClick={addClicked}
-//                     >
-//                         add clicked: {expState.clicked}
-//                     </button>
-//                     <button
-//                         onClick={changePerson}
-//                     >
-//                         change person
-//                     </button>
-//                     <button
-//                         onClick={addPersonAddAge }
-//                     >
-//                         add age
-//                     </button>
-//                 </div>
-//                 <PersonWindow personProxy={expState.person}/>
-//             </div>
-//         </div>
-//     )
-// }
-
-
-// 2. alternating object field of a state, all the sub components can't not get updates on the new object
-// export const Experiment = () => {
-//
-//     const addClicked = useCallback(() => {
-//         expState.clicked ++
-//     }, []);
-//
-//     const addPersonAddAge = useCallback(() => {
-//         expState.person.age++
-//     }, []);
-//
-//     const changePerson = useCallback(() => {
-//         expState.person = {
-//             name: "jack",
-//             age: 1999
-//         }
-//     }, []);
-//
-//     return (
-//         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
-//             <div className="flex justify-center items-center w-1/2 h-1/2 gap-10">
-//                 <div className="flex flex-col justify-center items-center">
-//                     <button
-//                         onClick={addClicked}
-//                     >
-//                         add clicked: {expState.clicked}
-//                     </button>
-//                     <button
-//                         onClick={changePerson}
-//                     >
-//                         change person
-//                     </button>
-//                     <button
-//                         onClick={addPersonAddAge }
-//                     >
-//                         add age
-//                     </button>
-//                 </div>
-//                 <PersonWindow personProxy={expState.person}/>
-//             </div>
-//         </div>
-//     )
-// }
+const Wallpaper: React.FC<Art> = ({
+                                      author,
+                                      name,
+                                      date,
+                                      imageUrl,
+                                      pageUrl,
+                                      imageClassName = "bg-cover bg-center blur brightness-75",
+                                      noiseClassname = "opacity-80 brightness-100"
+                                  }) => {
+    return (
+        <div className="">
+            <div
+                style={{backgroundImage: `url("${imageUrl}")`}}
+                className={cx("fixed -mt-5 -ml-5 w-screen-105 h-screen-105 -z-50",
+                    imageClassName
+                )}/>
+            <div className={cx("fixed h-full w-full bg-noise -z-50", noiseClassname)}/>
+            <div
+                className="fixed bottom-0 pt-10 pr-10 left-2 flex flex-col justify-end opacity-0 transition duration-500 hover:opacity-100">
+                <div className="flex-grow text-transparent"></div>
+                <a href={pageUrl} target="_blank">
+                    <p className="max-w-[14rem] truncate ...  hover:overflow-visible leading-none text-neutral-800 decoration-solid
+                    decoration-1 underline-offset-1 font hover:underline">{name}</p>
+                </a>
+                <div
+                    className="max-w-[14rem] truncate ...  hover:overflow-visible flex items-center justify-start gap-1">
+                    <p className="text-sm text-neutral-700">{author},</p>
+                    <p className="text-sm text-neutral-700">{date}</p>
+                </div>
+            </div>
+        </div>
+    )
+}

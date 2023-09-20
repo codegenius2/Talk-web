@@ -71,6 +71,9 @@ export default {
                 '4000': '4000ms',
                 '5000': '5000ms',
             },
+            brightness: {
+                25: '.25',
+            },
             fontFamily: {
                 'borel': ['borel', ...defaultTheme.fontFamily.sans],
             },
@@ -80,8 +83,6 @@ export default {
                 'balloon': "url('/src/assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b.png')",
                 'walk-in-green': "url('/src/assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png')",
 
-                // wikiart.org public domain arts, completely free to use
-                'simultaneous-counter-composition-1930': "url('/src/assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg')",
                 'noise': "url('/src/assets/bg/noise.svg')",
                 'noise-lg': "url('/src/assets/bg/noise-lg.svg')",
             }

@@ -7,7 +7,7 @@ import {BsTrash3} from "react-icons/bs";
 import {cx} from "./util/util.tsx";
 import {Helmet} from 'react-helmet-async';
 import * as packageJson from '../package.json';
-import {WallpaperGranim} from "./wallpaper/wallpaper-granim.tsx";
+import {GranimWallpaper} from "./wallpaper/granim-wallpaper.tsx";
 
 export default function Error() {
 
@@ -25,7 +25,7 @@ export default function Error() {
                 <title>Talk - Error</title>
             </Helmet>
 
-            <WallpaperGranim onDark={onDark}/>
+            <GranimWallpaper onDark={onDark}/>
             <div
                 className="w-[50%] max-h-[60%] flex flex-col items-center justify-center gap-5 rounded-xl py-3 px-5
                 bg-white bg-opacity-20 backdrop-blur">

@@ -8,11 +8,11 @@ import {useSnapshot} from "valtio/react";
 import {appState, hydrationState} from "../state/app-state.ts";
 import {useNavigate} from "react-router-dom";
 import {Helmet} from 'react-helmet-async';
-import {WallpaperSimultaneousCounter} from "../wallpaper/wallpaper-simultaneous-counter.tsx";
+import {TheWallpaper} from "../wallpaper/wallpaper.tsx";
 
 
 export default function Home() {
-    const hydrationSnap = useSnapshot(hydrationState)
+    const {hydrated} = useSnapshot(hydrationState)
     const {auth} = useSnapshot(appState)
     const navigate = useNavigate()
 
@@ -20,30 +20,28 @@ export default function Home() {
         if (hydrationState.hydrated && !appState.auth.loggedIn) {
             navigate("/auth")
         }
-    }, [hydrationSnap, auth, navigate]);
+    }, [hydrated, auth, navigate]);
 
     return (
-        hydrationSnap.hydrated ?
-            <div>
-                <Helmet>
-                    <title>Let's Talk</title>
-                </Helmet>
-                {/*<WallpaperWalkInGreen/>*/}
-                {/*<WallpaperBalloon/>*/}
-                <WallpaperSimultaneousCounter/>
-                {/*<WallpaperDefault/>*/}
-                <div
-                    className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 home lg:gap-5">
-                    <div className="hidden sm:block h-full min-w-80 max-w-80">
-                        <Panel/>
+        <div>
+            <Helmet>
+                <title>Let's Talk</title>
+            </Helmet>
+            <TheWallpaper/>
+            {hydrated &&
+                <>
+                    <div
+                        className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 home lg:gap-5">
+                        <div className="hidden sm:block h-full min-w-80 max-w-80">
+                            <Panel/>
+                        </div>
+                        <ChatWindow/>
                     </div>
-                    <ChatWindow/>
-                </div>
-                <SSE/>
-                <Workers/>
-                <WindowListeners/>
-            </div>
-            :
-            <></>
+                    <SSE/>
+                    <Workers/>
+                    <WindowListeners/>
+                </>
+            }
+        </div>
     )
 }

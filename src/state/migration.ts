@@ -14,7 +14,6 @@ const steps: Step[] = [
     {
         fromVersion: "0.0.0",
         toVersion: "0.0.1",
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         action: (_app: AppState): Error | null => {
             return null
         }
@@ -22,12 +21,19 @@ const steps: Step[] = [
     {
         fromVersion: "0.0.1",
         toVersion: "0.0.2",
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         action: (_app: AppState): Error | null => {
             _app.option.stt.google = defaultOption().tts.google
             for (const chat of _app.chats) {
                 chat.option.stt.google = defaultOption().tts.google
             }
+            return null
+        }
+    },
+    {
+        fromVersion: "0.0.2",
+        toVersion: "0.0.3",
+        action: (_app: AppState): Error | null => {
+            _app.pref.wallpaper = {index: 0}
             return null
         }
     }

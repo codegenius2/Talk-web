@@ -6,7 +6,7 @@ import {login} from "../api/restful/api.ts";
 import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
 import {cx} from "../util/util.tsx";
 import {Helmet} from 'react-helmet-async';
-import {WallpaperGranim} from "../wallpaper/wallpaper-granim.tsx";
+import {GranimWallpaper} from "../wallpaper/granim-wallpaper.tsx";
 
 const detectDelay = 1000
 const fadeOutDuration = 1500
@@ -77,7 +77,7 @@ export default function Auth() {
                 {/* Add more meta tags as needed */}
             </Helmet>
             <div className={cx("transition-opacity duration-300", startFadeIn ? 'opacity-100' : 'opacity-0')}>
-                {<WallpaperGranim onDark={onDark}/>}
+                {<GranimWallpaper onDark={onDark}/>}
                 <div
                     className="flex h-screen w-screen flex-col items-center justify-center gap-14 overflow-hidden transition-colors">
                     <p className={cx("select-none font-borel text-7xl md:text-8xl lg:text-9xl tracking-widest transition duration-5000",

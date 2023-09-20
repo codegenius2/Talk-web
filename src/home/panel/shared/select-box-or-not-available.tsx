@@ -7,9 +7,10 @@ type Props<T extends number | string> = {
     choices: Choice<T>[]
     defaultValue?: T
     setValue: (value?: T) => void
+    hoverOnValue?: (value?: T) => void
 }
 
-export function SelectBoxOrNotAvailable<T extends number | string>({title, choices, defaultValue, setValue}: Props<T>) {
+export function SelectBoxOrNotAvailable<T extends number | string>({title, choices, defaultValue, setValue,hoverOnValue}: Props<T>) {
     return (
         <div className="flex justify-start items-center gap-4">
             <p className="prose text-neutral-600">{title}</p>
@@ -19,6 +20,7 @@ export function SelectBoxOrNotAvailable<T extends number | string>({title, choic
                         choices={choices}
                         defaultValue={defaultValue}
                         setValue={setValue}
+                        hoverOnValue={hoverOnValue}
                     />
                 </div>
                 :

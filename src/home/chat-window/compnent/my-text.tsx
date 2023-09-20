@@ -13,10 +13,10 @@ interface TextProps {
 
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     return <div
-        className={cx(" select-none flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
+        className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
         )}>
-        <p className="select-text">{messageSnap.text}</p>
+        <p className="">{messageSnap.text}</p>
         <div className="flex justify-end items-center gap-1 pointer-events-none">
             <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
             {['sent', 'received'].includes(messageSnap.status) &&

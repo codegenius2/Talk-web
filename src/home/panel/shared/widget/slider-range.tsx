@@ -223,7 +223,7 @@ export const SliderRange: React.FC<Props> = ({
 
                 {/*noise background*/}
                 <div
-                    className="absolute top-1/2 left-0 h-full w-full -translate-y-1/2 bg-cover opacity-100 brightness-200 contrast-200 bg-noise">
+                    className="absolute top-1/2 left-0 h-full w-full -translate-y-1/2 bg-cover opacity-100 brightness-150 bg-noise">
                     <div className="h-full w-1/2 text-transparent brightness-125 prose">{value}</div>
                 </div>
 

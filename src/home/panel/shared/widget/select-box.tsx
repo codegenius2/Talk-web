@@ -10,9 +10,11 @@ type Props<T extends number | string> = {
     choices: Choice<T>[]
     defaultValue?: T
     setValue: (value?: T) => void
+    // set value if hovering, set undefined if not hovering on any
+    hoverOnValue?:(value?: T) => void
 }
 
-export function SelectBox<T extends number | string>({choices, defaultValue, setValue}: Props<T>) {
+export function SelectBox<T extends number | string>({choices, defaultValue, setValue, hoverOnValue}: Props<T>) {
     const {
         isOpen,
         selectedItem,
@@ -88,6 +90,8 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
                                 selectedItem?.value === c.value && 'bg-white/[1]',
                                 'relative rounded-lg py-1 px-1.5 flex flex-col',
                             )}
+                            onMouseOver={() => hoverOnValue && hoverOnValue(index as T)}
+                            onMouseLeave={() => hoverOnValue && hoverOnValue(undefined)}
                             key={`${c.value}${index}`}
                             {...getItemProps({item: c, index})}
                         >
