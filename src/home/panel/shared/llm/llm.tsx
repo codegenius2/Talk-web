@@ -14,7 +14,7 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
     const disableAll = useCallback(() => {
         const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.claude]
         switchable.forEach(it => it.enabled = false)
-    }, [])
+    }, [llmSnap])
 
     // const claudeOptionSnap= useSnapshot(llmOptionProxy.claude)
     // Only one can be enabled simultaneously

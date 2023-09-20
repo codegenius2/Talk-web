@@ -10,14 +10,14 @@ type Props = {
 }
 
 export const TTS: React.FC<Props> = ({ttsOptionProxy}) => {
-    useSnapshot(ttsOptionProxy)
+    const ttsOptionSnapshot = useSnapshot(ttsOptionProxy);
     const googleSnap = useSnapshot(ttsOptionProxy.google)
     const elevenlabsSnap = useSnapshot(ttsOptionProxy.elevenlabs)
 
     const disableAll = useCallback(() => {
         const switchable = [ttsOptionProxy.google, ttsOptionProxy.elevenlabs]
         switchable.forEach(it => it.enabled = false)
-    }, [])
+    }, [ttsOptionSnapshot])
 
     // Only one can be enabled simultaneously
     useEffect(() => {
