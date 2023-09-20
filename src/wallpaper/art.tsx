@@ -275,10 +275,10 @@ export const wikiarts: Art[] = [
     },
     {
         imageUrl: "https://uploads3.wikiart.org/images/henri-rousseau/the-mill.jpg",
-        pageUrl: "https://www.wikiart.org/en/katsushika-hokusai/asakusa-honganji-temple-in-th-eastern-capital",
-        name: "Asakusa Honganji temple in th Eastern capital",
-        author: "Katsushika Hokusai",
-        date: "1874",
+        pageUrl: "https://www.wikiart.org/en/henri-rousseau/the-mill",
+        name: "The Mill",
+        author: "Henri Rousseau",
+        date: "c.1896",
         imageClassName: "bg-cover bg-bottom blur-md brightness-75",
     },
     {
