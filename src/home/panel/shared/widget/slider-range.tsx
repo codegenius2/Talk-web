@@ -1,4 +1,5 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
+import {controlState} from "../../../../state/control-state.ts";
 
 type Props = {
     title: string
@@ -19,7 +20,7 @@ export const SliderRange: React.FC<Props> = ({
     const inputBoxRef = useRef<HTMLInputElement>(null);
     const sliderRef = useRef<HTMLInputElement>(null);
     const [longValue, setLongValue] = useState(0)
-    const [mouseDown, setMouseDown] = useState(false)
+
     // init
     useEffect(() => {
         if (value < range.start || value > range.end) {
@@ -33,7 +34,7 @@ export const SliderRange: React.FC<Props> = ({
     }, [range.start, range.end, setValue]);
 
     const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, forceMouseDown?: boolean) => {
-            if (sliderRef.current && (forceMouseDown || mouseDown)) {
+            if (sliderRef.current && (forceMouseDown || controlState.isMouseLeftDown)) {
                 const clientWidth = sliderRef.current.clientWidth
                 const {left, right} = sliderRef.current.getBoundingClientRect()
                 let res
@@ -64,7 +65,7 @@ export const SliderRange: React.FC<Props> = ({
                     setValue(res)
                 }
             }
-        }, [mouseDown, setValue, range.start, range.end]
+        }, [setValue, range.start, range.end]
     )
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -192,15 +193,11 @@ export const SliderRange: React.FC<Props> = ({
                 className="relative flex w-full gap-0.5 justify-center overflow-hidden rounded-xl"
                 ref={sliderRef}
                 onMouseDown={e => {
-                    e.button === 0 && setMouseDown(true)
                     handleMouseAction(e, true)
                 }}
-                onMouseUp={() => setMouseDown(false)}
-                onBlur={() => setMouseDown(false)}
-                onMouseMove={(e) => mouseDown && handleMouseAction(e)}
+                onMouseMove={(e) => handleMouseAction(e)}
                 onMouseLeave={(e) => {
-                    mouseDown && handleMouseAction(e)
-                    setMouseDown(false)
+                    handleMouseAction(e)
                 }}
                 onContextMenu={onContextMenu}
             >
