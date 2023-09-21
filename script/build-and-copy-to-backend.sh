@@ -1,1 +1,1 @@
-yarn build && rm -rf ../talk/web/html && mv ./dist ../talk/web/html
+yarn install && yarn build && rm -rf ../talk/web/html && mv ./dist ../talk/web/html
