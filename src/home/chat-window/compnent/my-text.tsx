@@ -17,8 +17,8 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
             theme.text, theme.bg
         )}>
         <p className="">{messageSnap.text}</p>
-        <div className="flex justify-end items-center gap-1 pointer-events-none">
-            <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
+        <div className="flex justify-end gap-1 pointer-events-none">
+            <p className="text-xs inline whitespace-nowrap" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
             {['sent', 'received'].includes(messageSnap.status) &&
                 <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
             }

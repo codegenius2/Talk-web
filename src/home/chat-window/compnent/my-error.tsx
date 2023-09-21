@@ -15,7 +15,7 @@ export const MyError: React.FC<TextProps> = ({messageSnap, theme}) => {
             theme.text, theme.bg
         )}>
         <div className="leading-none">
-            <CgDanger className={"w-4 h-4 mr-1 inline select-none" + theme.warningIcon}/>
+            <CgDanger className={"w-4 h-4 mr-1 inline " + theme.warningIcon}/>
             <p className="inline">{messageSnap.errorMessage}</p>
         </div>
         <div className="flex justify-end items-center gap-1 select-none">

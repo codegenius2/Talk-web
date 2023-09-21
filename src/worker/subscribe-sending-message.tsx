@@ -86,7 +86,8 @@ export const SubscribeSendingMessage: React.FC = () => {
                 if (r.status >= 200 && r.status < 300) {
                     onSent(msg)
                 } else {
-                    onError(msg, "Failed to send, reason:" + r.statusText)
+                    const data = typeof r.data ==="string"?r.data:""
+                    onError(msg, "Failed to send, reason: " + r.statusText +","+data)
                 }
             }
         ).catch((e: AxiosError) => {

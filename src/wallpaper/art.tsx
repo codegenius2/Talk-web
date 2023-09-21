@@ -21,7 +21,7 @@ export const wikiarts: Art[] = [
         name: "Simultaneous Counter Composition",
         author: "Theo van Doesburg",
         date: "1930; Germany",
-        imageClassName: "bg-contain blur brightness-75",
+        imageClassName: "bg-cover bg-center blur brightness-75",
         noiseClassname: "opacity-80 brightness-125"
     },
     {

@@ -83,9 +83,7 @@ export const Audio: React.FC<AudioProps> = ({
 
             current.on('interaction', () => {
                 clearPlayList()
-                current!.play().catch((e) => {
-                    console.error("can't play", e)
-                })
+                play(audioSnap.id)
             })
 
             current.on('play', () => {
@@ -193,10 +191,10 @@ export const Audio: React.FC<AudioProps> = ({
                 }
             </div>
             <div className={"flex pl-1 pr-3 justify-between gap-1 pointer-events-none"}>
-                <p className="text-xs inline w-10 text-center"
+                <p className="text-xs inline w-10 text-center whitespace-nowrap"
                    data-pseudo-content={formatAudioDuration(audioSnap.durationMs)}></p>
-                <div className="flex justify-end items-center gap-1">
-                    <p className="text-xs inline" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
+                <div className="flex justify-end gap-1">
+                    <p className="text-xs inline whitespace-nowrap" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
                     {['sent', 'received'].includes(messageSnap.status) &&
                         <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
                     }
