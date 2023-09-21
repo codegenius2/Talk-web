@@ -15,6 +15,7 @@ import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
 import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts";
+import {ChatGPTLogo} from "../widget/logo.tsx";
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
@@ -74,7 +75,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
                 className="flex flex-col justify-center gap-2 py-2 px-3 border-2 border-neutral-500 border-dashed
                         rounded-lg w-full">
                 <div className="flex justify-between items-center w-full ">
-                    <p className="prose text-lg text-neutral-600">ChatGPT</p>
+                    <ChatGPTLogo/>
                     <MySwitch enabled={chatGPTOptionSnap.enabled} setEnabled={setEnabled}/>
                 </div>
                 {chatGPTOptionSnap.enabled &&

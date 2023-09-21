@@ -8,6 +8,7 @@ import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
 import {Choice, emptyStringChoice} from "../../../../data-structure/provider-api-refrence/types.ts";
 import {googleSTTAPIReference} from "../../../../data-structure/provider-api-refrence/google-stt.ts";
+import { GoogleLogo } from '../widget/logo.tsx';
 
 type Props = {
     googleOptionProxy: GoogleOption
@@ -47,7 +48,7 @@ const GoogleStt: React.FC<Props> = ({googleOptionProxy, setEnabled}) => {
                 className="flex flex-col justify-center gap-2 py-2 px-3 border-2 border-neutral-500 border-dashed
                         rounded-lg w-full">
                 <div className="flex justify-between items-center w-full ">
-                    <p className="prose text-lg text-neutral-600">Google</p>
+                    <GoogleLogo/>
                     <MySwitch enabled={googleOptionSnap.enabled} setEnabled={setEnabled}/>
                 </div>
                 {googleOptionSnap.enabled &&

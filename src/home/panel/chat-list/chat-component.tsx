@@ -77,8 +77,8 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
             <div
                 className={cx("w-full px-1 flex h-14 font-medium rounded-lg",
                     "transition-all duration-100 bg-white",
-                    selected ? "bg-opacity-90" : "bg-opacity-40",
-                    !isMouseDragging && !selected && "hover:bg-neutral-100 hover:bg-opacity-70"
+                    selected ? "bg-opacity-75" : "bg-opacity-40",
+                    !isMouseDragging && !selected && "hover:bg-neutral-100 hover:bg-opacity-60"
                 )
                 }
             >

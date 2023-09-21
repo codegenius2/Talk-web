@@ -6,6 +6,7 @@ import {WhisperOption,} from "../../../../data-structure/client-option.tsx";
 import {appState} from "../../../../state/app-state.ts";
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
+import {WhisperGPTLogo} from "../widget/logo.tsx";
 
 type Props = {
     whisperOptionProxy: WhisperOption
@@ -26,7 +27,7 @@ const Whisper: React.FC<Props> = ({whisperOptionProxy, setEnabled}) => {
                 className="flex flex-col justify-center gap-2 py-2 px-3 border-2 border-neutral-500 border-dashed
                         rounded-lg w-full">
                 <div className="flex justify-between items-center w-full ">
-                    <p className="prose text-lg text-neutral-600">Whisper</p>
+                    <WhisperGPTLogo/>
                     <MySwitch enabled={whisperOptionSnap.enabled} setEnabled={setEnabled}/>
                 </div>
                 {whisperOptionSnap.enabled &&

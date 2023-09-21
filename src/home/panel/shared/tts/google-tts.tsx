@@ -10,6 +10,7 @@ import {appState} from "../../../../state/app-state.ts";
 import {googleTTSAPIReference} from "../../../../data-structure/provider-api-refrence/google-tts.ts";
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
+import {GoogleLogo} from "../widget/logo.tsx";
 
 type Props = {
     googleTTSOptionProxy: GoogleTTSOption
@@ -76,7 +77,7 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
                 className="flex flex-col justify-center gap-2 py-2 px-3 border-2 border-neutral-500 border-dashed
                         rounded-lg w-full">
                 <div className="flex justify-between items-center w-full ">
-                    <p className="prose text-lg text-neutral-600">Google</p>
+                    <GoogleLogo/>
                     <MySwitch enabled={googleTTSSnap.enabled} setEnabled={setEnabled}/>
                 </div>
                 {googleTTSSnap.enabled &&

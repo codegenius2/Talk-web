@@ -125,7 +125,7 @@ export function chooseAudioMimeType(mimeTypes: RecordingMimeType[]): RecordingMi
     return undefined
 }
 
-export const cx = (...classes: (boolean | string)[]): string => {
+export const cx = (...classes: (boolean | string | undefined)[]): string => {
     return classes.filter(c => typeof c === "string").join(" ")
 }
 

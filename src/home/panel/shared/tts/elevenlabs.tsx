@@ -9,13 +9,14 @@ import {appState} from "../../../../state/app-state.ts";
 import {elevenlabsAPIReference} from "../../../../data-structure/provider-api-refrence/elevenlabs-tts.ts";
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
 import _ from "lodash";
+import {ElevenlabsLogo} from "../widget/logo.tsx";
 
 type Props = {
     elevenlabsTTSOptionProxy: ElevenlabsTTSOption
     setEnabled: (enabled: boolean) => void
 }
 
-const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy,setEnabled}) => {
+const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy, setEnabled}) => {
     const elevenlabsTTSSnap = useSnapshot(elevenlabsTTSOptionProxy)
     const elevenlabsAbilitySnap = useSnapshot(appState.ability.tts.elevenlabs)
 
@@ -49,8 +50,8 @@ const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy,setEnabled}) =
             <div
                 className="flex flex-col justify-center gap-2 py-2 px-3 border-2 border-neutral-500 border-dashed
                         rounded-lg w-full">
-                <div className="flex justify-between items-center w-full ">
-                    <p className="prose text-lg text-neutral-600">Elevenlabs</p>
+                <div className="flex justify-between items-center w-full">
+                    <ElevenlabsLogo/>
                     <MySwitch enabled={elevenlabsTTSSnap.enabled} setEnabled={setEnabled}/>
                 </div>
                 {elevenlabsTTSSnap.enabled &&
