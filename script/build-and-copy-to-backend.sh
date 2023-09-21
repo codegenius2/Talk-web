@@ -1,1 +1,1 @@
-yarn build && rm -rf ../talk/web/html && cp -r ./dist/* ../talk/web/html
+yarn build && rm -rf ../talk/web/html && mv ./dist ../talk/web/html
