@@ -43,7 +43,7 @@ export const SSE = () => {
                 console.info("[SSE] connected to server, response: ", response);
             },
             onmessage: (msg) => {
-                console.debug("received an msg from SSE server", msg.event, msg.data.slice(0, 500))
+                // console.debug("received a msg from SSE server", msg.event, msg.data.slice(0, 500))
                 const data = JSON.parse(msg.data)
                 if (msg.event === EventSystemAbility) {
                     const sa = data as ServerAbility
@@ -116,11 +116,11 @@ export const SSE = () => {
                 console.error("[SSE] error:", err)
             },
             onclose: () => {
-                console.debug("[SSE] closed")
+                console.info("[SSE] closed")
             }
         })
         return () => {
-            console.debug("[SSE] trying to abort")
+            console.info("[SSE] trying to abort")
             ctrl.abort()
         }
     }, [passwordHash])

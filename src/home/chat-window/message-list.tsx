@@ -37,6 +37,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const [hasUpdate, setHasUpdate] = useState(0)
     const [hasNewAudio, setHasNewAudio] = useState("")
 
+    const [isOverflow, setIsOverflow] = useState(false);
     const [isAtBottom, setIsAtBottom] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -50,14 +51,37 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         scrollToBottom()
     }, [id, scrollToBottom]);
 
+    const onScroll = useCallback(() => {
+    }, []);
+
+
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            if (containerRef.current) {
+                // console.debug("containerRef.current.scrollHeight > containerRef.current.clientHeight",containerRef.current.scrollHeight > containerRef.current.clientHeight)
+                setIsOverflow(containerRef.current.scrollHeight > containerRef.current.clientHeight);
+            }
+        });
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                attributeOldValue: true,
+                attributeFilter: ['style', 'class'],
+            });
+        }
+        return () => observer.disconnect();
+    }, []);
+
     useEffect(() => {
         const container = containerRef.current;
 
         const handleScroll = () => {
             if (container) {
                 const {scrollTop, scrollHeight, clientHeight} = container;
-                const isBottom = scrollTop + clientHeight + 50 >= scrollHeight;
-                console.debug("isBottom", isBottom)
+                const isBottom = scrollTop + clientHeight >= scrollHeight - 200;
                 setIsAtBottom(isBottom);
             }
         };
@@ -156,7 +180,9 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     return (
         <div ref={containerRef}
              className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
-            <div className="flex w-full select-text flex-col justify-end gap-3 rounded-2xl">
+            <div className="flex w-full select-text flex-col justify-end gap-3 rounded-2xl"
+                 onResize={onScroll}
+            >
                 {/*crucial; don't merge the 2 divs above*/}
                 {messages.map((msg, index) =>
                     msg.status !== 'deleted' &&
@@ -175,7 +201,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             <div className="sticky bottom-1 flex justify-end pr-3 z-40">
                 <HiOutlineChevronDown
                     className={cx("h-8 w-8 p-1.5 bg-neutral-100 rounded-full",
-                        isAtBottom ? "hidden" : "")}
+                        isOverflow && !isAtBottom ? "" : "hidden")}
                     onClick={() => scrollToBottom("smooth")}
                 />
             </div>

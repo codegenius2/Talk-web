@@ -123,7 +123,7 @@ subscribe(appState, () => {
         return
     }
     const as = snapshot(appState)
-    console.debug("saving appState:", as)
+    // console.debug("saving appState:", as)
     appDb.setItem(appStateKey, as).then(() => {
         console.debug("saved")
     })
