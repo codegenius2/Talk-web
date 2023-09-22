@@ -18,6 +18,7 @@ import {DropDownMenu} from "./compnent/drop-down-menu.tsx";
 import {PiButterflyThin, PiDownloadSimpleLight} from "react-icons/pi";
 import {audioDb} from "../../state/db.ts";
 import {addToPlayList, clearPlayList} from "../../state/control-state.ts";
+import {HiOutlineChevronDown} from "react-icons/hi2";
 
 type MLProps = {
     chatProxy: Chat
@@ -39,11 +40,15 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const [isAtBottom, setIsAtBottom] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    const scrollToBottom = useCallback((behavior?: 'instant' | 'smooth') => {
         if (scrollEndRef.current) {
-            scrollEndRef.current.scrollIntoView({behavior: "instant"})
+            scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }
-    }, [id]);
+    }, []);
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [id, scrollToBottom]);
 
     useEffect(() => {
         const container = containerRef.current;
@@ -70,7 +75,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             const msg = messages[len - 1]
             if (msg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
                 msg.id === lastState.id && msg.lastUpdatedAt > lastState.updatedAt) {
-                setHasUpdate(h=>h + 1)
+                setHasUpdate(h => h + 1)
                 console.debug("has update")
                 if (msg.audio?.id && msg.status === "received") {
                     setHasNewAudio(msg.audio.id)
@@ -166,7 +171,15 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             </div>
             <div
                 ref={scrollEndRef}
-                className="h-10 select-none bg-transparent text-transparent" data-pseudo-content="ninja"></div>
+                className="h-10 select-none bg-transparent text-transparent" data-pseudo-content="ninja"/>
+            <div className="sticky bottom-1 flex justify-end pr-3 z-40">
+                <HiOutlineChevronDown
+                    className={cx("h-8 w-8 p-1.5 bg-neutral-100 rounded-full",
+                        isAtBottom ? "hidden" : "")}
+                    onClick={() => scrollToBottom("smooth")}
+                />
+            </div>
+
         </div>
     )
 };

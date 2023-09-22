@@ -1,4 +1,4 @@
-import {proxy, ref} from "valtio";
+import {proxy, ref, subscribe} from "valtio";
 import {EnhancedRecorder} from "../util/enhanced-recorder.ts";
 import {popularMimeTypes, RecordingMimeType} from "../config.ts";
 import {chooseAudioMimeType} from "../util/util.tsx";
@@ -56,6 +56,10 @@ export const controlState = proxy<ControlState>({
     sendingMessageSignal: 0,
     audioDurationUpdates: ref([]),
     audioDurationUpdateSignal: 0
+})
+
+subscribe(controlState.player, () => {
+    console.debug("player status:", controlState.player)
 })
 
 export const playerState = controlState.player
