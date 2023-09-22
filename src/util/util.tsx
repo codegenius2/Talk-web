@@ -94,7 +94,7 @@ export const formatAudioDuration = (duration?: number): string => {
     if (min === 0) {
         return `${sec}s`
     } else {
-        return `${min}min${sec}s`
+        return `${min}:${sec}`
     }
 };
 
