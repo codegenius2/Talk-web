@@ -24,7 +24,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         const [isComposing, setIsComposing] = useState(false);
 
         const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-            console.debug('stopPropagation', event.key);
             event.stopPropagation();
         }, []);
 

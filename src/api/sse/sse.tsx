@@ -46,8 +46,12 @@ export const SSE = () => {
                 // console.debug("received a msg from SSE server", msg.event, msg.data.slice(0, 500))
                 const data = JSON.parse(msg.data)
                 if (msg.event === EventSystemAbility) {
+                    console.debug("received a msg of ability from SSE server", msg.event, msg.data.slice(0, 500))
                     const sa = data as ServerAbility
                     adjustOption(appState.option, sa)
+                    for (const chat of appState.chats) {
+                        adjustOption(chat.option, sa)
+                    }
                     // eslint-disable-next-line valtio/state-snapshot-rule
                     appState.ability = sa
                     return;

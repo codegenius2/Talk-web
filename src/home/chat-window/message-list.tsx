@@ -100,7 +100,6 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             if (msg.id !== lastState.id && len > messageCount && messageCount !== 0 ||
                 msg.id === lastState.id && msg.lastUpdatedAt > lastState.updatedAt) {
                 setHasUpdate(h => h + 1)
-                console.debug("has update")
                 if (msg.audio?.id && msg.status === "received") {
                     setHasNewAudio(msg.audio.id)
                 }
