@@ -47,6 +47,10 @@ export const hydrationState = proxy({
     hydrated: false
 })
 
+export const persistState = proxy({
+    changedAt: Date.now(),
+})
+
 export const appState = proxy<AppState>({
     version: packageJson.version,
     auth: {
@@ -91,7 +95,7 @@ export const resetAppState = () => {
         console.debug("resetting appState, key:", key)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        appState[key as keyof AppState] =  dft[key]
+        appState[key as keyof AppState] = dft[key]
     })
 }
 
@@ -115,19 +119,21 @@ appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
     hydrationState.hydrated = true
 })
 
+
 subscribe(appState, () => {
-    const hySnp = snapshot(hydrationState)
-    if (!hySnp.hydrated) {
-        // never write to the state before hydration, or state in indexeddb will be overwritten by default state
-        console.debug("skipping subscription due to not hydrated")
-        return
-    }
-    const as = snapshot(appState)
-    // console.debug("saving appState:", as)
-    appDb.setItem(appStateKey, as).then(() => {
-        console.debug("appState saved")
-    })
+    persistState.changedAt = Date.now()
 })
+
+setInterval(() => {
+    if (Date.now() - persistState.changedAt < 500 && hydrationState.hydrated) {
+        const as = snapshot(appState)
+        // console.debug("saving appState:", as)
+        appDb.setItem(appStateKey, as).then(() => {
+            console.debug("appState saved")
+        })
+    }
+}, 500)
+
 
 export const clearSettings = () => {
     const dft = defaultAppState()
