@@ -1,13 +1,14 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {controlState, RecordingCtx} from "../../state/control-state.ts";
-import {cx, timeElapsedMMSS} from "../../util/util.tsx";
-import {HiMiniMicrophone} from "react-icons/hi2";
+import React, {useCallback, useEffect, useState} from 'react'
+import {controlState, RecordingCtx} from "../../state/control-state.ts"
+import {cx, timeElapsedMMSS} from "../../util/util.tsx"
+import {HiMiniMicrophone} from "react-icons/hi2"
 
 type Props = {
     chatId: string
 }
 
 const Recorder: React.FC<Props> = ({chatId}) => {
+    // console.info("Recorder rendered", new Date().toLocaleString())
 
     // These local variables monitor the recorder's state, updated through callbacks by the recorder itself.
     const [isRecording, setIsRecording] = useState(false)
@@ -39,15 +40,15 @@ const Recorder: React.FC<Props> = ({chatId}) => {
             setContext(ctx)
             setIsRecording(false)
         }
-        recorder.addStartListener(startListener);
-        recorder.addDoneListener(doneListener);
-        recorder.addCancelListener(cancelListener);
+        recorder.addStartListener(startListener)
+        recorder.addDoneListener(doneListener)
+        recorder.addCancelListener(cancelListener)
         return () => {
-            recorder.removeStartListener(startListener);
-            recorder.removeDoneListener(doneListener);
-            recorder.removeCancelListener(cancelListener);
+            recorder.removeStartListener(startListener)
+            recorder.removeDoneListener(doneListener)
+            recorder.removeCancelListener(cancelListener)
         }
-    }, [recorder, setIsRecording, setContext, chatId]);
+    }, [recorder, setIsRecording, setContext, chatId])
 
     // create an interval to increase recording time
     useEffect(() => {
@@ -55,17 +56,17 @@ const Recorder: React.FC<Props> = ({chatId}) => {
         if (isRecording) {
             interval = setInterval(() => {
                 setRecordDuration(recorder.currentRecordingDuration())
-            }, 50);
+            }, 50)
         }
         return () => {
             if (interval) {
                 clearInterval(interval)
             }
-        };
-    }, [isRecording, recorder, setRecordDuration]);
+        }
+    }, [isRecording, recorder, setRecordDuration])
 
     const handleClickStart = useCallback(() => {
-        console.debug('handleClickStart');
+        console.debug('handleClickStart')
         recorder.start({triggeredBy: 'click'}).catch((e) => {
                 console.error("failed to start recorder", e)
             }
@@ -73,7 +74,7 @@ const Recorder: React.FC<Props> = ({chatId}) => {
     }, [recorder])
 
     const handleClickDone = useCallback(() => {
-        console.debug('handleClickDone');
+        console.debug('handleClickDone')
         recorder.done()
     }, [recorder])
 
@@ -85,21 +86,21 @@ const Recorder: React.FC<Props> = ({chatId}) => {
     }, [recorder])
 
     const handleTouchStart = useCallback(() => {
-        console.debug('handleTouchStart');
+        console.debug('handleTouchStart')
         recorder.start({triggeredBy: 'touch'}).catch((e) => {
             console.error("failed to start recorder", e)
         })
     }, [recorder])
 
     const handleTouchEnd = useCallback(() => {
-        console.debug('handleTouchEnd');
+        console.debug('handleTouchEnd')
         if (recorder.currentContext()?.triggeredBy === 'touch') {
             recorder.done()
         }
     }, [recorder])
 
     const handleTouchCancel = useCallback(() => {
-        console.debug('handleTouchCancel');
+        console.debug('handleTouchCancel')
         if (recorder.currentContext()?.triggeredBy === 'touch') {
             recorder.cancel()
         }
@@ -162,5 +163,5 @@ const Recorder: React.FC<Props> = ({chatId}) => {
     </div>
 }
 
-export default Recorder;
+export default Recorder
 

@@ -1,8 +1,8 @@
 export type Role = 'user' | 'assistant' | 'system'
 
 export type LLMMessage = {
-    role: Role;
-    content: string;
+    role: Role
+    content: string
 }
 
 export type Switchable = {

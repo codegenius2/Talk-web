@@ -1,6 +1,6 @@
-import {AppState} from "./app-state.ts";
-import * as packageJson from '../../package.json';
-import {defaultOption} from "../data-structure/client-option.tsx";
+import {AppState} from "./app-state.ts"
+import * as packageJson from '../../package.json'
+import {defaultOption} from "../data-structure/client-option.tsx"
 
 const currentVersion = packageJson.version
 
@@ -14,7 +14,7 @@ const steps: Step[] = [
     {
         fromVersion: "0.0.0",
         toVersion: "0.0.1",
-        action: (_app: AppState): Error | null => {
+        action: (): Error | null => {
             return null
         }
     },

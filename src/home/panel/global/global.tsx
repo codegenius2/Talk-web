@@ -1,27 +1,22 @@
-import React from 'react';
-import {LLM} from "../shared/llm/llm.tsx";
-import {ClientOption} from "../../../data-structure/client-option.tsx";
-import {TTS} from "../shared/tts/tts.tsx";
-import {useSnapshot} from "valtio/react";
-import {STT} from "../shared/stt/stt.tsx";
-import {OtherSetting} from "./other-setting.tsx";
+import React, {memo} from 'react'
+import {LLM} from "../shared/llm/llm.tsx"
+import {TTS} from "../shared/tts/tts.tsx"
+import {STT} from "../shared/stt/stt.tsx"
+import {OtherSetting} from "./other-setting.tsx"
+import {appState} from "../../../state/app-state.ts";
 
-type Props = {
-    optionProxy: ClientOption
-}
-
-export const Global: React.FC<Props> = ({optionProxy}) => {
-    useSnapshot(optionProxy)
+const Global_: React.FC = () => {
+    // console.info("Global rendered", new Date().toLocaleString())
     return (
         <>
             <div className="z-40 w-full">
-                <LLM llmOptionProxy={optionProxy.llm}/>
+                <LLM llmOptionProxy={appState.option.llm}/>
             </div>
             <div className="z-30 w-full">
-                <TTS ttsOptionProxy={optionProxy.tts}/>
+                <TTS ttsOptionProxy={appState.option.tts}/>
             </div>
             <div className="z-20 w-full">
-                <STT sttOptionProxy={optionProxy.stt}/>
+                <STT sttOptionProxy={appState.option.stt}/>
             </div>
             <div className="z-10 w-full">
                 <OtherSetting/>
@@ -30,3 +25,4 @@ export const Global: React.FC<Props> = ({optionProxy}) => {
     )
 }
 
+export const Global = memo(Global_)

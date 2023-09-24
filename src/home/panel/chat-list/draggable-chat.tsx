@@ -1,11 +1,11 @@
-import React, {useEffect, useRef} from "react";
-import {Chat, dragChat} from "../../../state/app-state.ts";
-import {useDrag, useDrop} from "react-dnd";
-import {Identifier, XYCoord} from "dnd-core";
-import {ChatComponent} from "./chat-component.tsx";
-import {cx} from "../../../util/util.tsx";
-import {controlState} from "../../../state/control-state.ts";
-import {DragSourceMonitor} from "react-dnd/src/types";
+import React, {useEffect, useRef} from "react"
+import {Chat, dragChat} from "../../../state/app-state.ts"
+import {useDrag, useDrop} from "react-dnd"
+import {Identifier, XYCoord} from "dnd-core"
+import {ChatComponent} from "./chat-component.tsx"
+import {cx} from "../../../util/util.tsx"
+import {controlState} from "../../../state/control-state.ts"
+import {DragSourceMonitor} from "react-dnd/src/types"
 
 export const ItemTypes = {
     CARD: 'card',
@@ -18,11 +18,11 @@ export interface DragItem {
 }
 
 type Props = {
-    chatSnap: Chat
+    chatProxy: Chat
     index: number
 }
 
-export const DraggableChat: React.FC<Props> = ({chatSnap, index}) => {
+export const DraggableChat: React.FC<Props> = ({chatProxy, index}) => {
     const ref = useRef<HTMLDivElement>(null)
     const [{handlerId}, drop] = useDrop<
         DragItem,
@@ -88,7 +88,7 @@ export const DraggableChat: React.FC<Props> = ({chatSnap, index}) => {
     const [{isDragging}, drag] = useDrag({
         type: ItemTypes.CARD,
         item: () => {
-            return {chatSnap, index}
+            return {chatProxy: chatProxy, index}
         },
         collect: (monitor: DragSourceMonitor) => ({
             isDragging: monitor.isDragging(),
@@ -101,7 +101,7 @@ export const DraggableChat: React.FC<Props> = ({chatSnap, index}) => {
             // there seem to be a bug when using react-dnd: window onMouseUp listener is not called after drop
             controlState.isMouseLeftDown = false
         }
-    }, [isDragging]);
+    }, [isDragging])
 
     drag(drop(ref))
     return (
@@ -110,7 +110,7 @@ export const DraggableChat: React.FC<Props> = ({chatSnap, index}) => {
             ref={ref}
             data-handler-id={handlerId}
         >
-            <ChatComponent chatSnap={chatSnap}/>
+            <ChatComponent chatProxy={chatProxy}/>
         </div>
     )
 }

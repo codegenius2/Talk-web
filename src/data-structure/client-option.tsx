@@ -1,11 +1,11 @@
-import * as api from "../api/restful/model.ts";
-import {ServerAbility} from "../api/sse/server-ability.ts";
-import {chatGPTAPIReference} from "./provider-api-refrence/chat-gpt.ts";
-import {googleTTSAPIReference} from "./provider-api-refrence/google-tts.ts";
-import {elevenlabsAPIReference} from "./provider-api-refrence/elevenlabs-tts.ts";
-import {Switchable} from "../shared-types.ts";
-import {llmAPIReference} from "./provider-api-refrence/llm.ts";
-import {googleSTTAPIReference} from "./provider-api-refrence/google-stt.ts";
+import * as api from "../api/restful/model.ts"
+import {ServerAbility} from "../api/sse/server-ability.ts"
+import {chatGPTAPIReference} from "./provider-api-refrence/chat-gpt.ts"
+import {googleTTSAPIReference} from "./provider-api-refrence/google-tts.ts"
+import {elevenlabsAPIReference} from "./provider-api-refrence/elevenlabs-tts.ts"
+import {Switchable} from "../shared-types.ts"
+import {llmAPIReference} from "./provider-api-refrence/llm.ts"
+import {googleSTTAPIReference} from "./provider-api-refrence/google-stt.ts"
 
 /**
  * Data structures embodying the parameters intended for the settings page display.

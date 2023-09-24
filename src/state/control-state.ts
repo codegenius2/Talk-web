@@ -1,7 +1,7 @@
-import {proxy, ref} from "valtio";
-import {EnhancedRecorder} from "../util/enhanced-recorder.ts";
-import {popularMimeTypes, RecordingMimeType} from "../config.ts";
-import {chooseAudioMimeType} from "../util/util.tsx";
+import {proxy, ref} from "valtio"
+import {EnhancedRecorder} from "../util/enhanced-recorder.ts"
+import {popularMimeTypes, RecordingMimeType} from "../config.ts"
+import {chooseAudioMimeType} from "../util/util.tsx"
 
 
 export type Player = {
@@ -86,7 +86,7 @@ export const addToPlayList = (audioId: string) => {
 // if prev audio is finished, auto play the next audio if auto-play is not enabled
 export const onFinish = (audioId: string) => {
     if (playerState.current != audioId) {
-        return;
+        return
     }
     if (!playerState.autoPlay || playerState.playList.length == 0) {
         playerState.isPlaying = false

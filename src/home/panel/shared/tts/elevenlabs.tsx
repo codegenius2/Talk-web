@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect, useState} from 'react';
-import {MySwitch} from "../widget/switch.tsx";
-import {useSnapshot} from "valtio/react";
-import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
-import {SliderRange} from "../widget/slider-range.tsx";
-import {ElevenlabsTTSOption,} from "../../../../data-structure/client-option.tsx";
-import {appState} from "../../../../state/app-state.ts";
-import {elevenlabsAPIReference} from "../../../../data-structure/provider-api-refrence/elevenlabs-tts.ts";
-import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
-import _ from "lodash";
-import {ElevenlabsLogo} from "../widget/logo.tsx";
+import React, {useCallback, useEffect, useState} from 'react'
+import {MySwitch} from "../widget/switch.tsx"
+import {useSnapshot} from "valtio/react"
+import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
+import {SliderRange} from "../widget/slider-range.tsx"
+import {ElevenlabsTTSOption,} from "../../../../data-structure/client-option.tsx"
+import {appState} from "../../../../state/app-state.ts"
+import {elevenlabsAPIReference} from "../../../../data-structure/provider-api-refrence/elevenlabs-tts.ts"
+import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
+import _ from "lodash"
+import {ElevenlabsLogo} from "../widget/logo.tsx"
 
 type Props = {
     elevenlabsTTSOptionProxy: ElevenlabsTTSOption
@@ -86,5 +86,5 @@ const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy, setEnabled}) 
     )
 }
 
-export default ElevenlabsTTS;
+export default ElevenlabsTTS
 

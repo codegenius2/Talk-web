@@ -1,6 +1,5 @@
-import {currentProtocolHostPortPath, joinUrl} from "./util/util.tsx";
+import {currentProtocolHostPortPath, joinUrl} from "./util/util.tsx"
 
-export const StreamIdKey = "stream-id"
 export const audioPlayerMimeType = 'audio/mpeg'
 export const maxLoadedVoice = 6
 export const messageTimeoutSeconds = 60

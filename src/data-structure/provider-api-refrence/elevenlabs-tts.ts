@@ -1,4 +1,4 @@
-import {FloatRange} from "./types.ts";
+import {FloatRange} from "./types.ts"
 
 export type ElevenlabsAPIReference = {
     stability: FloatRange

@@ -7,7 +7,7 @@ export type  MySwitchProps = {
 }
 
 export const MySwitch: React.FC<MySwitchProps> = ({enabled, setEnabled}) => {
-    const switchBoxRef = useRef<HTMLButtonElement>(null);
+    const switchBoxRef = useRef<HTMLButtonElement>(null)
     useEffect(() => {
         if (switchBoxRef.current) {
             switchBoxRef.current.blur()

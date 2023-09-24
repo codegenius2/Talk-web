@@ -1,6 +1,6 @@
-import {cx, getRandomElement} from "../util/util.tsx";
-import React from "react";
-import {Art, wikiarts} from "../wallpaper/art.tsx";
+import {cx, getRandomElement} from "../util/util.tsx"
+import React from "react"
+import {Art, wikiarts} from "../wallpaper/art.tsx"
 
 
 export const Experiment = () => {

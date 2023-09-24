@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect} from 'react';
-import ChatGpt from "./chat-gpt.tsx";
-import {LLMOption} from "../../../../data-structure/client-option.tsx";
-import {useSnapshot} from "valtio/react";
+import React, {useCallback, useEffect} from 'react'
+import ChatGpt from "./chat-gpt.tsx"
+import {LLMOption} from "../../../../data-structure/client-option.tsx"
+import {useSnapshot} from "valtio/react"
 
 type Props = {
     llmOptionProxy: LLMOption

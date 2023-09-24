@@ -1,13 +1,13 @@
-import React, {useEffect, useRef} from "react";
-import Granim from "granim";
-import {compareSlices} from "../util/util.tsx";
+import React, {useEffect, useRef} from "react"
+import Granim from "granim"
+import {compareSlices} from "../util/util.tsx"
 
 export type WallpaperAuthProps = {
     onDark?: (isDark: boolean) => void
 }
 
 export const GranimWallpaper: React.FC<WallpaperAuthProps> = ({onDark}) => {
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null)
     useEffect(() => {
         const darkColor = ["#000428", "#004e92"]
         let granim: Granim
@@ -35,14 +35,14 @@ export const GranimWallpaper: React.FC<WallpaperAuthProps> = ({onDark}) => {
                         onDark(isDark)
                     }
                 }
-            });
+            })
         }
         return () => {
             if (granim) {
                 granim.destroy()
             }
         }
-    }, [onDark]);
+    }, [onDark])
 
     return (
         <div>
@@ -52,5 +52,5 @@ export const GranimWallpaper: React.FC<WallpaperAuthProps> = ({onDark}) => {
             />
             <div className="inset-0 bg-noise opacity-80 fixed h-screen w-screen brightness-150 -z-50"/>
         </div>
-    );
+    )
 }

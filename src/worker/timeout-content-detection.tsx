@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
-import {appState} from "../state/app-state.ts";
-import {setErrorIfTimeout} from "../data-structure/message.tsx";
+import React, {useEffect} from "react"
+import {appState} from "../state/app-state.ts"
+import {setErrorIfTimeout} from "../data-structure/message.tsx"
 
 // if content stays at 'sending', 'thinking' or 'receiving' status for over contentTimeoutSeconds, mark it as timeout
 export const TimeoutContentDetection: React.FC = () => {
@@ -14,14 +14,14 @@ export const TimeoutContentDetection: React.FC = () => {
                     setErrorIfTimeout(message)
                 }
             }
-        }, 2000);
+        }, 2000)
 
         return () => {
             if (interval) {
                 clearInterval(interval)
             }
-        };
-    }, []);
+        }
+    }, [])
     return null
 }
 

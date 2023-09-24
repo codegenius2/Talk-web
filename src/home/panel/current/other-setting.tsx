@@ -1,8 +1,8 @@
-import React, {useCallback} from 'react';
-import {Chat} from "../../../state/app-state.ts";
-import {CountDownButton} from "../shared/widget/button.tsx";
-import {BsTrash3} from "react-icons/bs";
-import {useSnapshot} from "valtio/react";
+import React, {useCallback} from 'react'
+import {Chat} from "../../../state/app-state.ts"
+import {CountDownButton} from "../shared/widget/button.tsx"
+import {BsTrash3} from "react-icons/bs"
+import {useSnapshot} from "valtio/react"
 
 type Props = {
     chatProxy: Chat
@@ -12,7 +12,7 @@ export const OtherSetting: React.FC<Props> = ({chatProxy}) => {
     useSnapshot(chatProxy)
     const clearMessages = useCallback(() => {
         chatProxy.messages = []
-    }, [chatProxy]);
+    }, [chatProxy])
     return <div
         className="flex flex-col w-full items-center justify-between gap-2 rounded-xl bg-white
             bg-opacity-40 backdrop-blur pt-1 pb-3 px-3 ">

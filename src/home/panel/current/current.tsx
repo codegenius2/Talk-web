@@ -1,17 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {LLM} from "../shared/llm/llm.tsx";
-import {TTS} from "../shared/tts/tts.tsx";
-import {STT} from "../shared/stt/stt.tsx";
-import {OtherSetting} from "./other-setting.tsx";
-import {useSnapshot} from "valtio/react";
-import {appState, Chat, currentChatProxy} from "../../../state/app-state.ts";
+import React, {memo, useEffect, useState} from 'react'
+import {LLM} from "../shared/llm/llm.tsx"
+import {TTS} from "../shared/tts/tts.tsx"
+import {STT} from "../shared/stt/stt.tsx"
+import {OtherSetting} from "./other-setting.tsx"
+import {useSnapshot} from "valtio/react"
+import {appState, Chat, currentChatProxy} from "../../../state/app-state.ts"
 
-export const Current: React.FC = () => {
+ const Current_: React.FC = () => {
+    // console.info("Current rendered", new Date().toLocaleString())
     const {currentChatId} = useSnapshot(appState)
     const [chatProxy, setChatProxy] = useState<Chat>()
     useEffect(() => {
         setChatProxy(currentChatProxy())
-    }, [currentChatId]);
+    }, [currentChatId])
 
     if (chatProxy) {
         return (
@@ -35,3 +36,4 @@ export const Current: React.FC = () => {
     }
 }
 
+export const Current = memo(Current_)

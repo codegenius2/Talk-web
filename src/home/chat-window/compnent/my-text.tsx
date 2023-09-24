@@ -1,10 +1,10 @@
-import React from 'react';
-import {cx, formatAgo} from "../../../util/util.tsx";
-import {Message} from "../../../data-structure/message.tsx";
-import {MySpin} from "./widget/icon.tsx";
-import {BsCheck2Circle} from "react-icons/bs";
-import {CgDanger} from "react-icons/cg";
-import {Theme} from "./theme.ts";
+import React from 'react'
+import {cx, formatAgo} from "../../../util/util.tsx"
+import {Message} from "../../../data-structure/message.tsx"
+import {MySpin} from "./widget/icon.tsx"
+import {BsCheck2Circle} from "react-icons/bs"
+import {CgDanger} from "react-icons/cg"
+import {Theme} from "./theme.ts"
 
 interface TextProps {
     messageSnap: Message
@@ -12,6 +12,7 @@ interface TextProps {
 }
 
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
+    // console.info("Row rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     return <div
         className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg

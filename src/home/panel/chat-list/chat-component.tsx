@@ -1,16 +1,19 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useSnapshot} from "valtio/react";
-import {appState, Chat, deleteChat, findChatProxy} from "../../../state/app-state.ts";
-import {Preview} from "./preview.tsx";
-import {cx} from "../../../util/util.tsx";
-import {TalkAvatar} from "./avatar.tsx";
-import {controlState} from "../../../state/control-state.ts";
+import React, {useCallback, useEffect, useRef, useState} from "react"
+import {useSnapshot} from "valtio/react"
+import {appState, Chat, deleteChat} from "../../../state/app-state.ts"
+import {Preview} from "./preview.tsx"
+import {cx} from "../../../util/util.tsx"
+import {TalkAvatar} from "./avatar.tsx"
+import {controlState} from "../../../state/control-state.ts"
 
 type Props = {
-    chatSnap: Chat
+    chatProxy: Chat
 }
 
-export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
+export const ChatComponent: React.FC<Props> = ({chatProxy}) => {
+    // console.info("ChatComponent rendered, chatId", chatProxy.id, new Date().toLocaleString())
+
+    const {name} = useSnapshot(chatProxy)
     const {currentChatId} = useSnapshot(appState)
     const [selected, setSelected] = useState(false)
     const [over, setMouseOver] = useState(false)
@@ -18,26 +21,31 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
     const [isEditing, setIsEditing] = useState(false)
     const [editText, setEditText] = useState("")
     const editorRef = useRef<HTMLInputElement>(null)
-    const onClick = useCallback(() => {
-        appState.currentChatId = chatSnap.id
-    }, [chatSnap.id])
+
+    const onClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.stopPropagation()
+        appState.currentChatId = chatProxy.id
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const removeChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
-        deleteChat(chatSnap.id)
-    }, [chatSnap.id])
+        deleteChat(chatProxy.id)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const onDeleteButtonMouseDownOrUp = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
     }, [])
 
     useEffect(() => {
-        setSelected(currentChatId === chatSnap.id)
-    }, [currentChatId, chatSnap]);
+        setSelected(currentChatId === chatProxy.id)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentChatId])
 
     const startEditing = useCallback(() => {
         if (selected) {
-            setEditText(chatSnap.name)
+            setEditText(chatProxy.name)
             setIsEditing(true)
         }
         const to = setTimeout(() => {
@@ -46,16 +54,17 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
             }
         }, 20)
         return () => clearTimeout(to)
-    }, [chatSnap.name, selected]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected])
 
     const doneEditing = useCallback(() => {
-        const chat = findChatProxy(chatSnap.id)
         const text = editText.trim()
-        if (chat && text !== "") {
-            chat[0].name = editText
+        if (text !== "") {
+            chatProxy.name = editText
         }
         setIsEditing(false)
-    }, [chatSnap.id, editText]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editText])
 
     const keyDownOnEditing = useCallback((e: React.KeyboardEvent) => {
         if (e.key === "Enter" || e.key === "Escape") {
@@ -64,7 +73,7 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
         } else if (e.key === "Tab") {
             e.preventDefault()
         }
-    }, [doneEditing]);
+    }, [doneEditing])
 
     return (
         <div
@@ -82,7 +91,7 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
                 )
                 }
             >
-                <TalkAvatar id={chatSnap.id}/>
+                <TalkAvatar id={chatProxy.id}/>
                 {isEditing ?
                     <div
                         className="flex flex-col items-center justify-center overflow-hidden py-1 pl-3
@@ -105,11 +114,11 @@ export const ChatComponent: React.FC<Props> = ({chatSnap}) => {
                         <div className=""
                              onClick={startEditing}
                         >
-                            <p className="truncate ... break-keep">{chatSnap.name}</p>
+                            <p className="truncate ... break-keep">{name}</p>
                         </div>
                         <div className="">
                             <div className="truncate text-sm text-neutral-600 ...">
-                                <Preview chatSnap={chatSnap}/>
+                                <Preview chatProxy={chatProxy}/>
                             </div>
                         </div>
                     </div>

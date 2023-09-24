@@ -1,5 +1,5 @@
-import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
-import {controlState} from "../../../../state/control-state.ts";
+import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react"
+import {controlState} from "../../../../state/control-state.ts"
 
 type Props = {
     title: string
@@ -17,8 +17,8 @@ export const SliderRange: React.FC<Props> = ({
                                                  range,
                                              }) => {
 
-    const inputBoxRef = useRef<HTMLInputElement>(null);
-    const sliderRef = useRef<HTMLInputElement>(null);
+    const inputBoxRef = useRef<HTMLInputElement>(null)
+    const sliderRef = useRef<HTMLInputElement>(null)
     const [longValue, setLongValue] = useState(0)
 
     // init
@@ -31,7 +31,7 @@ export const SliderRange: React.FC<Props> = ({
         }
         // changes of value should not trigger useEffect
         // eslint-disable-next-line
-    }, [range.start, range.end, setValue]);
+    }, [range.start, range.end, setValue])
 
     const handleMouseAction = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>, forceMouseDown?: boolean) => {
             if (sliderRef.current && (forceMouseDown || controlState.isMouseLeftDown)) {
@@ -45,7 +45,7 @@ export const SliderRange: React.FC<Props> = ({
                     setValue(range.end)
                     setLongValue(range.end)
                 } else {
-                    const relativeX = e.clientX - left;
+                    const relativeX = e.clientX - left
                     let percent = relativeX / clientWidth
                     if (percent <= 0) {
                         percent = 0
@@ -104,7 +104,7 @@ export const SliderRange: React.FC<Props> = ({
             inputBoxRef.current.value = text
             inputBoxRef.current.size = text.length + 1
         }
-    }, [value]);
+    }, [value])
 
     const [leftCapacity, setLeftCapacity] = useState(50)
     const [rightCapacity, setRightCapacity] = useState(50)
@@ -136,28 +136,28 @@ export const SliderRange: React.FC<Props> = ({
         }, [range.end, range.start, longValue, defaultValue]
     )
 
-    const [isTransparent, setIsTransparent] = useState(true);
-    const [timer, setTimer] = useState<NodeJS.Timeout>();
+    const [isTransparent, setIsTransparent] = useState(true)
+    const [timer, setTimer] = useState<NodeJS.Timeout>()
 
     useEffect(() => {
         return () => {
-            clearTimeout(timer);
-        };
-    }, [timer]);
+            clearTimeout(timer)
+        }
+    }, [timer])
 
     const handleMouseOver = () => {
-        clearTimeout(timer);
-        setIsTransparent(false);
-    };
+        clearTimeout(timer)
+        setIsTransparent(false)
+    }
 
     const handleMouseLeave = () => {
         const newTimer = setTimeout(() => {
-            setIsTransparent(true);
-        }, 1000);
-        setTimer(newTimer);
-    };
+            setIsTransparent(true)
+        }, 1000)
+        setTimer(newTimer)
+    }
 
-    const [showDivider, setShowDivider] = useState(false);
+    const [showDivider, setShowDivider] = useState(false)
 
     useEffect(() => {
         if (leftWidth !== 0 || rightWidth !== 0) {
@@ -165,7 +165,7 @@ export const SliderRange: React.FC<Props> = ({
         } else {
             setShowDivider(true)
         }
-    }, [leftCapacity, leftWidth, rightWidth]);
+    }, [leftCapacity, leftWidth, rightWidth])
 
     return (
         <div className="flex flex-col gap-y-0.5"

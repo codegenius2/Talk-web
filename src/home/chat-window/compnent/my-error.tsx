@@ -1,8 +1,8 @@
-import React from 'react';
-import {cx, formatAgo} from "../../../util/util.tsx";
-import {Message} from "../../../data-structure/message.tsx";
-import {CgDanger} from "react-icons/cg";
-import {Theme} from "./theme.ts";
+import React from 'react'
+import {cx, formatAgo} from "../../../util/util.tsx"
+import {Message} from "../../../data-structure/message.tsx"
+import {CgDanger} from "react-icons/cg"
+import {Theme} from "./theme.ts"
 
 interface TextProps {
     messageSnap: Message

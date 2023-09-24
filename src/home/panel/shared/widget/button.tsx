@@ -1,10 +1,10 @@
-import React, {useCallback, useState} from "react";
-import Countdown from "react-countdown";
-import {useNavigate} from "react-router-dom";
-import {audioDb} from "../../../../state/db.ts";
-import {resetAppState} from "../../../../state/app-state.ts";
-import {BsBootstrapReboot} from "react-icons/bs";
-import {cx} from "../../../../util/util.tsx";
+import React, {useCallback, useState} from "react"
+import Countdown from "react-countdown"
+import {useNavigate} from "react-router-dom"
+import {audioDb} from "../../../../state/db.ts"
+import {resetAppState} from "../../../../state/app-state.ts"
+import {BsBootstrapReboot} from "react-icons/bs"
+import {cx} from "../../../../util/util.tsx"
 
 type Color = 'red' | 'blue' | 'black'
 
@@ -90,7 +90,7 @@ export const ResetButton: React.FC<CountDwnProps> = ({countDownMs = 2000}) => {
                 navigate("/")
             }
         )
-    }, [navigate]);
+    }, [navigate])
 
     return <CountDownButton text={"Reset Everything"}
                             countDownMs={countDownMs}

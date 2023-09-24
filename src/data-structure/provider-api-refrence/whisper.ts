@@ -1,4 +1,4 @@
-import {ChooseOne} from "./types.ts";
+import {ChooseOne} from "./types.ts"
 
 export type WhisperAPIReference = {
     models: ChooseOne<string>

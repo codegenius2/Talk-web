@@ -1,4 +1,4 @@
-import {googleSTTLanguageSettings} from "./google-sst-language.ts";
+import {googleSTTLanguageSettings} from "./google-sst-language.ts"
 
 // see https://www.gstatic.com/cloud-site-ux/text_to_speech/text_to_speech.min.js
 // after comparing line by line, we found that googleSTTLanguageSettings and googleTTSLanguageStrings are identical

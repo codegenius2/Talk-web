@@ -1,26 +1,40 @@
-import {useCallback, useEffect, useRef, useState} from "react";
-import {useSnapshot} from "valtio/react";
-import {proxy} from "valtio";
+import React, {memo, useCallback, useEffect, useRef, useState} from "react"
+import {useSnapshot} from "valtio/react"
+import {proxy} from "valtio"
 import _ from "lodash"
-import {PiPlusLight} from "react-icons/pi";
-import {CiSearch} from "react-icons/ci";
-import {appState, Chat} from "../../../state/app-state.ts";
-import {randomHash16Char} from "../../../util/util.tsx";
-import {DndProvider} from "react-dnd";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {DraggableChat} from "./draggable-chat.tsx";
-import {motion} from "framer-motion";
+import {PiPlusLight} from "react-icons/pi"
+import {CiSearch} from "react-icons/ci"
+import {appState, Chat} from "../../../state/app-state.ts"
+import {randomHash16Char} from "../../../util/util.tsx"
+import {DndProvider} from "react-dnd"
+import {HTML5Backend} from "react-dnd-html5-backend"
+import {DraggableChat} from "./draggable-chat.tsx"
+import {motion} from "framer-motion"
+import {subscribeKey} from "valtio/utils";
 
 const animation = {
     x: [0, -10, 10, -10, 10, 0],
     y: [0, 0, 0, 0, 0, 0],
-};
+}
 
-export const ChatList = () => {
-    const {currentChatId, chats} = useSnapshot(appState)
+const ChatList_ = () => {
+    // console.info("ChatList rendered", new Date().toLocaleString())
+    const {currentChatId} = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
+    const [chats, setChats] = useState<Chat[]>([])
     const [showSearch, setShowSearch] = useState(true)
-    const newChat = useCallback((): void => {
+
+    useEffect(() => {
+        const callback = () => {
+            setChats(appState.chats.slice())
+        }
+        const unsubscribe = subscribeKey(appState.chats, "length", callback)
+        callback()
+        return unsubscribe
+    }, [])
+
+    const newChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.stopPropagation()
         const optionClone = _.cloneDeep(appState.option)
         const chat = proxy<Chat>({
             id: randomHash16Char(),
@@ -64,7 +78,10 @@ export const ChatList = () => {
                 <div
                     className="flex justify-center items-center rounded-xl stroke-white text-neutral-500
                  bg-white bg-opacity-80 backdrop-blur cursor-pointer"
-                    onClick={newChat}>
+                    onClick={newChat}
+                    onMouseDown={e => e.stopPropagation()}
+                    onMouseUp={e => e.stopPropagation()}
+                >
                     <PiPlusLight size={24}/>
                 </div>
             </div>
@@ -73,10 +90,10 @@ export const ChatList = () => {
                 <div
                     className="flex cursor-pointer flex-col gap-1">
                     <DndProvider backend={HTML5Backend}>
-                        {chats.map((chatSnap, index) =>
-                            <div ref={chatSnap.id === currentChatId ? chatRef : undefined}
-                                 key={chatSnap.id}>
-                                <DraggableChat chatSnap={chatSnap as Chat} index={index}/>
+                        {chats.map((chatProxy, index) =>
+                            <div ref={chatProxy.id === currentChatId ? chatRef : undefined}
+                                 key={chatProxy.id}>
+                                <DraggableChat chatProxy={chatProxy} index={index}/>
                             </div>
                         )}
                     </DndProvider>
@@ -85,3 +102,5 @@ export const ChatList = () => {
         </div>
     )
 }
+
+export const ChatList = memo(ChatList_)

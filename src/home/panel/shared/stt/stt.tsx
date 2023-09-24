@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect} from 'react';
-import {useSnapshot} from "valtio/react";
-import {STTOption,} from "../../../../data-structure/client-option.tsx";
-import Whisper from "./whisper.tsx";
-import GoogleStt from "./google-stt.tsx";
+import React, {useCallback, useEffect} from 'react'
+import {useSnapshot} from "valtio/react"
+import {STTOption,} from "../../../../data-structure/client-option.tsx"
+import Whisper from "./whisper.tsx"
+import GoogleStt from "./google-stt.tsx"
 
 type Props = {
     sttOptionProxy: STTOption

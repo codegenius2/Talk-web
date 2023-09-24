@@ -1,5 +1,5 @@
-import {SelectBox} from "./widget/select-box.tsx";
-import {Choice} from "../../../data-structure/provider-api-refrence/types.ts";
+import {SelectBox} from "./widget/select-box.tsx"
+import {Choice} from "../../../data-structure/provider-api-refrence/types.ts"
 
 
 type Props<T extends number | string> = {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react"
 import Avatar, {genConfig, GlassesStyle, HairStyle} from 'react-nice-avatar'
 
 type Props = {
@@ -18,12 +18,12 @@ export const TalkAvatar: React.FC<Props> = ({id}) => {
     useEffect(() => {
         const conf =createAvatarConf(id)
         setAvatarConf(conf)
-    }, [id]);
+    }, [id])
     return <Avatar style={avatarStyle} shape={"circle"} className="self-center" {...avatarConf} />
 }
 
 const createAvatarConf = (id: string) => {
-    const conf = genConfig(id);
+    const conf = genConfig(id)
     if (conf.sex === 'man') {
         // do you like mohawk? voting: (👍:0 👎:1)
         conf.hairStyle = ['normal', 'thick'][id[0].charCodeAt(0) % 2] as HairStyle

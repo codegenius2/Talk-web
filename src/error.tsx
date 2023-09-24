@@ -1,19 +1,19 @@
 import {useCallback, useState} from 'react'
-import {useNavigate, useRouteError} from "react-router-dom";
-import {CountDownButton, ResetButton} from "./home/panel/shared/widget/button.tsx";
-import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts";
-import {IoRefreshSharp} from "react-icons/io5";
-import {BsTrash3} from "react-icons/bs";
-import {cx} from "./util/util.tsx";
-import {Helmet} from 'react-helmet-async';
-import * as packageJson from '../package.json';
-import {GranimWallpaper} from "./wallpaper/granim-wallpaper.tsx";
+import {useNavigate, useRouteError} from "react-router-dom"
+import {CountDownButton, ResetButton} from "./home/panel/shared/widget/button.tsx"
+import {clearChats, clearSettings, currentChatProxy} from "./state/app-state.ts"
+import {IoRefreshSharp} from "react-icons/io5"
+import {BsTrash3} from "react-icons/bs"
+import {cx} from "./util/util.tsx"
+import {Helmet} from 'react-helmet-async'
+import * as packageJson from '../package.json'
+import {GranimWallpaper} from "./wallpaper/granim-wallpaper.tsx"
 
 export default function Error() {
 
     const [textLight, setTextLight] = useState(false)
-    const navigate = useNavigate();
-    const error = useRouteError() as Record<string, string>;
+    const navigate = useNavigate()
+    const error = useRouteError() as Record<string, string>
 
     const onDark = useCallback((isDark: boolean) => {
         setTextLight(isDark)

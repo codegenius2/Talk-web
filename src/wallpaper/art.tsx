@@ -1,7 +1,7 @@
-// import backgroundImage from 'assets/bg/wikiart';
-import balloonImage from "../assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b.png";
-import walkImage from "../assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png";
-import simultaneousImage from "../assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg";
+// import backgroundImage from 'assets/bg/wikiart'
+import balloonImage from "../assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b.png"
+import walkImage from "../assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png"
+import simultaneousImage from "../assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg"
 
 export type Art = {
     author: string

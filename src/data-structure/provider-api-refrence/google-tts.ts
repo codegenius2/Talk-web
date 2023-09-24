@@ -1,6 +1,6 @@
-import {ChooseOne, FloatRange} from "./types.ts";
-import {GoogleTTSGender} from "../../api/restful/model.ts";
-import {googleTTSLanguageStrings} from "../../data/google-tts-language.ts";
+import {ChooseOne, FloatRange} from "./types.ts"
+import {GoogleTTSGender} from "../../api/restful/model.ts"
+import {googleTTSLanguageStrings} from "../../data/google-tts-language.ts"
 
 export type GoogleTTSAPIReference = {
     language: ChooseOne<string>

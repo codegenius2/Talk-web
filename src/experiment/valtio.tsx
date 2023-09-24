@@ -1,6 +1,6 @@
-// import {proxy} from "valtio";
-// import {useSnapshot} from "valtio/react";
-// import {useCallback} from "react";
+// import {proxy} from "valtio"
+// import {useSnapshot} from "valtio/react"
+// import {useCallback} from "react"
 //
 // type Person = {
 //     name: string
@@ -30,7 +30,7 @@
 //     const personSnp = useSnapshot(personProxy)
 //     const addMyOwnName = useCallback(() => {
 //         personProxy.name += "x"
-//     }, [personProxy]);
+//     }, [personProxy])
 //     return (
 //         <div className="flex flex-col justify-center items-center w-1/2 h-1/2">
 //             <div className="flex gap-3">
@@ -53,18 +53,18 @@
 //
 //     const addClicked = useCallback(() => {
 //         expState.clicked++
-//     }, []);
+//     }, [])
 //
 //     const personAddAge = useCallback(() => {
 //         expState.person.age++
-//     }, []);
+//     }, [])
 //
 //     const changePerson = useCallback(() => {
 //         expState.person = {
 //             name: "jack",
 //             age: 1999
 //         }
-//     }, []);
+//     }, [])
 //
 //     return (
 //         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
@@ -120,18 +120,18 @@
 // //
 // //     const addClicked = useCallback(() => {
 // //         expState.clicked ++
-// //     }, []);
+// //     }, [])
 // //
 // //     const personAddAge = useCallback(() => {
 // //         expState.person.age++
-// //     }, []);
+// //     }, [])
 // //
 // //     const changePerson = useCallback(() => {
 // //         expState.person = {
 // //             name: "jack",
 // //             age: 1999
 // //         }
-// //     }, []);
+// //     }, [])
 // //
 // //     return (
 // //         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
@@ -167,18 +167,18 @@
 // //
 // //     const addClicked = useCallback(() => {
 // //         expState.clicked ++
-// //     }, []);
+// //     }, [])
 // //
 // //     const addPersonAddAge = useCallback(() => {
 // //         expState.person.age++
-// //     }, []);
+// //     }, [])
 // //
 // //     const changePerson = useCallback(() => {
 // //         expState.person = {
 // //             name: "jack",
 // //             age: 1999
 // //         }
-// //     }, []);
+// //     }, [])
 // //
 // //     return (
 // //         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">
@@ -212,18 +212,18 @@
 // //
 // //     const addClicked = useCallback(() => {
 // //         expState.clicked ++
-// //     }, []);
+// //     }, [])
 // //
 // //     const addPersonAddAge = useCallback(() => {
 // //         expState.person.age++
-// //     }, []);
+// //     }, [])
 // //
 // //     const changePerson = useCallback(() => {
 // //         expState.person = {
 // //             name: "jack",
 // //             age: 1999
 // //         }
-// //     }, []);
+// //     }, [])
 // //
 // //     return (
 // //         <div className="flex items-center justify-center w-screen h-screen bg-neutral-400 ">

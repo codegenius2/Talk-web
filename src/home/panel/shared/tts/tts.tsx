@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect} from 'react';
-import {useSnapshot} from "valtio/react";
-import {TTSOption} from "../../../../data-structure/client-option.tsx";
-import GoogleTTS from "./google-tts.tsx";
-import ElevenlabsTTS from "./elevenlabs.tsx";
+import React, {useCallback, useEffect} from 'react'
+import {useSnapshot} from "valtio/react"
+import {TTSOption} from "../../../../data-structure/client-option.tsx"
+import GoogleTTS from "./google-tts.tsx"
+import ElevenlabsTTS from "./elevenlabs.tsx"
 
 type Props = {
     ttsOptionProxy: TTSOption
 }
 
 export const TTS: React.FC<Props> = ({ttsOptionProxy}) => {
-    const ttsOptionSnapshot = useSnapshot(ttsOptionProxy);
+    const ttsOptionSnapshot = useSnapshot(ttsOptionProxy)
     const googleSnap = useSnapshot(ttsOptionProxy.google)
     const elevenlabsSnap = useSnapshot(ttsOptionProxy.elevenlabs)
 

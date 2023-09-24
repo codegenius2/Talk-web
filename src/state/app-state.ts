@@ -1,11 +1,11 @@
 import {proxy, snapshot, subscribe} from 'valtio'
-import {appDb, appStateKey} from "./db.ts";
-import {Message, onMarkDeleted} from "../data-structure/message.tsx";
-import {ClientOption, defaultOption} from "../data-structure/client-option.tsx";
-import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts";
-import {generateHash} from "../util/util.tsx";
-import {migrate} from "./migration.ts";
-import * as packageJson from '../../package.json';
+import {appDb, appStateKey} from "./db.ts"
+import {Message, onMarkDeleted} from "../data-structure/message.tsx"
+import {ClientOption, defaultOption} from "../data-structure/client-option.tsx"
+import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts"
+import {generateHash} from "../util/util.tsx"
+import {migrate} from "./migration.ts"
+import * as packageJson from '../../package.json'
 
 const currentVersion = packageJson.version
 
@@ -149,18 +149,37 @@ export const clearChats = () => {
     appState.currentChatId = dft.currentChatId
 }
 
-export const findMessage = (chatProxy: Chat, messageId: string): Message | undefined => {
-    return chatProxy.messages.find(m => m.id === messageId)
-}
-
-export const findChatProxy = (chatId: string): [Chat, number] | undefined => {
+export const findChatProxy = (chatId: string, warning?: boolean): [Chat, number] | undefined => {
     for (let i = appState.chats.length - 1; i >= 0; i--) {
         const chat = appState.chats[i]
         if (chat.id === chatId) {
             return [chat, i]
         }
     }
+    if (warning) {
+        console.warn("received an event from server, but can't find a chat to deal with, " +
+            "this usually happens when a chat has been deleted, or this would be fatal err that requires " +
+            "developers to re-check the code. chatId:", chatId)
+    }
     return undefined
+}
+
+export const findMessage = (chatProxy: Chat, messageId: string, warning?: boolean): Message | undefined => {
+    const found = chatProxy.messages.find(m => m.id === messageId)
+    if (!found && warning) {
+        console.warn("received an event from server, but can't find a message to deal with, " +
+            "this usually happens when a message has been deleted, or this would be fatal err that requires " +
+            "developers to re-check the code. chatId,messageId:", chatProxy.id, messageId)
+    }
+    return found
+}
+
+export const findMessage2 = (chatId: string, messageId: string, warning?: boolean): Message | undefined => {
+    const found = findChatProxy(chatId, warning)
+    if (found) {
+        return findMessage(found[0], messageId, warning)
+    }
+    return
 }
 
 export const dragChat = (draggingIndex: number, hoveringIndex: number) => {
@@ -260,7 +279,7 @@ export const deleteChat = (id: string) => {
         // if there is no chat selected or user are deleting a chat other than current chat
         removeChatById(id)
     } else {
-        const index = findChatProxy(currentChatId)?.[1];
+        const index = findChatProxy(currentChatId)?.[1]
         if (index === undefined) {
             // currentChatId is actually invalid, reset it
             appState.currentChatId = ""

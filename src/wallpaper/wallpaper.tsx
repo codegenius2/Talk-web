@@ -1,8 +1,8 @@
-import {cx} from "../util/util.tsx";
-import React, {useCallback, useEffect, useState} from "react";
-import {allArts, Art} from "./art.tsx";
-import {useSnapshot} from "valtio/react";
-import {appState} from "../state/app-state.ts";
+import {cx} from "../util/util.tsx"
+import React, {useCallback, useEffect, useState} from "react"
+import {allArts, Art} from "./art.tsx"
+import {useSnapshot} from "valtio/react"
+import {appState} from "../state/app-state.ts"
 
 
 export const TheWallpaper = () => {
@@ -28,7 +28,7 @@ const Wallpaper: React.FC<Props> = ({art}) => {
             clearTimeout(timer)
         }
         setShowInfo(true)
-    }, [timer]);
+    }, [timer])
 
     const startNewTimer = useCallback(() => {
         if (timer) {
@@ -36,7 +36,7 @@ const Wallpaper: React.FC<Props> = ({art}) => {
         }
         const t = setTimeout(() => setShowInfo(false), 5e3)
         setHideOnTime(t)
-    }, [timer]);
+    }, [timer])
 
     useEffect(() => {
         if (timer) {
@@ -46,7 +46,8 @@ const Wallpaper: React.FC<Props> = ({art}) => {
         const t = setTimeout(() => setShowInfo(false), 5e3)
         setHideOnTime(t)
         return () => clearTimeout(t)
-    }, [art]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [art])
 
     return (
         <div className="">

@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {useCallback, useState} from 'react';
-import {useSnapshot} from "valtio/react";
-import {appState, PanelSelection} from "../../state/app-state.ts";
-import {ChatList} from "./chat-list/chat-list.tsx";
-import {cx, escapeSpaceKey} from "../../util/util.tsx";
-import {Global} from "./global/global.tsx";
-import {Current} from "./current/current.tsx";
-import {layoutState} from "../../state/layout-state.ts";
+import React, {useCallback, useState} from 'react'
+import {useSnapshot} from "valtio/react"
+import {appState, PanelSelection} from "../../state/app-state.ts"
+import {ChatList} from "./chat-list/chat-list.tsx"
+import {cx, escapeSpaceKey} from "../../util/util.tsx"
+import {Global} from "./global/global.tsx"
+import {Current} from "./current/current.tsx"
+import {layoutState} from "../../state/layout-state.ts"
 
 export const Panel: React.FC = () => {
+    // console.info("Panel rendered", new Date().toLocaleString())
 
     const {currentChatId, panelSelection} = useSnapshot(appState)
     const [isMouseDown, setIsMouseDown] = useState(false)
@@ -23,9 +23,9 @@ export const Panel: React.FC = () => {
         }
     }, [isMouseDown])
 
-    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         layoutState.settingPanelScrollOffset = e.currentTarget.scrollTop
-    };
+    }, [])
 
     return (
         <div className="flex h-full select-none flex-col gap-3 w-full"
@@ -90,8 +90,8 @@ export const Panel: React.FC = () => {
                     panelSelection !== "global" && "hidden"
                 )}
             >
-                <Global optionProxy={appState.option}/>
-                {ninjia}
+                <Global/>
+                {ninja}
             </div>
             <div
                 onScroll={handleScroll}
@@ -103,10 +103,11 @@ export const Panel: React.FC = () => {
                 {currentChatId !== "" &&
                     <Current/>
                 }
-                {ninjia}
+                {ninja}
             </div>
         </div>
     )
 }
 
-const ninjia = <div className="min-h-[14rem] text-transparent select-none pointer-events-none" data-pseudo-content="ninja"></div>
+const ninja = <div className="min-h-[14rem] text-transparent select-none pointer-events-none"
+                   data-pseudo-content="ninja"></div>

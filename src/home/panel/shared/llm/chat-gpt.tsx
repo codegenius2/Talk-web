@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback, useEffect, useState} from 'react';
-import {MySwitch} from "../widget/switch.tsx";
-import {DiscreteRange} from "../widget/discrete-range.tsx";
-import {useSnapshot} from "valtio/react";
-import {SliderRange} from "../widget/slider-range.tsx";
-import {ChatGPTOption, LLMOption} from "../../../../data-structure/client-option.tsx";
+import React, {useCallback, useEffect, useState} from 'react'
+import {MySwitch} from "../widget/switch.tsx"
+import {DiscreteRange} from "../widget/discrete-range.tsx"
+import {useSnapshot} from "valtio/react"
+import {SliderRange} from "../widget/slider-range.tsx"
+import {ChatGPTOption, LLMOption} from "../../../../data-structure/client-option.tsx"
 import {
     chatGPTAPIReference,
     historyChoices,
     tokenChoices
-} from "../../../../data-structure/provider-api-refrence/chat-gpt.ts";
-import {appState} from "../../../../state/app-state.ts";
-import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
-import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
-import _ from "lodash";
-import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts";
-import {ChatGPTLogo} from "../widget/logo.tsx";
+} from "../../../../data-structure/provider-api-refrence/chat-gpt.ts"
+import {appState} from "../../../../state/app-state.ts"
+import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
+import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
+import _ from "lodash"
+import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts"
+import {ChatGPTLogo} from "../widget/logo.tsx"
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
@@ -39,7 +39,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
             tags: []
         }))
         setModelChoices(choices)
-    }, [models]);
+    }, [models])
 
     const setMaxHistory = useCallback((hist: number) => {
         llmOptionProxy.maxHistory = hist
@@ -152,5 +152,5 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
     )
 }
 
-export default ChatGpt;
+export default ChatGpt
 

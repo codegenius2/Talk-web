@@ -1,12 +1,12 @@
-import {motion} from 'framer-motion';
-import React, {useCallback, useEffect, useState} from 'react';
-import {AxiosError, AxiosResponse} from "axios";
-import {useNavigate} from "react-router-dom";
-import {login} from "../api/restful/api.ts";
-import {savePassAsHash, setLoggedIn} from "../state/app-state.ts";
-import {cx} from "../util/util.tsx";
-import {Helmet} from 'react-helmet-async';
-import {GranimWallpaper} from "../wallpaper/granim-wallpaper.tsx";
+import {motion} from 'framer-motion'
+import React, {useCallback, useEffect, useState} from 'react'
+import {AxiosError, AxiosResponse} from "axios"
+import {useNavigate} from "react-router-dom"
+import {login} from "../api/restful/api.ts"
+import {savePassAsHash, setLoggedIn} from "../state/app-state.ts"
+import {cx} from "../util/util.tsx"
+import {Helmet} from 'react-helmet-async'
+import {GranimWallpaper} from "../wallpaper/granim-wallpaper.tsx"
 
 const detectDelay = 1000
 const fadeOutDuration = 1500
@@ -15,28 +15,28 @@ const fadeOutDuration = 1500
 const shakeAnimation = {
     x: [0, -30, 30, -30, 30, 0],
     y: [0, 0, 0, 0, 0, 0],
-};
+}
 
 export default function Auth() {
     const navigate = useNavigate()
 
     const [textLight, setTextLight] = useState<boolean>(false)
 
-    const [inputValue, setInputValue] = useState('');
-    const [shake, setShake] = useState(false);
-    const [startFadeOut, setStartFadeOut] = useState(false);
-    const [startFadeIn, setStartFadeIn] = useState(false);
+    const [inputValue, setInputValue] = useState('')
+    const [shake, setShake] = useState(false)
+    const [startFadeOut, setStartFadeOut] = useState(false)
+    const [startFadeIn, setStartFadeIn] = useState(false)
 
     // use this function to detect where password is required by Talk server
     const handleLogin = useCallback((detect: boolean, password?: string) => {
-        setShake(false);
+        setShake(false)
         login(password).then((r: AxiosResponse) => {
             console.info("login is successful", r.status, r.data)
             if (password) {
                 savePassAsHash(password)
             }
             setLoggedIn(true)
-            setStartFadeOut(true);
+            setStartFadeOut(true)
             setTimeout(() => navigate("/chat"), fadeOutDuration)
         }).catch((e: AxiosError) => {
             console.info("failed to login", e)
@@ -52,10 +52,10 @@ export default function Auth() {
         const t = setTimeout(() => handleLogin(true)
             , detectDelay)
         return () => clearTimeout(t)
-    }, [handleLogin]);
+    }, [handleLogin])
 
     const handleSubmit = useCallback((event: React.FormEvent) => {
-        event.preventDefault();
+        event.preventDefault()
         handleLogin(false, inputValue)
     }, [handleLogin, inputValue])
 
@@ -66,7 +66,7 @@ export default function Auth() {
 
     useEffect(() => {
         setStartFadeIn(true)
-    }, []);
+    }, [])
 
     return (
         // fadeOutDuration is shorter than duration-2000 to avoid staying in a white page
@@ -98,8 +98,8 @@ export default function Auth() {
                             value={inputValue}
                             autoComplete="current-password"
                             onChange={(e) => {
-                                setInputValue(e.target.value);
-                                setShake(false);
+                                setInputValue(e.target.value)
+                                setShake(false)
                             }}
                             className={cx("appearance-none w-full h-16 rounded-lg outline-none caret-transparent",
                                 "text-6xl text-center tracking-widest bg-white backdrop-blur bg-opacity-10 transition duration-5000",

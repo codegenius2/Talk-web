@@ -1,36 +1,46 @@
-import React, {useEffect, useRef, useState} from 'react';
-import WaveSurfer from 'wavesurfer.js';
-import {Message, MessageAudio} from "../../../data-structure/message.tsx";
-import {audioDb} from "../../../state/db.ts";
-import {clearPlayList, controlState, onFinish, pauseMe, play} from "../../../state/control-state.ts";
+import React, {useEffect, useRef, useState} from 'react'
+import WaveSurfer from 'wavesurfer.js'
+import {Message, MessageAudio} from "../../../data-structure/message.tsx"
+import {audioDb} from "../../../state/db.ts"
+import {clearPlayList, controlState, onFinish, pauseMe, play} from "../../../state/control-state.ts"
 import Hover from 'wavesurfer.js/dist/plugins/hover'
-import {Theme} from "./theme.ts";
-import {cx, formatAgo, formatAudioDuration} from "../../../util/util.tsx";
-import {BsCheck2Circle} from "react-icons/bs";
-import {MySpin} from "./widget/icon.tsx";
-import {CgDanger} from "react-icons/cg";
-import {subscribe} from "valtio";
+import {Theme} from "./theme.ts"
+import {cx, formatAgo, formatAudioDuration} from "../../../util/util.tsx"
+import {BsCheck2Circle} from "react-icons/bs"
+import {MySpin} from "./widget/icon.tsx"
+import {CgDanger} from "react-icons/cg"
+import {subscribe} from "valtio"
+import {messageState} from "../../../state/message-state.ts";
+import {subscribeKey} from "valtio/utils";
 
 interface AudioProps {
     audioSnap: MessageAudio
     chatId: string
     messageSnap: Message
-    loadAudio: boolean
     theme: Theme
 }
 
 export const Audio: React.FC<AudioProps> = ({
-                                                audioSnap, chatId, messageSnap, loadAudio, theme
+                                                audioSnap, chatId, messageSnap, theme
                                             }) => {
 
-    const wavesurfer = useRef<WaveSurfer>();
-    const container = useRef(null);
+    const wavesurfer = useRef<WaveSurfer>()
+    const container = useRef(null)
     const [amIPlaying, setAmIPlaying] = useState(false)
-    const [load, setLoad] = useState(false)
     const [url, setUrl] = useState("")
 
+    const [loadAudio, setLoadAudio] = useState(false)
+
     useEffect(() => {
-        if (load) {
+        const callback = () => setLoadAudio(messageState.record[messageSnap.id]?.loadAudio ?? false)
+        const un = subscribeKey(messageState.record, messageSnap.id, callback)
+        callback()
+        return un
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (loadAudio) {
             if (audioSnap.id) {
                 audioDb.getItem<Blob>(audioSnap.id, (err, blob) => {
                     if (err) {
@@ -46,14 +56,10 @@ export const Audio: React.FC<AudioProps> = ({
                 }).then(() => true)
             }
         }
-    }, [audioSnap.id, loadAudio, load])
+    }, [audioSnap.id, loadAudio])
 
     useEffect(() => {
-        setLoad(loadAudio)
-    }, [loadAudio]);
-
-    useEffect(() => {
-            if (!load || !url) {
+            if (!loadAudio || !url) {
                 return
             }
             wavesurfer.current = WaveSurfer.create({
@@ -117,7 +123,9 @@ export const Audio: React.FC<AudioProps> = ({
                     current.pause()
                 }
             }
-            let unSub: () => void;
+
+            let unSub: () => void
+
             current.on('ready', () => {
                 syncWithPlayer()
                 unSub = subscribe(controlState.player, () => {
@@ -139,12 +147,11 @@ export const Audio: React.FC<AudioProps> = ({
             return () => {
                 unSub && unSub()
                 onFinish(audioSnap.id)
-                current.destroy();
-            };
+                current.destroy()
+            }
 
-            // exclude audioSnap.durationMS from deps
-            // eslint-disable-next-line
-        }, [audioSnap.id, theme, url, load, chatId, messageSnap.id]
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [url, loadAudio]
     )
 
     const togglePlay = () => {
@@ -158,11 +165,11 @@ export const Audio: React.FC<AudioProps> = ({
                 console.error("can't play", e)
             })
         }
-    };
+    }
 
     return (
         <div className={cx("flex flex-col rounded-2xl px-1 pt-1 pb-0.5", theme.text, theme.bg)}
-             onClick={() => setLoad(true)}
+             onClick={() => setLoadAudio(true)}
         >
             <div className={"relative flex px-1 items-center gap-2 "}>
                 <div className={"flex justify-center items-center rounded-full w-10 h-10 shrink-0 " + theme.playBg}
@@ -183,7 +190,7 @@ export const Audio: React.FC<AudioProps> = ({
                 </div>
                 <div ref={container} className="h-10 w-full">
                 </div>
-                {!load &&
+                {!loadAudio &&
                     <div className={cx("absolute w-full h-full flex justify-center items-center", theme.text)}
                          data-pseudo-content="Click to Load"
                     >
@@ -194,7 +201,8 @@ export const Audio: React.FC<AudioProps> = ({
                 <p className="text-xs inline w-10 text-center whitespace-nowrap"
                    data-pseudo-content={formatAudioDuration(audioSnap.durationMs)}></p>
                 <div className="flex justify-end gap-1">
-                    <p className="text-xs inline whitespace-nowrap" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
+                    <p className="text-xs inline whitespace-nowrap"
+                       data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
                     {['sent', 'received'].includes(messageSnap.status) &&
                         <BsCheck2Circle className={"h-4 w-4" + theme.normalIcon}/>
                     }

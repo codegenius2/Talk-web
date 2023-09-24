@@ -1,4 +1,4 @@
-import {IntRange} from "./types.ts";
+import {IntRange} from "./types.ts"
 
 export type LLMAPIReference = {
     readonly maxHistory: IntRange

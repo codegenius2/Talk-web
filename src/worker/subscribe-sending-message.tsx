@@ -1,17 +1,17 @@
-import React, {useEffect} from "react";
-import {useSnapshot} from "valtio/react";
-import {snapshot} from "valtio";
-import {AxiosError} from "axios";
-import {controlState} from "../state/control-state.ts";
-import {findChatProxy, findMessage} from "../state/app-state.ts";
-import {historyMessages} from "../api/restful/util.ts";
-import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx";
-import {postAudioChat, postChat} from "../api/restful/api.ts";
-import {generateUudioId} from "../util/util.tsx";
-import {audioDb} from "../state/db.ts";
-import {LLMMessage} from "../shared-types.ts";
-import {minSpeakTimeMillis} from "../config.ts";
-import {toRestfulAPIOption} from "../data-structure/client-option.tsx";
+import React, {useEffect} from "react"
+import {useSnapshot} from "valtio/react"
+import {snapshot} from "valtio"
+import {AxiosError} from "axios"
+import {controlState} from "../state/control-state.ts"
+import {findChatProxy, findMessage} from "../state/app-state.ts"
+import {historyMessages} from "../api/restful/util.ts"
+import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx"
+import {postAudioChat, postChat} from "../api/restful/api.ts"
+import {generateUudioId} from "../util/util.tsx"
+import {audioDb} from "../state/db.ts"
+import {LLMMessage} from "../shared-types.ts"
+import {minSpeakTimeMillis} from "../config.ts"
+import {toRestfulAPIOption} from "../data-structure/client-option.tsx"
 
 const systemMessage: LLMMessage = {
     role: "system",
@@ -23,7 +23,7 @@ export const SubscribeSendingMessage: React.FC = () => {
     const {sendingMessageSignal} = useSnapshot(controlState)
     useEffect(() => {
         if (controlState.sendingMessages.length === 0) {
-            return;
+            return
         }
         const [sm] = controlState.sendingMessages.splice(0, 1)
         if (!sm) {
@@ -63,7 +63,7 @@ export const SubscribeSendingMessage: React.FC = () => {
                 ticketId: nonProxyMessage.ticketId,
                 ms: messages,
                 talkOption: talkOption
-            });
+            })
         } else {
             messages.push({role: "user", content: sm.text})
             nonProxyMessage.text = sm.text
@@ -74,11 +74,11 @@ export const SubscribeSendingMessage: React.FC = () => {
                 ticketId: nonProxyMessage.ticketId,
                 ms: messages,
                 talkOption: talkOption
-            });
+            })
         }
 
         postPromise.then((r) => {
-                const msg = findMessage(chatProxy, nonProxyMessage.id);
+                const msg = findMessage(chatProxy, nonProxyMessage.id)
                 if (!msg) {
                     console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
                     return
@@ -91,7 +91,7 @@ export const SubscribeSendingMessage: React.FC = () => {
                 }
             }
         ).catch((e: AxiosError) => {
-            const msg = findMessage(chatProxy, nonProxyMessage.id);
+            const msg = findMessage(chatProxy, nonProxyMessage.id)
             if (!msg) {
                 console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
                 return
@@ -105,7 +105,7 @@ export const SubscribeSendingMessage: React.FC = () => {
                     if (err || !value) {
                         console.debug("failed to save audio blob, audioId:", audioId, err)
                     } else {
-                        const msg = findMessage(chatProxy, nonProxyMessage.id);
+                        const msg = findMessage(chatProxy, nonProxyMessage.id)
                         if (!msg) {
                             console.error("message not found after pushing, chatId,messageId:", chatProxy.id, nonProxyMessage.id)
                             return
@@ -116,6 +116,6 @@ export const SubscribeSendingMessage: React.FC = () => {
                 }
             )
         }
-    }, [sendingMessageSignal]);
+    }, [sendingMessageSignal])
     return null
 }

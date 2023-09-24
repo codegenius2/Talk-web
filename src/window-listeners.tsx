@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect} from "react";
-import {controlState} from "./state/control-state.ts";
+import React, {useCallback, useEffect} from "react"
+import {controlState} from "./state/control-state.ts"
 
 export const WindowListeners: React.FC = () => {
     const setMouseDown = useCallback((isMouseLeftDown: boolean) => {
         controlState.isMouseLeftDown = isMouseLeftDown
-    }, []);
+    }, [])
 
     const recorder = controlState.recorder
     useEffect(() => {
@@ -13,7 +13,7 @@ export const WindowListeners: React.FC = () => {
             const handleKeyUp = (event: KeyboardEvent) => {
                 if (event.key == ' ' && recorder.currentContext()?.triggeredBy === 'spacebar') {
                     // prevent space from scrolling message list
-                    event.preventDefault();
+                    event.preventDefault()
                     recorder.done()
                 }
             }
@@ -21,12 +21,12 @@ export const WindowListeners: React.FC = () => {
             const handleKeyDown = (event: KeyboardEvent) => {
                 if (event.key === ' ') {
                     // prevent space from scrolling message list
-                    event.preventDefault();
+                    event.preventDefault()
                     if (event.repeat) {
                         return
                     }
                     if (!recorder.currentContext()?.triggeredBy) {
-                        console.debug('handleKeyDown with not repeated space');
+                        console.debug('handleKeyDown with not repeated space')
                         recorder.start({triggeredBy: 'spacebar'})
                             .then(() => {
                                 return true
@@ -47,7 +47,7 @@ export const WindowListeners: React.FC = () => {
                         recorder.cancel()
                     }
                 }
-            };
+            }
 
             const handleMouseDown = (event: MouseEvent) => {
                 if (event.button === 0) {
@@ -65,18 +65,18 @@ export const WindowListeners: React.FC = () => {
                 setMouseDown(false)
             }
 
-            window.addEventListener("keydown", handleKeyDown);
-            window.addEventListener("keyup", handleKeyUp);
-            window.addEventListener("mousedown", handleMouseDown);
-            window.addEventListener("mouseup", handleMouseUp);
-            window.addEventListener("blur", handleBrowserBlur);
+            window.addEventListener("keydown", handleKeyDown)
+            window.addEventListener("keyup", handleKeyUp)
+            window.addEventListener("mousedown", handleMouseDown)
+            window.addEventListener("mouseup", handleMouseUp)
+            window.addEventListener("blur", handleBrowserBlur)
 
             return () => {
-                window.removeEventListener("keydown", handleKeyDown);
-                window.removeEventListener("keyup", handleKeyUp);
-                window.removeEventListener("mousedown", handleMouseDown);
-                window.removeEventListener("mouseup", handleMouseUp);
-                window.removeEventListener("blur", handleBrowserBlur);
+                window.removeEventListener("keydown", handleKeyDown)
+                window.removeEventListener("keyup", handleKeyUp)
+                window.removeEventListener("mousedown", handleMouseDown)
+                window.removeEventListener("mouseup", handleMouseUp)
+                window.removeEventListener("blur", handleBrowserBlur)
             }
         },
         [setMouseDown, recorder]

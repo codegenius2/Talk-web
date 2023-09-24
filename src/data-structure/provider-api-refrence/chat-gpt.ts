@@ -1,11 +1,11 @@
-import {Choice, FloatRange, IntRange, k} from "./types.ts";
+import {Choice, FloatRange, IntRange, k} from "./types.ts"
 
 export type ChatGPTAPIReference = {
-    readonly maxTokens: IntRange;
-    readonly temperature: FloatRange;
-    readonly topP: FloatRange;
-    readonly presencePenalty: FloatRange;
-    readonly frequencyPenalty: FloatRange;
+    readonly maxTokens: IntRange
+    readonly temperature: FloatRange
+    readonly topP: FloatRange
+    readonly presencePenalty: FloatRange
+    readonly frequencyPenalty: FloatRange
 }
 
 // see https://platform.openai.com/docs/api-reference/chat/create

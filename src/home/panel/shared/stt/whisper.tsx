@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useCallback} from 'react';
-import {MySwitch} from "../widget/switch.tsx";
-import {useSnapshot} from "valtio/react";
-import {WhisperOption,} from "../../../../data-structure/client-option.tsx";
-import {appState} from "../../../../state/app-state.ts";
-import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx";
-import _ from "lodash";
-import {WhisperGPTLogo} from "../widget/logo.tsx";
+import React, {useCallback} from 'react'
+import {MySwitch} from "../widget/switch.tsx"
+import {useSnapshot} from "valtio/react"
+import {WhisperOption,} from "../../../../data-structure/client-option.tsx"
+import {appState} from "../../../../state/app-state.ts"
+import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
+import _ from "lodash"
+import {WhisperGPTLogo} from "../widget/logo.tsx"
 
 type Props = {
     whisperOptionProxy: WhisperOption
@@ -48,5 +48,5 @@ const Whisper: React.FC<Props> = ({whisperOptionProxy, setEnabled}) => {
     )
 }
 
-export default Whisper;
+export default Whisper
 

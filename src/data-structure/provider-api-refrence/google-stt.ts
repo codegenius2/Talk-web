@@ -1,5 +1,5 @@
-import {ChooseOne} from "./types.ts";
-import {googleTTSLanguageStrings} from "../../data/google-tts-language.ts";
+import {ChooseOne} from "./types.ts"
+import {googleTTSLanguageStrings} from "../../data/google-tts-language.ts"
 
 export type GoogleSTTAPIReference = {
     language: ChooseOne<string>

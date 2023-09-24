@@ -1,10 +1,10 @@
-import {useSelect} from "downshift";
-import {cx} from "../../../../util/util.tsx";
-import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
-import {useEffect, useRef, useState} from "react";
-import {layoutState} from "../../../../state/layout-state.ts";
-import {useSnapshot} from "valtio/react";
-import {HiCheck} from "react-icons/hi2";
+import {useSelect} from "downshift"
+import {cx} from "../../../../util/util.tsx"
+import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
+import {useEffect, useRef, useState} from "react"
+import {layoutState} from "../../../../state/layout-state.ts"
+import {useSnapshot} from "valtio/react"
+import {HiCheck} from "react-icons/hi2"
 
 type Props<T extends number | string> = {
     choices: Choice<T>[]
@@ -39,10 +39,10 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
             setValue(found.value)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultValue, choices]);
+    }, [defaultValue, choices])
 
     const layoutSnap = useSnapshot(layoutState)
-    const buttonRef = useRef<HTMLParagraphElement>(null);
+    const buttonRef = useRef<HTMLParagraphElement>(null)
     const [currentButtonBottom, setCurrentButtonBottom] = useState(0)
     const [buttonWidth, setButtonWidth] = useState(0)
     // set init state for UL, or UL flashes on top of screen on first open
@@ -53,7 +53,7 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
             setCurrentButtonBottom(bottom)
             return
         }
-    }, []);
+    }, [])
     // monitor the button's location and situate the dropdown list underneath it
     useEffect(() => {
         if (isOpen && buttonRef.current) {
@@ -62,7 +62,7 @@ export function SelectBox<T extends number | string>({choices, defaultValue, set
             setCurrentButtonBottom(bottom)
             return
         }
-    }, [layoutSnap, isOpen]);
+    }, [layoutSnap, isOpen])
 
     return (
         <div className="">

@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {HiMiniEllipsisHorizontal} from "react-icons/hi2";
+import React, {useEffect, useRef, useState} from 'react'
+import {HiMiniEllipsisHorizontal} from "react-icons/hi2"
 
 export type Item = {
     name: string
@@ -17,27 +17,27 @@ interface Props {
 
 export const DropDownMenu: React.FC<Props> = ({list}) => {
     const [open, setOpen] = useState(false)
-    const dropdownRef = useRef(null);
+    const dropdownRef = useRef(null)
 
     useEffect(() => {
         const handleOutsideClick = (event: unknown) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setOpen(false);
+                setOpen(false)
             }
-        };
+        }
 
-        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('mousedown', handleOutsideClick)
 
         return () => {
-            document.removeEventListener('mousedown', handleOutsideClick);
-        };
-    }, []);
+            document.removeEventListener('mousedown', handleOutsideClick)
+        }
+    }, [])
 
     const toggleMenu = () => {
-        setOpen(!open);
-    };
+        setOpen(!open)
+    }
 
     return (
         <div ref={dropdownRef} className="relative z-10 flex flex-col">
@@ -66,5 +66,5 @@ export const DropDownMenu: React.FC<Props> = ({list}) => {
                 </div>
             }
         </div>
-    );
+    )
 };

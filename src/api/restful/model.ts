@@ -1,9 +1,9 @@
-import {LLMMessage} from "../../shared-types.ts";
+import {LLMMessage} from "../../shared-types.ts"
 
 export type ChatReq = {
-    chatId: string; // unique ID for every chat
-    ticketId: string; // A distinctive ID for each request, utilised by the client to associate messages.
-    ms: LLMMessage[];
+    chatId: string // unique ID for every chat
+    ticketId: string // A distinctive ID for each request, utilised by the client to associate messages.
+    ms: LLMMessage[]
     talkOption: TalkOption
 }
 

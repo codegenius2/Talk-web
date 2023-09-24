@@ -1,7 +1,7 @@
-import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react";
-import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts";
-import {controlState} from "../../../../state/control-state.ts";
-import {cx} from "../../../../util/util.tsx";
+import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react"
+import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
+import {controlState} from "../../../../state/control-state.ts"
+import {cx} from "../../../../util/util.tsx"
 
 type Props<T extends number | string> = {
     title: string
@@ -35,8 +35,8 @@ export function DiscreteRange<T extends string | number>({
     const [containsValue, setChoiceContainsValue] = useState<boolean>(false)
     const [valueUpdated, setValueUpdated] = useState(0)
     const scrollChildRef = useRef<HTMLDivElement>(null)
-    const scrollBarRef = useRef<HTMLInputElement>(null);
-    const inputBoxRef = useRef<HTMLInputElement>(null);
+    const scrollBarRef = useRef<HTMLInputElement>(null)
+    const inputBoxRef = useRef<HTMLInputElement>(null)
 
     const onBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
         const target = e.target.value
@@ -77,7 +77,7 @@ export function DiscreteRange<T extends string | number>({
             inputBoxRef.current.value = value.toString()
             inputBoxRef.current.size = value.toString().length + 1
         }
-    }, [value, choices, valueUpdated]);
+    }, [value, choices, valueUpdated])
 
     useEffect(() => {
         const res: ChoiceColor<T>[] = []
@@ -98,7 +98,7 @@ export function DiscreteRange<T extends string | number>({
     const [shouldScroll, setShouldScroll] = useState(0)
     useEffect(() => {
         setTimeout(() => setShouldScroll(1), 20)
-    }, []);
+    }, [])
     // auto scroll to selected value when page is loaded
     useEffect(() => {
         if (scrollChildRef.current && scrollBarRef.current) {
@@ -107,14 +107,14 @@ export function DiscreteRange<T extends string | number>({
             const visibleWith = scrollBarRef.current.clientWidth
             const {left} = scrollBarRef.current.getBoundingClientRect()
             const distance = point - left - visibleWith / 2
-            scrollBarRef.current.scrollTo({top: 0, left: distance, behavior: 'smooth'});
+            scrollBarRef.current.scrollTo({top: 0, left: distance, behavior: 'smooth'})
         }
     }, [shouldScroll])
 
     const handleMouseLeaveFirstElement = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (outOfLeftBoundary !== undefined && controlState.isMouseLeftDown) {
-            const {clientX} = event;
-            const {right} = event.currentTarget.getBoundingClientRect();
+            const {clientX} = event
+            const {right} = event.currentTarget.getBoundingClientRect()
             // if mouse doesn't leave from right side
             if (clientX < right) {
                 setValue(outOfLeftBoundary)
@@ -130,10 +130,10 @@ export function DiscreteRange<T extends string | number>({
             const totalWidth = scrollBarRef.current.scrollWidth
 
             // length of visible content
-            const visibleWidth = scrollBarRef.current.clientWidth;
+            const visibleWidth = scrollBarRef.current.clientWidth
 
-            const mouseX = e.clientX;
-            const relativeX = mouseX - scrollBarRef.current.getBoundingClientRect().left;
+            const mouseX = e.clientX
+            const relativeX = mouseX - scrollBarRef.current.getBoundingClientRect().left
 
             let pos
             if (relativeX <= visibleWidth / 4) {
@@ -143,9 +143,9 @@ export function DiscreteRange<T extends string | number>({
             } else {
                 pos = (relativeX - visibleWidth / 4) / (visibleWidth / 2) * (totalWidth - visibleWidth)
             }
-            scrollBarRef.current.scrollTo({top: 0, left: pos, behavior: 'instant'});
+            scrollBarRef.current.scrollTo({top: 0, left: pos, behavior: 'instant'})
         }
-    }, []);
+    }, [])
 
     const onContextMenu = useCallback((e: React.MouseEvent<HTMLInputElement>) => {
             e.preventDefault()
@@ -219,6 +219,6 @@ export function DiscreteRange<T extends string | number>({
                 </div>
             </div>
         </div>
-    );
+    )
 
 }
