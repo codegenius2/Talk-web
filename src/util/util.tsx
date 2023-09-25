@@ -5,7 +5,7 @@ import {RecordingMimeType} from "../config.ts"
 import {floor} from "lodash"
 
 export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
-    console.debug("decoding base64(truncated to 100 chars)", base64String.slice(0, 100))
+    console.debug("decoding base64(truncated to 20 chars)", base64String.slice(0, 20))
     const byteCharacters = atob(base64String)
     const byteNumbers: number[] = []
 
@@ -15,20 +15,6 @@ export const base64ToBlob = (base64String: string, mimeType: string): Blob => {
 
     const byteArray = new Uint8Array(byteNumbers)
     return new Blob([byteArray], {type: mimeType})
-}
-
-export function blobToBase64(blob: Blob): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => {
-            let base64Data = reader.result as string
-            // Remove MIME type
-            base64Data = base64Data.split(",")[1]
-            resolve(base64Data)
-        }
-        reader.onerror = reject
-        reader.readAsDataURL(blob)
-    })
 }
 
 // duration is in ms
@@ -99,7 +85,7 @@ export const formatAudioDuration = (duration?: number): string => {
 }
 
 
-export const generateUudioId = (action: "recording" | "synthesis"): string => {
+export const generateAudioId = (action: "recording" | "synthesis"): string => {
     return action + "-" + formatNow() + "-" + randomHash16Char()
 }
 
@@ -161,6 +147,7 @@ export const randomHash32Char = (): string => {
     return SHA256(str).toString().slice(0, 32)
 }
 
+// noinspection SpellCheckingInspection
 const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 function randomString(length: number): string {

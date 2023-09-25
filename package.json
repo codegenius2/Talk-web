@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@tanstack/react-virtual": "^3.0.0-beta.60",
     "axios": "^1.5.0",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.30.0",

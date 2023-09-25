@@ -16,7 +16,7 @@ import {
     SSEMsgMeta,
     SSEMsgText
 } from "./event.ts"
-import {base64ToBlob, generateUudioId, randomHash32Char} from "../../util/util.tsx"
+import {base64ToBlob, generateAudioId, randomHash32Char} from "../../util/util.tsx"
 import {audioDb} from "../../state/db.ts"
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts"
 import {adjustOption} from "../../data-structure/client-option.tsx"
@@ -93,7 +93,7 @@ export const SSE = () => {
                 const msg = findMessage2(audio.chatId, audio.messageID, true)
                 if (msg) {
                     const blob = base64ToBlob(audio.audio, audioPlayerMimeType)
-                    const audioId = generateUudioId("synthesis")
+                    const audioId = generateAudioId("synthesis")
                     audioDb.setItem(audioId, blob, () => {
                         onAudio(msg, {id: audioId, durationMs: audio.durationMs})
                     }).then(() => true)

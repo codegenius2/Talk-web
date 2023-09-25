@@ -7,7 +7,7 @@ import {findChatProxy, findMessage} from "../state/app-state.ts"
 import {historyMessages} from "../api/restful/util.ts"
 import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx"
 import {postAudioChat, postChat} from "../api/restful/api.ts"
-import {generateUudioId} from "../util/util.tsx"
+import {generateAudioId} from "../util/util.tsx"
 import {audioDb} from "../state/db.ts"
 import {LLMMessage} from "../shared-types.ts"
 import {minSpeakTimeMillis} from "../config.ts"
@@ -68,7 +68,6 @@ export const SubscribeSendingMessage: React.FC = () => {
             messages.push({role: "user", content: sm.text})
             nonProxyMessage.text = sm.text
             chatProxy.messages.push(nonProxyMessage)
-            console.debug("sending chat, chatId,messages: ", chatProxy.id, messages)
             postPromise = postChat({
                 chatId: chatProxy.id,
                 ticketId: nonProxyMessage.ticketId,
@@ -100,7 +99,7 @@ export const SubscribeSendingMessage: React.FC = () => {
         })
 
         if (sm.audioBlob) {
-            const audioId = generateUudioId("recording")
+            const audioId = generateAudioId("recording")
             audioDb.setItem<Blob>(audioId, sm.audioBlob as Blob, (err, value) => {
                     if (err || !value) {
                         console.debug("failed to save audio blob, audioId:", audioId, err)

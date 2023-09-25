@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {appState, Chat} from "../../../state/app-state.ts"
 import {isInHistory, Message} from "../../../data-structure/message.tsx"
 import ErrorBoundary from "../compnent/error-boundary.tsx"
@@ -12,6 +12,8 @@ import {subscribeKey} from "valtio/utils";
 import {subscribe} from "valtio";
 import {layoutState} from "../../../state/layout-state.ts";
 import {clearMessageState, setMState} from "../../../state/message-state.ts";
+import {useVirtualizer} from "@tanstack/react-virtual";
+import {throttle} from "lodash";
 
 type MLProps = {
     chatProxy: Chat
@@ -20,15 +22,20 @@ type MLProps = {
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     // console.info("MessageList rendered", new Date().toLocaleString())
     const [messages, setMessages] = useState<Message[]>([])
-    const scrollEndRef = useRef<HTMLDivElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    const scrollEndRef = useRef<HTMLDivElement>(null)
 
-    const lastState = useRef<{ id: string, updatedAt: number }>({id: "", updatedAt: 0})
+    const lastState = useRef<{ id: string, updatedAt: number, audioDuration: number }>({
+        id: "",
+        updatedAt: 0,
+        audioDuration: 0
+    })
 
     useEffect(() => {
         const callBack = () => {
-            console.info("length changed, should rerender", new Date().toLocaleString())
-            setMessages(chatProxy.messages.slice())
+            setMessages(chatProxy.messages
+                .filter(it => it.status !== 'deleted')
+            )
         }
         const un = subscribeKey(chatProxy.messages, "length", callBack)
         callBack()
@@ -36,58 +43,28 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const scrollToBottom = useCallback((behavior?: 'instant' | 'smooth') => {
+
+    const count = messages.length
+    const virtualizer = useVirtualizer({
+        count: messages.length,
+        overscan: 20,
+        onChange: (v) => {
+            if (v.scrollElement) {
+                layoutState.isMessageListOverflow = v.scrollElement.scrollHeight > v.scrollElement.clientHeight
+                const {scrollTop, scrollHeight, clientHeight} = v.scrollElement
+                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 100
+            }
+        },
+        getScrollElement: () => containerRef.current,
+        estimateSize: () => 100,
+    })
+    const items = virtualizer.getVirtualItems()
+
+    const scrollToBottom = throttle((behavior?: 'instant' | 'smooth') => {
         if (scrollEndRef.current) {
             scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }
-    }, [])
-
-    useEffect(() => {
-        setTimeout(() => {
-            console.info(
-                "message length when scrolling:", chatProxy.messages.length)
-
-            scrollToBottom()
-        }, 1)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            if (containerRef.current) {
-                layoutState.isMessageListOverflow = containerRef.current.scrollHeight > containerRef.current.clientHeight
-            }
-        })
-
-        if (containerRef.current) {
-            observer.observe(containerRef.current, {
-                attributes: true,
-                childList: true,
-                subtree: true,
-                attributeOldValue: true,
-                attributeFilter: ['style', 'class'],
-            })
-        }
-        return () => observer.disconnect()
-    }, [])
-
-    useEffect(() => {
-        const container = containerRef.current
-
-        const handleScroll = () => {
-            if (container) {
-                const {scrollTop, scrollHeight, clientHeight} = container
-                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 200
-            }
-        }
-
-        container?.addEventListener('scroll', handleScroll)
-
-        return () => {
-            container?.removeEventListener('scroll', handleScroll)
-        }
-    }, [])
+    }, 500)
 
     useEffect(() => {
         subscribe(chatProxy.messages, () => {
@@ -96,16 +73,29 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                 const msg = chatProxy.messages[len - 1]
                 if (lastState.current.id !== "") {
                     if (msg.id !== lastState.current.id ||
-                        msg.lastUpdatedAt > lastState.current.updatedAt) {
-                        if (scrollEndRef.current && layoutState.isMessageListAtBottom) {
-                            scrollEndRef.current.scrollIntoView({behavior: 'instant'})
-                        }
-                        if (msg.audio?.id && msg.status === "received") {
-                            addToPlayList(msg.audio.id)
+                        msg.lastUpdatedAt > lastState.current.updatedAt ||
+                        (msg.audio?.durationMs ?? 0) > lastState.current.audioDuration
+                    ) {
+                        if (layoutState.isMessageListAtBottom) {
+                            // Avoid using virtualizer.scrollToIndex for scrolling, as it doesn't perform optimally in dynamic mode
+                            scrollToBottom("smooth")
                         }
                     }
+                    // Limitation: In the event of multiple simultaneous audio arrivals, only the most recent audio may
+                    // have an opportunity to be added to the playlist
+                    if (msg.id === lastState.current.id &&
+                        msg.lastUpdatedAt > lastState.current.updatedAt &&
+                        msg.audio &&
+                        (msg.audio.durationMs ?? 0) > lastState.current.audioDuration
+                    ) {
+                        addToPlayList(msg.audio.id)
+                    }
                 }
-                lastState.current = ({id: msg.id, updatedAt: msg.lastUpdatedAt})
+                lastState.current = ({
+                    id: msg.id,
+                    updatedAt: msg.lastUpdatedAt,
+                    audioDuration: msg.audio?.durationMs ?? 0
+                })
             }
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,28 +147,54 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const buttonScrollAction = useCallback(() => {
-        scrollToBottom("smooth")
-    }, [scrollToBottom]);
+    useEffect(() => {
+        // only scroll to bottom once
+        if (count > 0 && lastState.current.id === "") {
+            // It is recommended to use virtualizer.scrollToIndex instead of scrollToBottom as the latter may not be
+            // accurate until the virtualizer has fully initialized.
+            virtualizer.scrollToIndex(count - 1, {align: "end"})
+        }
+    }, [count, virtualizer])
 
     return (
         <div ref={containerRef}
              className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
-            <div className="flex w-full select-text flex-col justify-end gap-3 rounded-2xl">
-                {/*crucial; don't merge the 2 divs above*/}
-                {messages.map((msg) =>
-                    msg.status !== 'deleted' &&
-                    <ErrorBoundary key={msg.id}>
-                        <Row chatId={chatProxy.id}
-                             messageProxy={msg}
-                        />
-                    </ErrorBoundary>
-                )}
-            </div>
             <div
-                ref={scrollEndRef}
-                className="h-10 select-none bg-transparent text-transparent" data-pseudo-content="ninja"/>
-            <ToBottomButton action={buttonScrollAction}/>
+                style={{
+                    height: virtualizer.getTotalSize(),
+                    width: '100%',
+                    position: 'relative',
+                }}
+            >
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        transform: `translateY(${items[0]?.start ?? 0}px)`,
+                    }}
+                >
+                    {items.map((virtualRow) => (
+                        <div
+                            key={virtualRow.key}
+                            data-index={virtualRow.index}
+                            ref={virtualizer.measureElement}
+                            className="py-1.5"
+                        >
+                            <ErrorBoundary>
+                                <Row chatId={chatProxy.id}
+                                     messageProxy={messages[virtualRow.index]}
+                                />
+                            </ErrorBoundary>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div ref={scrollEndRef}></div>
+            <ToBottomButton action={() =>
+                virtualizer.scrollToIndex(count - 1, {align: "end", behavior: "smooth"})
+            }/>
         </div>
     )
 }
@@ -189,11 +205,13 @@ type TBProps = {
 const ToBottomButton: React.FC<TBProps> = ({action}) => {
     const {isMessageListOverflow, isMessageListAtBottom} = useSnapshot(layoutState)
 
-    return <div className="sticky bottom-1 flex justify-end pr-3 z-40">
-        <HiOutlineChevronDown
-            className={cx("h-8 w-8 p-1.5 bg-neutral-100 rounded-full",
-                isMessageListOverflow && !isMessageListAtBottom ? "" : "hidden")}
-            onClick={action}
-        />
+    return <div className="sticky bottom-1 flex justify-end pr-3">
+        <div className="relative">
+            <HiOutlineChevronDown
+                className={cx("absolute right-0 bottom-0 h-8 w-8 p-1.5 bg-neutral-100 rounded-full",
+                    isMessageListOverflow && !isMessageListAtBottom ? "" : "hidden")}
+                onClick={action}
+            />
+        </div>
     </div>
 }
