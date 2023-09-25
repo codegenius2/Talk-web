@@ -5,6 +5,7 @@ import {Preview} from "./preview.tsx"
 import {cx} from "../../../util/util.tsx"
 import {TalkAvatar} from "./avatar.tsx"
 import {controlState} from "../../../state/control-state.ts"
+import {CloseIcon} from "../../chat-window/compnent/widget/icon.tsx";
 
 type Props = {
     chatProxy: Chat
@@ -13,7 +14,7 @@ type Props = {
 export const ChatComponent: React.FC<Props> = ({chatProxy}) => {
     // console.info("ChatComponent rendered, chatId", chatProxy.id, new Date().toLocaleString())
 
-    const {name} = useSnapshot(chatProxy)
+    const {name, id} = useSnapshot(chatProxy)
     const {currentChatId} = useSnapshot(appState)
     const [selected, setSelected] = useState(false)
     const [over, setMouseOver] = useState(false)
@@ -91,7 +92,7 @@ export const ChatComponent: React.FC<Props> = ({chatProxy}) => {
                 )
                 }
             >
-                <TalkAvatar id={chatProxy.id}/>
+                <TalkAvatar id={id}/>
                 {isEditing ?
                     <div
                         className="flex flex-col items-center justify-center overflow-hidden py-1 pl-3
@@ -111,12 +112,10 @@ export const ChatComponent: React.FC<Props> = ({chatProxy}) => {
                     </div> :
                     <div className="flex flex-col overflow-hidden py-1 pr-10 pl-3 text-neutral-800 gap-y-0.5">
 
-                        <div className=""
-                             onClick={startEditing}
-                        >
+                        <div onClick={startEditing}>
                             <p className="truncate ... break-keep">{name}</p>
                         </div>
-                        <div className="">
+                        <div>
                             <div className="truncate text-sm text-neutral-600 ...">
                                 <Preview chatProxy={chatProxy}/>
                             </div>
@@ -125,16 +124,14 @@ export const ChatComponent: React.FC<Props> = ({chatProxy}) => {
                 }
             </div>
             {
-                !isEditing && !isMouseDragging && over && <div
+                !isEditing && !isMouseDragging && over &&
+                <div
                     className="absolute right-2 rounded-lg text-neutral-500 p-0.5 hover:bg-neutral-500/[0.4] hover:text-neutral-100"
                     onMouseDown={onDeleteButtonMouseDownOrUp}
                     onMouseUp={onDeleteButtonMouseDownOrUp}
                     onClick={removeChat}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2}
-                         stroke="currentColor" className="h-6 w-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
+                    <CloseIcon className="h-6 w-6"/>
                 </div>
             }
         </div>

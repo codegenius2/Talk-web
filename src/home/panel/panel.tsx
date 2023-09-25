@@ -109,5 +109,8 @@ export const Panel: React.FC = () => {
     )
 }
 
-const ninja = <div className="min-h-[14rem] text-transparent select-none pointer-events-none"
-                   data-pseudo-content="ninja"></div>
+const ninja =
+    (<div data-pseudo-content="ninja"
+          className="min-h-[14rem] text-transparent select-none pointer-events-none"
+        />
+    )

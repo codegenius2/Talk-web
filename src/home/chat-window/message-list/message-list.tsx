@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react"
 import {appState, Chat} from "../../../state/app-state.ts"
-import {isInHistory, Message} from "../../../data-structure/message.tsx"
+import {isAttached, Message} from "../../../data-structure/message.tsx"
 import ErrorBoundary from "../compnent/error-boundary.tsx"
 import {maxLoadedVoice} from "../../../config.ts"
 import {cx} from "../../../util/util.tsx"
@@ -20,7 +20,7 @@ type MLProps = {
 }
 
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
-    // console.info("MessageList rendered", new Date().toLocaleString())
+    console.info("MessageList rendered", new Date().toLocaleString())
     const [messages, setMessages] = useState<Message[]>([])
     const containerRef = useRef<HTMLDivElement>(null)
     const scrollEndRef = useRef<HTMLDivElement>(null)
@@ -61,16 +61,18 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const items = virtualizer.getVirtualItems()
 
     const scrollToBottom = throttle((behavior?: 'instant' | 'smooth') => {
-        if (scrollEndRef.current) {
+        if (!layoutState.isPromptoryPinning && !layoutState.isPromptoryFloating && scrollEndRef.current) {
+            // don't scroll message list because it pushed promptory outside screen.
             scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }
     }, 500)
 
     useEffect(() => {
-        subscribe(chatProxy.messages, () => {
+        return subscribe(chatProxy.messages, () => {
             const len = chatProxy.messages.length
             if (len > 0) {
                 const msg = chatProxy.messages[len - 1]
+                console.debug("lastState.current.id", lastState.current.id)
                 if (lastState.current.id !== "") {
                     if (msg.id !== lastState.current.id ||
                         msg.lastUpdatedAt > lastState.current.updatedAt ||
@@ -84,7 +86,6 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                     // Limitation: In the event of multiple simultaneous audio arrivals, only the most recent audio may
                     // have an opportunity to be added to the playlist
                     if (msg.id === lastState.current.id &&
-                        msg.lastUpdatedAt > lastState.current.updatedAt &&
                         msg.audio &&
                         (msg.audio.durationMs ?? 0) > lastState.current.audioDuration
                     ) {
@@ -105,10 +106,10 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         return () => clearPlayList()
     }, [])
 
-    // whether text in history or should load audio
+    // whether text is attached or should load audio
     useEffect(() => {
         const callback = () => {
-            const mh = appState.pref.butterflyOnHistoryMessage ? chatProxy.option.llm.maxHistory : 0
+            const mh = appState.pref.butterflyOnAttachedMessage ? chatProxy.option.llm.maxAttached : 0
             let histCount = 0
             let loadCount = 0
             clearMessageState()
@@ -121,8 +122,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                     continue
                 }
                 if (histCount < mh) {
-                    if (isInHistory(m)) {
-                        setMState(m.id, "inHistory", true)
+                    if (isAttached(m)) {
+                        setMState(m.id, "attached", true)
                         histCount++
                     }
                 }
@@ -136,8 +137,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             }
         }
         const un1 = subscribe(chatProxy.messages, callback)
-        const un2 = subscribeKey(chatProxy.option.llm, 'maxHistory', callback)
-        const un3 = subscribeKey(appState.pref, 'butterflyOnHistoryMessage', callback)
+        const un2 = subscribeKey(chatProxy.option.llm, 'maxAttached', callback)
+        const un3 = subscribeKey(appState.pref, 'butterflyOnAttachedMessage', callback)
         callback()
         return () => {
             un1()
@@ -180,7 +181,12 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                             key={virtualRow.key}
                             data-index={virtualRow.index}
                             ref={virtualizer.measureElement}
-                            className="py-1.5"
+                            // message of the same ticket stay closer
+                            className={
+                                messages[virtualRow.index - 1]?.ticketId === messages[virtualRow.index].ticketId &&
+                                messages[virtualRow.index - 1]?.role === messages[virtualRow.index].role
+                                    ? "pt-[2px]" : "pt-5"
+                            }
                         >
                             <ErrorBoundary>
                                 <Row chatId={chatProxy.id}

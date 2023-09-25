@@ -4,7 +4,7 @@ import {subscribeKey} from "valtio/utils";
 
 interface MState {
     loadAudio: boolean
-    inHistory: boolean
+    isAttached: boolean
 }
 
 interface MessageState {

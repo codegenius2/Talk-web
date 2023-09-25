@@ -4,7 +4,7 @@ import {snapshot} from "valtio"
 import {AxiosError} from "axios"
 import {controlState} from "../state/control-state.ts"
 import {findChatProxy, findMessage} from "../state/app-state.ts"
-import {historyMessages} from "../api/restful/util.ts"
+import {attachedMessages} from "../api/restful/util.ts"
 import {newSending, onAudio, onError, onSent} from "../data-structure/message.tsx"
 import {postAudioChat, postChat} from "../api/restful/api.ts"
 import {generateAudioId} from "../util/util.tsx"
@@ -47,7 +47,7 @@ export const SubscribeSendingMessage: React.FC = () => {
 
         const option = snapshot(chatProxy.option)
 
-        let messages = historyMessages(chatProxy, option.llm.maxHistory)
+        let messages = attachedMessages(chatProxy.messages, option.llm.maxAttached)
         messages = [systemMessage, ...messages]
 
         const nonProxyMessage = newSending()

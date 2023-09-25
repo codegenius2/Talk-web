@@ -37,7 +37,7 @@ export const chatGPTAPIReference: ChatGPTAPIReference = {
     },
 }
 
-export const historyChoices: Choice<number>[] = [
+export const attachNumberChoices: Choice<number>[] = [
     {value: 1, name: "1", tags: []},
     {value: 2, name: "2", tags: []},
     {value: 3, name: "3", tags: []},

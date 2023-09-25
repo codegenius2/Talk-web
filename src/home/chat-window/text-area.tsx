@@ -81,7 +81,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
     }, [inputAreaIsLarge])
 
-    const autoGrowHeight = (e: React.BaseSyntheticEvent) => {
+    const autoGrowHeight = useCallback((e: React.BaseSyntheticEvent) => {
         e.currentTarget.style.height = "auto"
         e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
         if (textAreaRef.current) {
@@ -89,7 +89,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                 setInputAreaIsLarge(true)
             }
         }
-    }
+    }, [])
 
     return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
             <button

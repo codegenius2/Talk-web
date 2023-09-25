@@ -17,7 +17,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         className={cx("flex flex-col rounded-2xl whitespace-pre-wrap px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
         )}>
-        <p className="">{messageSnap.text}</p>
+        <p className="leading-snug">{messageSnap.text}</p>
         <div className="flex justify-end gap-1 pointer-events-none">
             <p className="text-xs inline whitespace-nowrap" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
             {['sent', 'received'].includes(messageSnap.status) &&

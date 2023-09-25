@@ -1,20 +1,19 @@
-import {Chat} from "../../state/app-state.ts"
-import {isInHistory} from "../../data-structure/message.tsx"
+import {isAttached, Message} from "../../data-structure/message.tsx"
 import {LLMMessage} from "../../shared-types.ts"
 
-export const historyMessages = (chat: Chat, maxHistory: number): LLMMessage[] => {
-    if (maxHistory <= 0) {
+export const attachedMessages = (messages:Message[], maxAttached: number): LLMMessage[] => {
+    if (maxAttached <= 0) {
         return []
     }
-    const messages: LLMMessage[] = []
-    for (let i = chat.messages.length - 1; i >= 0; i--) {
-        if (messages.length === maxHistory) {
+    const hist: LLMMessage[] = []
+    for (let i = messages.length - 1; i >= 0; i--) {
+        if (hist.length === maxAttached) {
             break
         }
-        const m = chat.messages[i]
-        if (isInHistory(m)) {
-            messages.push({role: m.role, content: m.text})
+        const m = messages[i]
+        if (isAttached(m)) {
+            hist.push({role: m.role, content: m.text})
         }
     }
-    return messages.reverse()
+    return hist.reverse()
 }

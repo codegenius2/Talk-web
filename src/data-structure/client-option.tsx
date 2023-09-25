@@ -33,7 +33,7 @@ export const defaultOption = (): ClientOption => ({
             available: false,
             enabled: true,
         },
-        maxHistory: llmAPIReference.maxHistory.default,
+        maxAttached: llmAPIReference.maxAttached.default,
     },
     tts: {
         google: {
@@ -149,7 +149,7 @@ export const toRestfulAPIOption = (c: ClientOption): api.TalkOption => {
 export type LLMOption = {
     chatGPT: ChatGPTOption
     claude: ClaudeOption
-    maxHistory: number
+    maxAttached: number
 }
 
 export type ChatGPTOption = Switchable & {

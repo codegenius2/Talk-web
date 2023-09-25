@@ -1,7 +1,7 @@
 {
   "name": "talk-vite",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.1.0-dev-b",
   "type": "module",
   "scripts": {
     "dev": "vite",

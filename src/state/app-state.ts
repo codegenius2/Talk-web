@@ -1,10 +1,10 @@
 import {proxy, snapshot, subscribe} from 'valtio'
-import {appDb, appStateKey} from "./db.ts"
+import {talkDB, appStateKey} from "./db.ts"
 import {Message, onMarkDeleted} from "../data-structure/message.tsx"
 import {ClientOption, defaultOption} from "../data-structure/client-option.tsx"
 import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts"
 import {generateHash} from "../util/util.tsx"
-import {migrate} from "./migration.ts"
+import {migrateAppState} from "./migration.ts"
 import * as packageJson from '../../package.json'
 
 const currentVersion = packageJson.version
@@ -17,6 +17,7 @@ export type AuthState = {
 export type Chat = {
     id: string
     name: string
+    promptId: string
     messages: Message[]
     option: ClientOption,
     inputText: string
@@ -28,7 +29,7 @@ export type Wallpaper = {
     previewIndex?: number
 }
 export type UserPreference = {
-    butterflyOnHistoryMessage: boolean
+    butterflyOnAttachedMessage: boolean
     wallpaper: Wallpaper
 }
 
@@ -63,14 +64,14 @@ export const appState = proxy<AppState>({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        butterflyOnHistoryMessage: true,
+        butterflyOnAttachedMessage: true,
         wallpaper: {
             index: 0,
         }
     }
 })
 
-const defaultAppState = (): AppState => ({
+export const defaultAppState = (): AppState => ({
     version: currentVersion,
     auth: {
         passwordHash: "",
@@ -82,31 +83,21 @@ const defaultAppState = (): AppState => ({
     currentChatId: "",
     panelSelection: "chats",
     pref: {
-        butterflyOnHistoryMessage: true,
+        butterflyOnAttachedMessage: true,
         wallpaper: {
             index: 0,
         }
     }
 })
 
-export const resetAppState = () => {
-    const dft = defaultAppState()
-    Object.keys(appState).forEach((key) => {
-        console.debug("resetting appState, key:", key)
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        appState[key as keyof AppState] = dft[key]
-    })
-}
-
-appDb.getItem<AppState>(appStateKey).then((as: AppState | null) => {
+talkDB.getItem<AppState>(appStateKey).then((as: AppState | null) => {
     console.debug("restoring from db:", as)
 
     if (as !== null) {
         const dft = defaultAppState()
         Object.keys(appState).forEach((key) => {
             console.debug("restoring from db, key:", key)
-            const error = migrate(as)
+            const error = migrateAppState(as)
             if (error) {
                 throw error
             }
@@ -128,26 +119,11 @@ setInterval(() => {
     if (Date.now() - persistState.changedAt < 500 && hydrationState.hydrated) {
         const as = snapshot(appState)
         // console.debug("saving appState:", as)
-        appDb.setItem(appStateKey, as).then(() => {
+        talkDB.setItem(appStateKey, as).then(() => {
             console.debug("appState saved")
         })
     }
 }, 500)
-
-
-export const clearSettings = () => {
-    const dft = defaultAppState()
-    appState.auth = dft.auth
-    appState.ability = dft.ability
-    appState.option = dft.option
-    appState.panelSelection = dft.panelSelection
-}
-
-export const clearChats = () => {
-    const dft = defaultAppState()
-    appState.chats = dft.chats
-    appState.currentChatId = dft.currentChatId
-}
 
 export const findChatProxy = (chatId: string, warning?: boolean): [Chat, number] | undefined => {
     for (let i = appState.chats.length - 1; i >= 0; i--) {

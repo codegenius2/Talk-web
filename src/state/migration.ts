@@ -36,10 +36,31 @@ const steps: Step[] = [
             _app.pref.wallpaper = {index: 0}
             return null
         }
+    },
+    {
+        fromVersion: "1.0.3",
+        toVersion: "1.1.0-dev-a",
+        action: (app: AppState): Error | null => {
+            for (const chat of app.chats) {
+                chat.promptId = ""
+            }
+            return null
+        }
+    },
+    {
+        fromVersion: "1.1.0-dev-a",
+        toVersion: "1.1.0-dev-b",
+        action: (app: AppState): Error | null => {
+            for (const chat of app.chats) {
+                chat.option.llm.maxAttached = defaultOption().llm.maxAttached
+            }
+            app.option.llm.maxAttached = defaultOption().llm.maxAttached
+            return null
+        }
     }
 ]
 
-export const migrate = (app: AppState): Error | null => {
+export const migrateAppState = (app: AppState): Error | null => {
     if (app.version === currentVersion) {
         return null
     }

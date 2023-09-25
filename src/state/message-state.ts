@@ -3,12 +3,12 @@ import {proxy} from "valtio";
 
 export interface MState {
     loadAudio: boolean
-    inHistory: boolean
+    attached: boolean
 }
 
 const defaultMState = (): MState => ({
     loadAudio: false,
-    inHistory: false
+    attached: false
 })
 
 export interface MessageState {

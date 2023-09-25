@@ -74,6 +74,9 @@ https://benborgers.com/posts/tailwind-h-screen
         background-color: transparent;
         transition: background-color 1000ms linear;
     }
+    .scrollbar-hidden-instant::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
     /*for Firefox*/
     .scrollbar-hidden {
         scrollbar-color: transparent transparent;

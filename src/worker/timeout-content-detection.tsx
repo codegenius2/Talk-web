@@ -8,9 +8,9 @@ export const TimeoutContentDetection: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             const chats = appState.chats
-            // for better performance, only check last 60 qa
+            // for better performance, only check last 20 messages
             for (const entry of Object.entries(chats)) {
-                for (const message of entry[1].messages.slice(-60)) {
+                for (const message of entry[1].messages.slice(20)) {
                     setErrorIfTimeout(message)
                 }
             }

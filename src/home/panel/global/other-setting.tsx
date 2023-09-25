@@ -1,18 +1,19 @@
 import React, {useCallback} from 'react'
 import {CountDownButton, ResetButton} from "../shared/widget/button.tsx"
-import {appState, clearChats} from "../../../state/app-state.ts"
+import {appState} from "../../../state/app-state.ts"
 import {BsTrash3} from "react-icons/bs"
 import {MySwitch} from "../shared/widget/switch.tsx"
 import {useSnapshot} from "valtio/react"
 import {SelectBoxOrNotAvailable} from "../shared/select-box-or-not-available.tsx"
 import {allArts} from "../../../wallpaper/art.tsx"
 import {PiButterflyThin} from "react-icons/pi";
+import {clearChats} from "../../../state/dangerous.ts";
 
 export const OtherSetting: React.FC = () => {
-    const {butterflyOnHistoryMessage, wallpaper} = useSnapshot(appState.pref)
+    const {butterflyOnAttachedMessage, wallpaper} = useSnapshot(appState.pref)
 
     const showButterfly = useCallback((enabled: boolean) => {
-        appState.pref.butterflyOnHistoryMessage = enabled
+        appState.pref.butterflyOnAttachedMessage = enabled
     }, [])
 
     const setWallpaperIndex = useCallback((value?: number) => {
@@ -36,10 +37,10 @@ export const OtherSetting: React.FC = () => {
                 <div className="flex items-center gap-1">
                     <PiButterflyThin className="w-5 h-5 select-none -rotate-45 fill-neutral-600 stroke-2"/>
                     <p className="prose text text-neutral-600">
-                        on History
+                        on Attached
                     </p>
                 </div>
-                <MySwitch enabled={butterflyOnHistoryMessage} setEnabled={showButterfly}/>
+                <MySwitch enabled={butterflyOnAttachedMessage} setEnabled={showButterfly}/>
             </div>
             <div className="w-full">
                 <SelectBoxOrNotAvailable

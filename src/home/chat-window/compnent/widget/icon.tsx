@@ -1,3 +1,5 @@
+import React, {CSSProperties} from "react";
+
 export const ThinkingIcon = () => {
     return (
         <div>
@@ -14,6 +16,8 @@ export const ThinkingIcon = () => {
 
 type Props = {
     className?: string
+    onClick?: (event: React.MouseEvent<SVGElement>) => void
+    style?: CSSProperties | undefined
 }
 
 export const MySpin: React.FC<Props> = ({className = ""}) => {
@@ -51,4 +55,13 @@ export const MySpin: React.FC<Props> = ({className = ""}) => {
             </svg>
         </div>
     )
+}
+
+export const CloseIcon: React.FC<Props> = ({className = "", onClick = undefined, style = undefined}) => {
+    return <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} style={style}
+                stroke="currentColor" className={className}
+                onClick={onClick}
+    >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
 }

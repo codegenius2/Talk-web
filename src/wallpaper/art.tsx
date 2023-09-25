@@ -283,10 +283,10 @@ export const wikiarts: Art[] = [
     },
     {
         imageUrl: "https://uploads3.wikiart.org/images/cindy-sherman/untitled-film-still-31-1979.jpg",
-        pageUrl: "https://www.wikiart.org/en/richard-prince/untitled-cowboy-1989",
-        name: "Untitled (Cowboy)",
-        author: "Richard Prince",
-        date: "1989",
+        pageUrl: "https://www.wikiart.org/en/cindy-sherman/untitled-film-still-31-1979",
+        name: "Untitled Film Still #31",
+        author: "Cindy Sherman",
+        date: "1979",
         imageClassName: "bg-cover bg-right brightness-75",
         noiseClassname: "opacity-80 brightness-100"
     },

@@ -205,7 +205,7 @@ export const setErrorIfTimeout = (prev: Message): boolean => {
     return false
 }
 
-const inHistory: MessageStatus[] = ["received", "sent"]
-export const isInHistory = (m: Message): boolean => {
-    return m.text !== "" && inHistory.includes(m.status)
+const canAttach: MessageStatus[] = ["received", "sent"]
+export const isAttached = (m: Message): boolean => {
+    return m.text !== "" && canAttach.includes(m.status)
 }

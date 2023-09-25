@@ -1,10 +1,9 @@
 import React, {useCallback, useState} from "react"
 import Countdown from "react-countdown"
 import {useNavigate} from "react-router-dom"
-import {audioDb} from "../../../../state/db.ts"
-import {resetAppState} from "../../../../state/app-state.ts"
 import {BsBootstrapReboot} from "react-icons/bs"
 import {cx} from "../../../../util/util.tsx"
+import {resetEverything} from "../../../../state/dangerous.ts";
 
 type Color = 'red' | 'blue' | 'black'
 
@@ -79,17 +78,9 @@ type CountDwnProps = {
 
 export const ResetButton: React.FC<CountDwnProps> = ({countDownMs = 2000}) => {
     const navigate = useNavigate()
+
     const reset = useCallback(() => {
-        audioDb.clear(() => {
-        }).catch(e => {
-                console.error("failed to clear audio blobs:", e)
-            }
-        ).finally(() => {
-                resetAppState()
-                console.info("reset")
-                navigate("/")
-            }
-        )
+        resetEverything(() => navigate("/"))
     }, [navigate])
 
     return <CountDownButton text={"Reset Everything"}

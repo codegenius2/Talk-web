@@ -1,6 +1,6 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from "react"
 import {useSnapshot} from "valtio/react"
-import {proxy} from "valtio"
+import {proxy, subscribe} from "valtio"
 import _ from "lodash"
 import {PiPlusLight} from "react-icons/pi"
 import {CiSearch} from "react-icons/ci"
@@ -10,7 +10,6 @@ import {DndProvider} from "react-dnd"
 import {HTML5Backend} from "react-dnd-html5-backend"
 import {DraggableChat} from "./draggable-chat.tsx"
 import {motion} from "framer-motion"
-import {subscribeKey} from "valtio/utils";
 
 const animation = {
     x: [0, -10, 10, -10, 10, 0],
@@ -18,7 +17,7 @@ const animation = {
 }
 
 const ChatList_ = () => {
-    // console.info("ChatList rendered", new Date().toLocaleString())
+    console.info("ChatList rendered", new Date().toLocaleString())
     const {currentChatId} = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
     const [chats, setChats] = useState<Chat[]>([])
@@ -26,12 +25,24 @@ const ChatList_ = () => {
 
     useEffect(() => {
         const callback = () => {
-            setChats(appState.chats.slice())
+            // only rerender when chat list size changed, or reordering happened(triggered by drag and drop)
+            // never rerender the whole chat list when chat message changes
+            if (appState.chats.length !== chats.length) {
+                setChats(appState.chats.slice())
+            } else {
+                for (let i = 0; i < chats.length; i++) {
+                    if (appState.chats[i]?.id != chats[i].id) {
+                        setChats(appState.chats.slice())
+                        return
+                    }
+                }
+            }
         }
-        const unsubscribe = subscribeKey(appState.chats, "length", callback)
+        const unsubscribe = subscribe(appState.chats, callback)
         callback()
         return unsubscribe
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chats.length])
 
     const newChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
@@ -39,7 +50,7 @@ const ChatList_ = () => {
         const chat = proxy<Chat>({
             id: randomHash16Char(),
             name: "New Chat",
-            // name: "New Chat",
+            promptId: "",
             messages: [],
             option: optionClone,
             inputText: ""
@@ -50,12 +61,15 @@ const ChatList_ = () => {
 
     // delete other chats should not trigger auto scrolling
     useEffect(() => {
-        if (chatRef.current) {
-            chatRef.current.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest"
-            })
-        }
+        setTimeout(() => {
+                if (chatRef.current) {
+                    chatRef.current.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest"
+                    })
+                }
+            }
+        )
     }, [currentChatId])
 
     return (

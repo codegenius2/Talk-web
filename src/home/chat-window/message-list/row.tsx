@@ -26,10 +26,10 @@ export const Row: React.FC<Props> = ({
     const messageSnap = useSnapshot(messageProxy)
     const [theme, setTheme] = useState(neutralColor)
     const [hoveringOnRow, setHoveringOnRow] = useState(false)
-    const [inHistory, setInHistory] = useState(false)
+    const [isAttached, setIsAttached] = useState(false)
 
     useEffect(() => {
-        const callback = () =>{ setInHistory(messageState.record[messageProxy.id]?.inHistory ?? false)}
+        const callback = () =>{ setIsAttached(messageState.record[messageProxy.id]?.attached ?? false)}
         const un = subscribeKey(messageState.record, messageProxy.id, callback)
         callback()
         return un
@@ -80,8 +80,8 @@ export const Row: React.FC<Props> = ({
             {messageSnap.text &&
                 <div className="relative rounded-2xl transition-all duration-200 max-w-3/4">
                     <MyText messageSnap={messageSnap} theme={theme}/>
-                    {inHistory &&
-                        <PiButterflyThin className={cx("absolute w-6 h-6 select-none", theme.historyIcon)}/>
+                    {isAttached &&
+                        <PiButterflyThin className={cx("absolute w-6 h-6 select-none", theme.attachIcon)}/>
                     }
                 </div>
             }

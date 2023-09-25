@@ -7,7 +7,7 @@ import {SliderRange} from "../widget/slider-range.tsx"
 import {ChatGPTOption, LLMOption} from "../../../../data-structure/client-option.tsx"
 import {
     chatGPTAPIReference,
-    historyChoices,
+    attachNumberChoices,
     tokenChoices
 } from "../../../../data-structure/provider-api-refrence/chat-gpt.ts"
 import {appState} from "../../../../state/app-state.ts"
@@ -28,7 +28,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
     const chatGPTOptionSnap = useSnapshot(chatGPTOptionProxy)
 
     const {models} = useSnapshot(appState.ability.llm.chatGPT)
-    const {maxHistory} = useSnapshot(llmOptionProxy)
+    const {maxAttached} = useSnapshot(llmOptionProxy)
 
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
 
@@ -41,8 +41,8 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
         setModelChoices(choices)
     }, [models])
 
-    const setMaxHistory = useCallback((hist: number) => {
-        llmOptionProxy.maxHistory = hist
+    const setMaxAttached = useCallback((hist: number) => {
+        llmOptionProxy.maxAttached = hist
     }, [llmOptionProxy])
 
     const setModel = useCallback((model?: string | number) => {
@@ -80,16 +80,16 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
                 </div>
                 {chatGPTOptionSnap.enabled &&
                     <>
-                        <DiscreteRange choices={historyChoices}
-                                       title="Max Hisotry"
-                                       setValue={setMaxHistory}
-                                       value={maxHistory}
+                        <DiscreteRange choices={attachNumberChoices}
+                                       title="Attached Messages"
+                                       setValue={setMaxAttached}
+                                       value={maxAttached}
                                        showRange={true}
-                                       outOfLeftBoundary={llmAPIReference.maxHistory.rangeStart}
-                                       defaultValue={llmAPIReference.maxHistory.default}
+                                       outOfLeftBoundary={llmAPIReference.maxAttached.rangeStart}
+                                       defaultValue={llmAPIReference.maxAttached.default}
                                        range={{
-                                           rangeStart: llmAPIReference.maxHistory.rangeStart,
-                                           rangeEnd: llmAPIReference.maxHistory.rangeEnd,
+                                           rangeStart: llmAPIReference.maxAttached.rangeStart,
+                                           rangeEnd: llmAPIReference.maxAttached.rangeEnd,
                                        }}
                         />
                         <DiscreteRange choices={tokenChoices}
