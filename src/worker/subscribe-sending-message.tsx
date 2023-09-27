@@ -9,14 +9,9 @@ import {newSending, onAudio, onError, onSent} from "../data-structure/message.ts
 import {postAudioChat, postChat} from "../api/restful/api.ts"
 import {generateAudioId} from "../util/util.tsx"
 import {audioDb} from "../state/db.ts"
-import {LLMMessage} from "../shared-types.ts"
 import {minSpeakTimeMillis} from "../config.ts"
 import {toRestfulAPIOption} from "../data-structure/client-option.tsx"
-
-const systemMessage: LLMMessage = {
-    role: "system",
-    content: "You are a helpful assistant!"
-}
+import {findPrompt} from "../state/promt-state.ts";
 
 export const SubscribeSendingMessage: React.FC = () => {
 
@@ -48,7 +43,11 @@ export const SubscribeSendingMessage: React.FC = () => {
         const option = snapshot(chatProxy.option)
 
         let messages = attachedMessages(chatProxy.messages, option.llm.maxAttached)
-        messages = [systemMessage, ...messages]
+        const prompt = findPrompt(chatProxy.promptId);
+        if (prompt) {
+            const pms = prompt.messages.filter(it => it.content.trim() !== "")
+            messages = [...pms, ...messages]
+        }
 
         const nonProxyMessage = newSending()
         const talkOption = toRestfulAPIOption(option)
@@ -85,8 +84,8 @@ export const SubscribeSendingMessage: React.FC = () => {
                 if (r.status >= 200 && r.status < 300) {
                     onSent(msg)
                 } else {
-                    const data = typeof r.data ==="string"?r.data:""
-                    onError(msg, "Failed to send, reason: " + r.statusText +","+data)
+                    const data = typeof r.data === "string" ? r.data : ""
+                    onError(msg, "Failed to send, reason: " + r.statusText + "," + data)
                 }
             }
         ).catch((e: AxiosError) => {

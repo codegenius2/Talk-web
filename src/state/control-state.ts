@@ -3,7 +3,6 @@ import {EnhancedRecorder} from "../util/enhanced-recorder.ts"
 import {popularMimeTypes, RecordingMimeType} from "../config.ts"
 import {chooseAudioMimeType} from "../util/util.tsx"
 
-
 export type Player = {
     autoPlay: boolean
     isPlaying: boolean

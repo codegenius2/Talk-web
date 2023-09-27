@@ -7,22 +7,22 @@ import {BsCircle} from "react-icons/bs"
 const handMonitorRadius = 200
 const handMaxOpacity = 1
 const handBgMaxOpacity = 0.4
-export const PromptoryButton = () => {
-    const {promptoryButtonDistance,isPromptoryPinning} = useSnapshot(layoutState, {sync: true})
+export const PromptAttachedButton = () => {
+    const {PAButtonDistance, isPAPinning} = useSnapshot(layoutState, {sync: true})
     const [iconOpacity, setIconOpacity] = useState(0)
     const [bgOpacity, setBgOpacity] = useState(0)
     const [isButtonVisible, setIsButtonVisible] = useState(false)
 
     useEffect(() => {
-        setIsButtonVisible(promptoryButtonDistance <= handMonitorRadius-50)
-        if (promptoryButtonDistance < 10) {
+        setIsButtonVisible(PAButtonDistance <= handMonitorRadius - 50)
+        if (PAButtonDistance < 10) {
             setIconOpacity(handMaxOpacity)
             setBgOpacity(handBgMaxOpacity)
         } else {
-            setIconOpacity((handMonitorRadius - promptoryButtonDistance) / handMonitorRadius * handMaxOpacity)
-            setBgOpacity((handMonitorRadius - promptoryButtonDistance) / handMonitorRadius * handBgMaxOpacity)
+            setIconOpacity((handMonitorRadius - PAButtonDistance) / handMonitorRadius * handMaxOpacity)
+            setBgOpacity((handMonitorRadius - PAButtonDistance) / handMonitorRadius * handBgMaxOpacity)
         }
-    }, [promptoryButtonDistance])
+    }, [PAButtonDistance])
     // console.log("hand,bg,dist", handOpacity, handBgOpacity, distance)
 
     return (
@@ -34,13 +34,15 @@ export const PromptoryButton = () => {
             className={cx("absolute w-8 h-8 top-1 rounded-full p-1 cursor-pointer ",
                 "hover:scale-125 hover:backdrop-blur-xl transition-transform duration-200",
                 isButtonVisible ? "z-10" : "opacity-0 -z-10",
-                isPromptoryPinning&&"hidden"
+                isPAPinning && "hidden"
             )}
-            onMouseEnter={() => layoutState.isPromptoryFloating = true}
-            onMouseLeave={() => layoutState.isPromptoryFloating = false}
-            onClick={() => layoutState.isPromptoryPinning = !layoutState.isPromptoryPinning}
+            onMouseEnter={() => layoutState.isPAFloating = true}
+            onMouseLeave={() => layoutState.isPAFloating = false}
+            onClick={() => layoutState.isPAPinning = !layoutState.isPAPinning}
         >
             <BsCircle
+                onWheel={e => layoutState.PAButtonWheelDeltaY = e.deltaY}
+                onMouseLeave={() => layoutState.PAButtonWheelDeltaY = 0}
                 style={{
                     opacity: iconOpacity
                 }}

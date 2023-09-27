@@ -93,7 +93,7 @@ export const promptCountState = proxy<PromptCountState>({
 })
 
 export const syncPromptIdCounts = () => {
-    console.log("syncPromptIdCounts")
+    // console.log("syncPromptIdCounts")
     for (const key in promptCountState.counts) {
         delete promptCountState.counts[key]
     }

@@ -13,10 +13,10 @@ type Props = {
 export const AttachedItem: React.FC<Props> = ({message}) => {
 
     const [fullText, setFullText] = useState(false)
-    const {isPromptoryPinning, isPromptoryFloating} = useSnapshot(layoutState)
+    const {isPAPinning, isPAFloating} = useSnapshot(layoutState)
     useEffect(() => {
         setFullText(false)
-    }, [isPromptoryPinning, isPromptoryFloating]);
+    }, [isPAPinning, isPAFloating]);
     let theme
     switch (message.role) {
         case "user":
@@ -34,7 +34,7 @@ export const AttachedItem: React.FC<Props> = ({message}) => {
         <div className="flex flex-col">
             <div
                 onMouseOver={() => setFullText(true)}
-                className={cx("flex rounded-2xl whitespace-pre-wrap px-3 pt-0.5 pb-0.5",
+                className={cx("flex rounded-xl whitespace-pre-wrap px-3 pt-0.5 pb-0.5",
                     theme.bg, theme.text, theme.other
                 )}>
 
@@ -44,7 +44,7 @@ export const AttachedItem: React.FC<Props> = ({message}) => {
                 {!fullText &&
                     <div className="leading-snug">
                         {message.content.slice(0, 100)}
-                        {message.content.length > 100 && <div><LiaEllipsisHSolid className="w-5 h-5"/></div>}
+                        {message.content.length > 100 && <LiaEllipsisHSolid className="w-5 h-5"/>}
                     </div>}
             </div>
         </div>

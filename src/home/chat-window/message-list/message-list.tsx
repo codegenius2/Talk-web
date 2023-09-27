@@ -20,7 +20,7 @@ type MLProps = {
 }
 
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
-    console.info("MessageList rendered", new Date().toLocaleString())
+    // console.info("MessageList rendered", new Date().toLocaleString())
     const [messages, setMessages] = useState<Message[]>([])
     const containerRef = useRef<HTMLDivElement>(null)
     const scrollEndRef = useRef<HTMLDivElement>(null)
@@ -43,7 +43,6 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-
     const count = messages.length
     const virtualizer = useVirtualizer({
         count: messages.length,
@@ -61,7 +60,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     const items = virtualizer.getVirtualItems()
 
     const scrollToBottom = throttle((behavior?: 'instant' | 'smooth') => {
-        if (!layoutState.isPromptoryPinning && !layoutState.isPromptoryFloating && scrollEndRef.current) {
+        if (!layoutState.isPAPinning && !layoutState.isPAFloating && scrollEndRef.current) {
             // don't scroll message list because it pushed promptory outside screen.
             scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }

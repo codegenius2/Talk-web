@@ -14,12 +14,12 @@ type Props = {
 }
 
 export const PromptList: React.FC<Props> = ({chatProxy}) => {
-    console.info("Prompts rendered", new Date().toLocaleString())
+    // console.info("Prompts rendered", new Date().toLocaleString())
     const {promptId} = useSnapshot(chatProxy)
-    const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([])
+    const {isPAPinning} = useSnapshot(layoutState)
     const {prompts} = useSnapshot(promptState)
-    const {isPromptoryPinning} = useSnapshot(layoutState)
     const [searchText, setSearchText] = useState("")
+    const [filteredPrompts, setFilteredPrompts] = useState<Prompt[]>([])
     const [isSearching, setIsSearching] = useState(false)
     const searchRef = useRef<HTMLInputElement>(null)
     const selectedRef = useRef<HTMLInputElement>(null)
@@ -48,7 +48,7 @@ export const PromptList: React.FC<Props> = ({chatProxy}) => {
 
     // scroll to selected item
     useEffect(() => {
-        if (isPromptoryPinning && !isSearching && containerRef.current) {
+        if (isPAPinning && !isSearching && containerRef.current) {
             setTimeout(() => {
                 if (selectedRef.current && containerRef.current) {
                     const containerRect = containerRef.current.getBoundingClientRect()
@@ -65,7 +65,7 @@ export const PromptList: React.FC<Props> = ({chatProxy}) => {
                 }
             })
         }
-    }, [isSearching, isPromptoryPinning])
+    }, [isSearching, isPAPinning])
 
     return (
         <div className="flex h-full flex-col gap-2 min-w-[18rem] max-w-[18rem] p4-2">

@@ -209,3 +209,36 @@ const canAttach: MessageStatus[] = ["received", "sent"]
 export const isAttached = (m: Message): boolean => {
     return m.text !== "" && canAttach.includes(m.status)
 }
+
+// Take messages as linux message history and search message in it
+// Return message of history and new index
+// If search can't continue, return -1 as new index
+// Range of currentIndex: [-1, messages.length - 1]
+export const searchLinuxTerminalHistoryPotision = (messages: Message[],
+                                                   currentIndex: number,
+                                                   currentBuffer: string,
+                                                   keyUpOrDown: 'up' | 'down'
+): [string, number] => {
+    if (currentIndex === -1 && currentBuffer !== "") {
+        return ["", -1]
+    }
+
+    const next = (i: number) => i + (keyUpOrDown === "up" ? 1 : -1)
+    messages = messages.slice().reverse()
+    let nextIndex = next(currentIndex)
+    if (currentIndex < -1 || currentIndex > messages.length - 1 ||
+        nextIndex < 0 || nextIndex > messages.length - 1) {
+        return ["", -1]
+    }
+
+    for (; nextIndex >= 0 || nextIndex <= messages.length - 1; nextIndex = next(nextIndex)) {
+        const nextMessage = messages[nextIndex]
+        if (nextMessage.status === "deleted" || nextMessage.role !== "user" || nextMessage.text.trim() === "") {
+            continue
+        }
+        if (currentIndex === -1 || messages[currentIndex].text === currentBuffer) {
+            return [nextMessage.text, nextIndex]
+        }
+    }
+    return ["", -1]
+}

@@ -10,7 +10,7 @@ type MLProps = {
 
 // prompt and attached
 export const PromptAttached: React.FC<MLProps> = ({chatProxy}) => {
-    console.info("Promptory rendered", new Date().toLocaleString())
+    // console.info("Promptory rendered", new Date().toLocaleString())
 
     return (
         <div

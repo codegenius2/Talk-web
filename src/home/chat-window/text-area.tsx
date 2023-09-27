@@ -3,6 +3,7 @@ import {useSnapshot} from "valtio/react"
 import {Chat} from "../../state/app-state.ts"
 import {controlState} from "../../state/control-state.ts"
 import {cx} from "../../util/util.tsx"
+import {searchLinuxTerminalHistoryPotision} from "../../data-structure/message.tsx";
 
 type Props = {
     chatProxy: Chat
@@ -22,6 +23,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     // if user is typing in a composing way
     const [isComposing, setIsComposing] = useState(false)
+    const [linuxTerminalHistoryIndex, setLinuxTerminalHistoryIndex] = useState(-1)
 
     const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         event.stopPropagation()
@@ -42,16 +44,47 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
         event.stopPropagation()
+        // never interrupt composing
         if (isComposing) {
+            setLinuxTerminalHistoryIndex(-1)
             return
-        } else if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        }
+
+        // search history or reset history
+        if (event.key === 'ArrowUp' || (event.key === "p" && event.ctrlKey)) {
+            const [res, newIndex] = searchLinuxTerminalHistoryPotision(chatProxy.messages,
+                linuxTerminalHistoryIndex,
+                chatProxy.inputText,
+                "up")
+            if (newIndex !== -1) {
+                chatProxy.inputText = res
+            }
+            setLinuxTerminalHistoryIndex(newIndex)
+            return
+        } else if (event.key === 'ArrowDown' || (event.key === "n" && event.ctrlKey)) {
+            const [res, newIndex] = searchLinuxTerminalHistoryPotision(chatProxy.messages,
+                linuxTerminalHistoryIndex,
+                chatProxy.inputText,
+                "down")
+            if (newIndex !== -1) {
+                chatProxy.inputText = res
+            }
+            setLinuxTerminalHistoryIndex(newIndex)
+            return
+        } else {
+            setLinuxTerminalHistoryIndex(-1)
+        }
+
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
             sendAndClearText()
         } else if (event.key === 'Escape') {
             if (textAreaRef.current) {
                 textAreaRef.current!.blur()
             }
         }
-    }, [isComposing, sendAndClearText])
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isComposing, linuxTerminalHistoryIndex, sendAndClearText])
 
     const handleCompositionStart = useCallback(() => {
         setIsComposing(true)
