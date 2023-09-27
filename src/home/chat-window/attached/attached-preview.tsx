@@ -157,7 +157,7 @@ const EmptyPromptEditorTitle = () => {
     return (
         <div className="flex items-center text-lg gap-1 text-neutral-600">
             <div className="select-none">Prompt:</div>
-            <div className="bg-transparent line-through">None</div>
+            <div className="bg-transparent line-through select-none">None</div>
         </div>
     )
 }
