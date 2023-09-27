@@ -38,7 +38,7 @@ const steps: Step[] = [
         }
     },
     {
-        fromVersion: "1.0.3",
+        fromVersion: "0.0.3",
         toVersion: "1.1.0",
         action: (app: AppState): Error | null => {
             for (const chat of app.chats) {

@@ -17,7 +17,6 @@ const animation = {
 }
 
 const ChatList_ = () => {
-    console.debug("ChatList rendered", new Date().toLocaleString())
     const {currentChatId} = useSnapshot(appState)
     const chatRef = useRef<HTMLDivElement>(null)
     const [chats, setChats] = useState<Chat[]>([])
