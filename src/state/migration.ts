@@ -39,19 +39,10 @@ const steps: Step[] = [
     },
     {
         fromVersion: "1.0.3",
-        toVersion: "1.1.0-dev-a",
+        toVersion: "1.1.0",
         action: (app: AppState): Error | null => {
             for (const chat of app.chats) {
                 chat.promptId = ""
-            }
-            return null
-        }
-    },
-    {
-        fromVersion: "1.1.0-dev-a",
-        toVersion: "1.1.0-dev-b",
-        action: (app: AppState): Error | null => {
-            for (const chat of app.chats) {
                 chat.option.llm.maxAttached = defaultOption().llm.maxAttached
             }
             app.option.llm.maxAttached = defaultOption().llm.maxAttached
