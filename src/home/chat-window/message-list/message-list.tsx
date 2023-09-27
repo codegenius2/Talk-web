@@ -51,7 +51,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             if (v.scrollElement) {
                 layoutState.isMessageListOverflow = v.scrollElement.scrollHeight > v.scrollElement.clientHeight
                 const {scrollTop, scrollHeight, clientHeight} = v.scrollElement
-                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 100
+                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 200
             }
         },
         getScrollElement: () => containerRef.current,
@@ -64,14 +64,13 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             // don't scroll message list because it pushed promptory outside screen.
             scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }
-    }, 500)
+    }, 200)
 
     useEffect(() => {
         return subscribe(chatProxy.messages, () => {
             const len = chatProxy.messages.length
             if (len > 0) {
                 const msg = chatProxy.messages[len - 1]
-                console.debug("lastState.current.id", lastState.current.id)
                 if (lastState.current.id !== "") {
                     if (msg.id !== lastState.current.id ||
                         msg.lastUpdatedAt > lastState.current.updatedAt ||

@@ -120,7 +120,7 @@ setInterval(() => {
         const as = snapshot(appState)
         // console.debug("saving appState:", as)
         talkDB.setItem(appStateKey, as).then(() => {
-            console.debug("appState saved")
+            console.debug("appState saved", new Date().toISOString())
         })
     }
 }, 500)

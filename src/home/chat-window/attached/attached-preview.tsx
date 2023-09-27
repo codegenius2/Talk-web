@@ -155,9 +155,9 @@ const PromptEditorTitle: React.FC<Props> = ({promptProxy}) => {
 
 const EmptyPromptEditorTitle = () => {
     return (
-        <div className="flex items-center text-lg gap-1">
-            <div className="text-neutral-600 select-none">Prompt:</div>
-            <div className="bg-transparent line-through text-neutral-800">None</div>
+        <div className="flex items-center text-lg gap-1 text-neutral-600">
+            <div className="select-none">Prompt:</div>
+            <div className="bg-transparent line-through">None</div>
         </div>
     )
 }
