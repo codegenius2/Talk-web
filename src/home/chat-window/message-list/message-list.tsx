@@ -157,7 +157,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
     return (
         <div ref={containerRef}
-             className="w-full overflow-y-auto pr-1 scrollbar-hidden hover:scrollbar-visible">
+             style={{ scrollbarGutter: "stable" }}
+             className="w-full overflow-y-auto scrollbar-hidden hover:scrollbar-visible pl-2 pr-1">
             <div
                 style={{
                     height: virtualizer.getTotalSize(),

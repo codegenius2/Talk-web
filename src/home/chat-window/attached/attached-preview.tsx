@@ -98,10 +98,9 @@ export const AttachedPreview: React.FC<HPProps> = ({chatProxy}) => {
             </div>
             <div
                 ref={scrollRef}
+                style={{ scrollbarGutter: "stable" }}
                 className={cx("flex flex-col gap-3 pt-1 overflow-y-auto overflow-x-hidden",
-                    (isPAFloating) && "scrollbar-visible-neutral-300",
-                    (isPAPinning) && "scrollbar-hidden hover:scrollbar-visible-neutral-300",
-                    (!isPAFloating && !isPAPinning) && "scrollbar-gone",
+                    "scrollbar-hidden hover:scrollbar-visible-neutral-300"
                 )}>
                 <div
                     className="flex flex-col px-1 ml-1.5 mr-0.5 pb-3 border-2 border-dashed border-neutral-500 rounded-lg ">

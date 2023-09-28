@@ -62,11 +62,12 @@ export const ChatWindow: React.FC = () => {
                     </div>
 
                     <div
-                        className="flex flex-col items-center w-full h-full justify-between gap-1 pb-2 px-2">
+                        className="flex flex-col items-center w-full h-full justify-between gap-1 pb-2">
                         <>
                             <MessageList chatProxy={chatProxy} key={chatProxy.id}/>
                             <div
-                                className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2">
+                                className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2
+                                md:px-4 lg:px-6">
                                 <TextArea chatProxy={chatProxy} key={chatProxy.id}/>
                                 <div className="flex w-full items-center justify-center">
                                     <Recorder chatId={chatProxy.id}/>
