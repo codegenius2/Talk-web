@@ -37,15 +37,18 @@ export const resetEverything = (callback: () => void) => {
 
 export const clearSettings = () => {
     const dft = defaultAppState()
-    appState.auth = dft.auth
-    appState.ability = dft.ability
-    appState.option = dft.option
-    appState.panelSelection = dft.panelSelection
+    Object.keys(appState).forEach((key) => {
+        if (key !== "chats") {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            appState[key as keyof AppState] = dft[key]
+        }
+    })
     resetPromptState()
 }
 
 export const clearChats = () => {
     const dft = defaultAppState()
-    appState.chats = dft.chats
+    appState.chats.splice(0, appState.chats.length)
     appState.currentChatId = dft.currentChatId
 }

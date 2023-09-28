@@ -1,11 +1,12 @@
 import {proxy, snapshot, subscribe} from 'valtio'
-import {talkDB, appStateKey} from "./db.ts"
+import {talkDB, appStateKey, deleteBlobs} from "./db.ts"
 import {Message, onMarkDeleted} from "../data-structure/message.tsx"
 import {ClientOption, defaultOption} from "../data-structure/client-option.tsx"
 import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts"
 import {generateHash} from "../util/util.tsx"
 import {migrateAppState} from "./migration.ts"
 import * as packageJson from '../../package.json'
+import _ from "lodash";
 
 const currentVersion = packageJson.version
 
@@ -236,6 +237,13 @@ export const markMessageAsDeleted = (chatId: string, messageId: string): void =>
             onMarkDeleted(message)
         }
     }
+}
+
+export const clearMessages = (chat: Chat): void => {
+    const audioIds = _.compact(chat.messages.map(m => m.audio?.id))
+    deleteBlobs(audioIds).finally(() => {
+        chat.messages.splice(0, chat.messages.length)
+    })
 }
 
 // password hash will be embedded within the header of subsequent requests

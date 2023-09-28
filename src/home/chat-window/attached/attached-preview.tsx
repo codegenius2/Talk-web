@@ -44,6 +44,8 @@ export const AttachedPreview: React.FC<HPProps> = ({chatProxy}) => {
                         console.error("prompt not found", chatProxy.promptId)
                         chatProxy.promptId = ""
                     }
+                } else {
+                    setPromptProxy(undefined)
                 }
             }
         }

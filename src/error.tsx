@@ -7,7 +7,7 @@ import {cx} from "./util/util.tsx"
 import {Helmet} from 'react-helmet-async'
 import * as packageJson from '../package.json'
 import {GranimWallpaper} from "./wallpaper/granim-wallpaper.tsx"
-import {currentChatProxy} from "./state/app-state.ts";
+import {clearMessages, currentChatProxy} from "./state/app-state.ts";
 import {clearChats, clearSettings} from "./state/dangerous.ts";
 
 export default function Error() {
@@ -51,7 +51,7 @@ export default function Error() {
                     action={() => {
                         const chat = currentChatProxy()
                         if (chat) {
-                            chat.messages = []
+                            clearMessages(chat)
                         }
                         navigate("/")
                     }}

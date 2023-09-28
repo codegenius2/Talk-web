@@ -49,6 +49,9 @@ subscribe(promptState, () => {
 })
 
 export const findPrompt = (id: string): Prompt | undefined => {
+    if (id === "") {
+        return undefined
+    }
     return promptState.prompts.find(it => it.id === id)
 }
 

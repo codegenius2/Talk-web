@@ -18,9 +18,8 @@ export const audioDb = localforage.createInstance({
     name: audioDB
 })
 
-export const deleteBlobs = async (ids: string[], callBack: () => void) => {
+export const deleteBlobs = async (ids: string[]) => {
     for (const id of ids) {
         await audioDb.removeItem(id)
     }
-    callBack()
 }
