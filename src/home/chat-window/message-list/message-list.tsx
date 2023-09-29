@@ -84,6 +84,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
                     // Limitation: In the event of multiple simultaneous audio arrivals, only the most recent audio may
                     // have an opportunity to be added to the playlist
                     if (msg.id === lastState.current.id &&
+                        msg.role === "assistant" &&
                         msg.audio &&
                         (msg.audio.durationMs ?? 0) > lastState.current.audioDuration
                     ) {
@@ -157,7 +158,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
     return (
         <div ref={containerRef}
-             style={{ scrollbarGutter: "stable" }}
+             style={{scrollbarGutter: "stable"}}
              className="w-full overflow-y-auto scrollbar-hidden hover:scrollbar-visible pl-2 pr-1">
             <div
                 style={{
