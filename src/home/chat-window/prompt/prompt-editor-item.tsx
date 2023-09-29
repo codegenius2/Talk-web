@@ -22,9 +22,11 @@ export const PromptEditorItem: React.FC<Props> = ({promptProxy, messageProxy, in
         promptProxy.messages.splice(index, 1)
     }, [index, promptProxy.messages]);
 
-    const add = useCallback(() => {
+    const add = useCallback((e: React.MouseEvent) => {
+        e.preventDefault()
+        const newIndex = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey ? index : index + 1
         // eslint-disable-next-line valtio/state-snapshot-rule
-        promptProxy.messages.splice(index + 1, 0, {role: "user", content: ""})
+        promptProxy.messages.splice(newIndex, 0, {role: "user", content: ""})
     }, [index, promptProxy.messages]);
 
     return (
@@ -40,8 +42,8 @@ export const PromptEditorItem: React.FC<Props> = ({promptProxy, messageProxy, in
                     {hovering &&
                         <>
                             <div className="absolute left-1 flex gap-1">
-                                <ActionDot actionType="Delete" action={remove}/>
-                                <ActionDot actionType="New" action={add}/>
+                                <ActionDot actionType="Delete" clickAction={remove}/>
+                                <ActionDot actionType="New" clickAction={add}/>
                             </div>
                             <Dot messageProxy={messageProxy} targetRole={"assistant"}/>
                             <Dot messageProxy={messageProxy} targetRole={"system"}/>
@@ -137,16 +139,16 @@ const Dot: React.FC<RoleDotProps> = ({messageProxy, targetRole}) => {
 
 type ActionDotProps = {
     actionType: 'Delete' | 'New'
-    action: () => void
+    clickAction: (e: React.MouseEvent) => void
 }
 
-const ActionDot: React.FC<ActionDotProps> = ({actionType, action}) => {
+const ActionDot: React.FC<ActionDotProps> = ({actionType, clickAction}) => {
     const [hovering, setHovering] = useState(false)
 
     return <div
         onMouseOver={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-        onClick={action}
+        onClick={clickAction}
         className={cx("relative flex justify-center items-center h-4 w-4 rounded-full transition-all duration-100",
             hovering ? "scale-125 bg-neutral-600/[0.8] text-neutral-100" : "bg-neutral-200/[0.8] text-neutral-600 cursor-pointer",
         )}>
