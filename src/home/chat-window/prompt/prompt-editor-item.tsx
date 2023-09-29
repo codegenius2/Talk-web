@@ -63,7 +63,7 @@ type TextAreaProps = {
 }
 
 const TextArea: React.FC<TextAreaProps> = ({messageProxy}) => {
-    const {role, content} = useSnapshot(messageProxy)
+    const {role, content} = useSnapshot(messageProxy,{sync:true})
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
     useEffect(() => {
