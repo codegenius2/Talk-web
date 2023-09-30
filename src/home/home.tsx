@@ -31,7 +31,6 @@ export default function Home() {
             <TheWallpaper/>
             {hydrated &&
                 <>
-                    {/*<Greeting/>*/}
                     <div
                         className="flex h-screen w-screen items-center justify-center gap-2 overflow-hidden p-3 lg:gap-5">
                         <div className="hidden sm:block h-full min-w-80 max-w-80">

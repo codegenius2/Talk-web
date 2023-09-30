@@ -74,10 +74,10 @@ export function DiscreteRange<T extends string | number>({
             inputBoxRef.current.value = found
             inputBoxRef.current.size = found.length + 1
         } else {
-            inputBoxRef.current.value = defaultValue.toString()
-            inputBoxRef.current.size = defaultValue.toString().length + 1
+            inputBoxRef.current.value = value.toString()
+            inputBoxRef.current.size = value.toString().length + 1
         }
-    }, [value, choices, valueUpdated, defaultValue])
+    }, [value, choices, valueUpdated])
 
     useEffect(() => {
         const res: ChoiceColor<T>[] = []

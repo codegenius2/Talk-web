@@ -36,12 +36,12 @@ export const SSE = () => {
             console.info("connecting to [SSE]: ", url)
 
             eventSource.onopen = (event) => {
-                console.info("[SSE] connected to server, response: ", event)
+                console.info("[SSE] connected to server, response: ", event, new Date().toISOString())
                 eventSource.withCredentials
             }
 
             eventSource.onerror = (event) => {
-                console.error("[SSE] error: ", event);
+                console.error("[SSE] error: ", event, new Date().toISOString());
             }
 
             eventSource.addEventListener(EventSystemAbility, (event: MessageEvent<string>) => {

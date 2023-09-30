@@ -37,7 +37,7 @@ export const OtherSetting: React.FC = () => {
                 <div className="flex items-center gap-1">
                     <PiButterflyThin className="w-5 h-5 select-none -rotate-45 fill-neutral-600 stroke-2"/>
                     <p className="prose text text-neutral-600">
-                        on Attached
+                        on Attached Messages
                     </p>
                 </div>
                 <MySwitch enabled={butterflyOnAttachedMessage} setEnabled={showButterfly}/>
