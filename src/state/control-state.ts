@@ -1,4 +1,4 @@
-import {proxy, ref} from "valtio"
+import {proxy, ref, subscribe} from "valtio"
 import {EnhancedRecorder} from "../util/enhanced-recorder.ts"
 import {popularMimeTypes, RecordingMimeType} from "../config.ts"
 import {chooseAudioMimeType} from "../util/util.tsx"
@@ -57,9 +57,9 @@ export const controlState = proxy<ControlState>({
     audioDurationUpdateSignal: 0
 })
 
-// subscribe(controlState.player, () => {
-//     console.debug("player status:", controlState.player)
-// })
+subscribe(controlState.player, () => {
+    console.debug("player status:", controlState.player)
+})
 
 export const playerState = controlState.player
 
@@ -70,15 +70,13 @@ export const addToPlayList = (audioId: string) => {
         return
     }
 
-    if (playerState.current === "") {
-        console.debug("adding audio to playlist,confirmed, now playing")
+    if (playerState.isPlaying) {
+        console.debug("adding audio to playlist, queued")
+        playerState.playList.push(audioId)
+    } else {
+        console.debug("adding audio to playlist, now playing it")
         playerState.isPlaying = true
         playerState.current = audioId
-    } else {
-        console.debug("adding audio to playlist,confirmed, add te queue")
-        // if playing === false, it's pause by user.
-        // so don't play the audio now
-        playerState.playList.push(audioId)
     }
 }
 
@@ -106,7 +104,7 @@ export const pauseMe = (audioId: string) => {
 // clear playList if user ask to play a new audio
 export const play = (audioId: string) => {
     if (playerState.current !== audioId) {
-        playerState.playList = []
+        playerState.playList.splice(0, playerState.playList.length)
     }
     playerState.current = audioId
     playerState.isPlaying = true
@@ -115,6 +113,6 @@ export const play = (audioId: string) => {
 export const clearPlayList = () => {
     playerState.isPlaying = false
     playerState.current = ""
-    playerState.playList = []
+    playerState.playList.splice(0, playerState.playList.length)
 }
 
