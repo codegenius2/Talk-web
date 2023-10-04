@@ -1,8 +1,11 @@
-import {atelierDuneDark as userCode} from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import {atelierDuneLight as assistantCode} from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import {
+    atelierDuneDark as userCode,
+    atelierDuneLight as assistantCode
+} from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import React from "react";
 
 export type Theme = {
+    themeRole: ThemeRole
     bg: string
     text: string
     normalIcon: string
@@ -21,12 +24,13 @@ export type Theme = {
 }
 
 export const userColor: Theme = {
+    themeRole: 'user',
     bg: 'bg-blue-700',
     text: 'text-violet-100 user-prose',
     normalIcon: 'fill-violet-100',
     warningIcon: 'text-yellow-500',
     attachIcon: 'fill-violet-100 -left-2 -top-1.5 rotate-45',
-    code: {...userCode},
+    code: userCode,
 
     playBg: 'bg-blue-grey',
     play: 'white',
@@ -39,6 +43,7 @@ export const userColor: Theme = {
 }
 
 export const assistantColor: Theme = {
+    themeRole: 'assistant',
     bg: 'bg-neutral-100 bg-opacity-80',
     text: 'text-neutral-800 assistant-prose',
     normalIcon: 'fill-neutral-800',
@@ -55,3 +60,5 @@ export const assistantColor: Theme = {
     labelBg: '#d1d5db',
     label: 'black',
 }
+
+export type ThemeRole = 'user' | 'assistant'

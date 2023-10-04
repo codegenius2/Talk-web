@@ -29,7 +29,9 @@ export const Row: React.FC<Props> = ({
     const [isAttached, setIsAttached] = useState(false)
 
     useEffect(() => {
-        const callback = () =>{ setIsAttached(messageState.record[messageProxy.id]?.attached ?? false)}
+        const callback = () => {
+            setIsAttached(messageState.record[messageProxy.id]?.attached ?? false)
+        }
         const un = subscribeKey(messageState.record, messageProxy.id, callback)
         callback()
         return un
