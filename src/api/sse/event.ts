@@ -7,6 +7,7 @@ export const EventMessageAudio = "message/audio"
 export const EventMessageError = "message/error"
 export const EventSystemAbility = "system/ability"
 export const EventSystemNotification = "system/notification"
+export const EventKeepAlive = ""
 
 export type SSEMsgMeta = {
     // unique ID for the whole chat(contains maybe hundreds of messages)

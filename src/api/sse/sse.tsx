@@ -10,7 +10,7 @@ import {
     EventMessageTextEOF,
     EventMessageTextTyping,
     EventMessageThinking,
-    EventSystemAbility,
+    EventSystemAbility, EventKeepAlive,
     SSEMsgAudio,
     SSEMsgError,
     SSEMsgMeta,
@@ -114,6 +114,10 @@ export const SSE = () => {
                     const m = newError(error.messageID, error.ticketId, error.role, error.errMsg)
                     chat.messages.push(m)
                 }
+            })
+
+            eventSource.addEventListener(EventKeepAlive, () => {
+                // nothing to do
             })
 
             return () => {
