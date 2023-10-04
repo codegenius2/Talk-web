@@ -4,10 +4,23 @@ import {Message} from "../../../data-structure/message.tsx"
 import {MySpin} from "./widget/icon.tsx"
 import {BsCheck2Circle} from "react-icons/bs"
 import {CgDanger} from "react-icons/cg"
-import {assistantColor, Theme, ThemeRole, userColor} from "./theme.ts"
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm'
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import {Theme} from "./theme.ts"
+import MarkdownIt from "markdown-it/lib"
+import hljs from 'highlight.js'
+import 'highlight.js/styles/panda-syntax-dark.css'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import taskList from "markdown-it-task-lists"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import misub from "markdown-it-sub"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import misup from "markdown-it-sup"
+import mila from "markdown-it-link-attributes"
+import mimt from "markdown-it-multimd-table"
+import miemoji from "markdown-it-emoji"
+import mifoot from "markdown-it-footnote"
 
 interface TextProps {
     messageSnap: Message
@@ -22,8 +35,12 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
             theme.text, theme.bg
         )}>
 
-        <div className={cx("leading-snug prose")}>
-            <MDText themeRole={theme.themeRole} text={messageSnap.text}/>
+        <div className={cx("leading-snug")}>
+            {messageSnap.role === 'assistant' ?
+                <MDText text={messageSnap.text}/>
+                :
+                <p className="leading-snug whitespace-pre-wrap break-words">{messageSnap.text}</p>
+            }
         </div>
         <div className="flex justify-end gap-1 pointer-events-none">
             <p className="text-xs inline whitespace-nowrap" data-pseudo-content={formatAgo(messageSnap.createdAt)}></p>
@@ -43,43 +60,45 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     </div>
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const md = new MarkdownIt({
+    linkify: true,
+    typographer: true,
+    highlight: (str, lang) => {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return `<pre class="hljs">`+
+                            `language: <span>${lang}</span><br><br>`+
+                            "<code>"+
+                                `${hljs.highlight(str, {language: lang, ignoreIllegals: true}).value}`+
+                            "</code>"+
+                        "</pre>"
+            } catch (_) { /* empty */
+            }
+        }
+        return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+    },
+})
+    .use(taskList, {enabled: true, label: true})
+    .use(mimt)
+    .use(mifoot)
+    .use(miemoji)
+    .use(misub)
+    .use(misup)
+    .use(mila, {
+        attrs: {
+            target: "_blank",
+            rel: "noopener noreferrer",
+        },
+    })
+
 type Props = {
-    themeRole: ThemeRole
     text: string
 }
 
-const MDText = memo(function MDText({themeRole, text}: Props) {
-    const theme = themeRole === 'user' ? userColor : assistantColor
-    return <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            a: ({node, children, ...props}) => {
-                if (props.href?.includes('http')) {
-                    props.target = '_blank'
-                    props.rel = 'noopener noreferrer'
-                }
-                return <a {...props}>{children}</a>
-            },
-            code: ({className, children, ...props}) => {
-                const match = /language-(\w+)/.exec(className || '')
-                return String(children).includes("\n") ? (
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    <SyntaxHighlighter
-                        {...props}
-                        children={String(children).replace(/\n$/, '')}
-                        style={{...theme.code}}
-                        language={match?.[1] ?? "javascript"}
-                        PreTag="div"
-                    />
-                ) : (
-                    <code {...props} className={className}>
-                        {children}
-                    </code>
-                )
-            }
-        }}
-    >{text}</ReactMarkdown>;
+const MDText = memo(function MDText({text}: Props) {
+    const h = md.render(text)
+    return <div className="leading-snug  prose" dangerouslySetInnerHTML={{__html: h}}/>
 })
 
