@@ -1,7 +1,7 @@
 import {Message} from "../../../data-structure/message.tsx"
 import React, {useCallback, useEffect, useState} from "react"
 import {markMessageAsDeleted} from "../../../state/app-state.ts"
-import {blueColor, neutralColor} from "../compnent/theme.ts"
+import {userColor, assistantColor} from "../compnent/theme.ts"
 import {cx} from "../../../util/util.tsx"
 import {MySpin} from "../compnent/widget/icon.tsx"
 import {Audio} from "../compnent/audio.tsx"
@@ -24,7 +24,7 @@ export const Row: React.FC<Props> = ({
                                      }) => {
     // console.info("Row rendered, messageId:", messageProxy.id, new Date().toLocaleString())
     const messageSnap = useSnapshot(messageProxy)
-    const [theme, setTheme] = useState(neutralColor)
+    const [theme, setTheme] = useState(assistantColor)
     const [hoveringOnRow, setHoveringOnRow] = useState(false)
     const [isAttached, setIsAttached] = useState(false)
 
@@ -41,7 +41,7 @@ export const Row: React.FC<Props> = ({
     }, [chatId, messageSnap.id])
 
     useEffect(() => {
-        setTheme(messageSnap.role === "user" ? blueColor : neutralColor)
+        setTheme(messageSnap.role === "user" ? userColor : assistantColor)
     }, [messageSnap.role])
 
     return (

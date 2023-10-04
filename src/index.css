@@ -44,6 +44,7 @@ https://benborgers.com/posts/tailwind-h-screen
         background-color: #d4d4d4;
         transition: background-color 1000ms linear;
     }
+
     /*for Firefox*/
     .scrollbar-visible-neutral-300 {
         scrollbar-color: #d4d4d4 transparent;
@@ -54,6 +55,7 @@ https://benborgers.com/posts/tailwind-h-screen
         background-color: #71717a;
         transition: background-color 1000ms linear;
     }
+
     /*for Firefox*/
     .scrollbar-visible-neutral-500 {
         scrollbar-color: #71717a transparent;
@@ -74,9 +76,11 @@ https://benborgers.com/posts/tailwind-h-screen
         background-color: transparent;
         transition: background-color 1000ms linear;
     }
+
     .scrollbar-hidden-instant::-webkit-scrollbar-thumb {
         background-color: transparent;
     }
+
     /*for Firefox*/
     .scrollbar-hidden {
         scrollbar-color: transparent transparent;
@@ -113,5 +117,72 @@ https://benborgers.com/posts/tailwind-h-screen
 
 /*Prevent an element from being selected and copied with CSS. see https://danoc.me/blog/css-prevent-copy*/
 [data-pseudo-content]::before {
-  content: attr(data-pseudo-content);
+    content: attr(data-pseudo-content);
+}
+
+.user-prose h1,
+.user-prose h2,
+.user-prose h3,
+.user-prose h4,
+.user-prose p,
+.user-prose a,
+.user-prose blockquote,
+.user-prose figure,
+.user-prose figcaption,
+.user-prose strong,
+.user-prose em,
+.user-prose code,
+.user-prose pre,
+.user-prose ol,
+.user-prose ul,
+.user-prose li,
+.user-prose table,
+.user-prose thead,
+.user-prose tr,
+.user-prose th,
+.user-prose td,
+.user-prose img,
+.user-prose video,
+.user-prose hr {
+    @apply text-violet-100 !important;
+}
+.user-prose a{
+    @apply visited:text-purple-400 !important;
+}
+
+.assistant-prose h1,
+.assistant-prose h2,
+.assistant-prose h3,
+.assistant-prose h4,
+.assistant-prose p,
+.assistant-prose a,
+.assistant-prose blockquote,
+.assistant-prose figure,
+.assistant-prose figcaption,
+.assistant-prose strong,
+.assistant-prose em,
+.assistant-prose code,
+.assistant-prose pre,
+.assistant-prose ol,
+.assistant-prose ul,
+.assistant-prose li,
+.assistant-prose table,
+.assistant-prose thead,
+.assistant-prose tr,
+.assistant-prose th,
+.assistant-prose td,
+.assistant-prose img,
+.assistant-prose video,
+.assistant-prose hr {
+    @apply text-neutral-800 leading-snug !important;
+}
+.assistant-prose a{
+    @apply visited:text-purple-600 !important;
+}
+
+h1,
+h2,
+h3,
+h4{
+    @apply my-0.5 !important;
 }

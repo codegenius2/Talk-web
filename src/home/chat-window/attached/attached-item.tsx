@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react"
 import {LLMMessage} from "../../../shared-types.ts";
 import {cx} from "../../../util/util.tsx";
-import {blueColor, neutralColor} from "../compnent/theme.ts";
+import {userColor, assistantColor} from "../compnent/theme.ts";
 import {LiaEllipsisHSolid} from "react-icons/lia";
 import {useSnapshot} from "valtio/react";
 import {layoutState} from "../../../state/layout-state.ts";
@@ -53,14 +53,14 @@ export const AttachedItem: React.FC<Props> = ({message}) => {
 }
 
 const userTheme = {
-    bg: blueColor.bg,
-    text: blueColor.text,
+    bg: userColor.bg,
+    text: userColor.text,
     other: "max-w-[80%] self-end",
 }
 
 const assistantTheme = {
-    bg: neutralColor.bg,
-    text: neutralColor.text,
+    bg: assistantColor.bg,
+    text: assistantColor.text,
     other: "max-w-[80%] self-start",
 }
 

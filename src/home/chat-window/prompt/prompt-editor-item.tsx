@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from "react"
 import {cx} from "../../../util/util.tsx";
-import {blueColor, neutralColor} from "../compnent/theme.ts";
+import {userColor, assistantColor} from "../compnent/theme.ts";
 import {LLMMessage, Role} from "../../../shared-types.ts";
 import {useSnapshot} from "valtio/react";
 import _ from "lodash";
@@ -165,13 +165,13 @@ const ActionDot: React.FC<ActionDotProps> = ({actionType, clickAction}) => {
 
 
 const userTheme = {
-    bg: blueColor.bg,
-    text: blueColor.text,
+    bg: userColor.bg,
+    text: userColor.text,
 }
 
 const assistantTheme = {
-    bg: neutralColor.bg,
-    text: neutralColor.text,
+    bg: assistantColor.bg,
+    text: assistantColor.text,
 }
 
 const systemTheme = {
