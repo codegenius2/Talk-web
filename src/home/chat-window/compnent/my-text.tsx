@@ -26,25 +26,32 @@ import mifoot from "markdown-it-footnote"
 import './widget/highlightjs-plugins/copy-button-plugin.css'
 import {LanguageLabelPlugin} from "./widget/highlightjs-plugins/language-label-plugin.tsx";
 import {CopyButtonPlugin} from "./widget/highlightjs-plugins/copy-button-plugin.tsx";
+import {throttle} from "lodash";
 
 hljs.configure({
-    ignoreUnescapedHTML: true
+    ignoreUnescapedHTML: true,
 });
-hljs.addPlugin(new CopyButtonPlugin());
 hljs.addPlugin(new LanguageLabelPlugin());
+hljs.addPlugin(new CopyButtonPlugin());
+
+// to improve performance
+const ha: () => void = throttle(() => {
+    hljs.highlightAll()
+}, 500)
 
 interface TextProps {
     messageSnap: Message
     theme: Theme
 }
 
-
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
     useEffect(() => {
         // apply plugins only if message is fully received to improve performance
-        setTimeout(() => messageSnap.status === 'received' && hljs.highlightAll(), 500)
+        if (messageSnap.status === 'received') {
+            ha()
+        }
     }, [messageSnap.status]);
 
     return <div
@@ -53,8 +60,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         )}>
 
         <div className={cx("leading-snug",
-            // remove default padding and only use padding applied by hljs.highlightAll()
-            messageSnap.status === 'received' && "prose-pre:p-0"
+            "prose-pre:p-0 prose-pre:pt-3"
         )}>
             {messageSnap.role === 'assistant' ?
                 <MDText text={messageSnap.text}/>
@@ -86,17 +92,17 @@ const md = new MarkdownIt({
     linkify: true,
     typographer: true,
     highlight: (str, lang) => {
-        if (lang && hljs.getLanguage(lang)) {
-            try {
-                return `<pre class="hljs">`+
-                            "<code>"+
-                                `${hljs.highlight(str, {language: lang, ignoreIllegals: true}).value}`+
-                            "</code>"+
-                        "</pre>"
-            } catch (_) { /* empty */
-            }
+        if (!lang || !hljs.getLanguage(lang)) {
+            lang = "plaintext"
         }
-        return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+        try {
+            return `<pre class="hljs">` +
+                `<code class='hljs language-${lang}'>` +
+                `${hljs.highlight(str, {language: lang, ignoreIllegals: true}).value}` +
+                "</code>" +
+                "</pre>"
+        } catch (_) { /* empty */
+        }
     },
 })
     .use(taskList, {enabled: true, label: true})
