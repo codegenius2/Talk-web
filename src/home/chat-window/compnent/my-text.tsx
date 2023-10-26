@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useEffect} from 'react'
 import {cx, formatAgo} from "../../../util/util.tsx"
 import {Message} from "../../../data-structure/message.tsx"
 import {MySpin} from "./widget/icon.tsx"
@@ -21,21 +21,41 @@ import mila from "markdown-it-link-attributes"
 import mimt from "markdown-it-multimd-table"
 import miemoji from "markdown-it-emoji"
 import mifoot from "markdown-it-footnote"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import './widget/highlightjs-plugins/copy-button-plugin.css'
+import {LanguageLabelPlugin} from "./widget/highlightjs-plugins/language-label-plugin.tsx";
+import {CopyButtonPlugin} from "./widget/highlightjs-plugins/copy-button-plugin.tsx";
+
+hljs.configure({
+    ignoreUnescapedHTML: true
+});
+hljs.addPlugin(new CopyButtonPlugin());
+hljs.addPlugin(new LanguageLabelPlugin());
 
 interface TextProps {
     messageSnap: Message
     theme: Theme
 }
 
+
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
-    // console.info("Row rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
+    // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
+    useEffect(() => {
+        // apply plugins only if message is fully received to improve performance
+        setTimeout(() => messageSnap.status === 'received' && hljs.highlightAll(), 500)
+    }, [messageSnap.status]);
+
     return <div
         className={cx("flex flex-col rounded-2xl px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
         )}>
 
-        <div className={cx("leading-snug")}>
+        <div className={cx("leading-snug",
+            // remove default padding and only use padding applied by hljs.highlightAll()
+            messageSnap.status === 'received' && "prose-pre:p-0"
+        )}>
             {messageSnap.role === 'assistant' ?
                 <MDText text={messageSnap.text}/>
                 :
@@ -69,7 +89,6 @@ const md = new MarkdownIt({
         if (lang && hljs.getLanguage(lang)) {
             try {
                 return `<pre class="hljs">`+
-                            `language: <span>${lang}</span><br><br>`+
                             "<code>"+
                                 `${hljs.highlight(str, {language: lang, ignoreIllegals: true}).value}`+
                             "</code>"+

@@ -23,6 +23,7 @@
     "framer-motion": "^10.16.1",
     "granim": "^2.0.0",
     "highlight.js": "^11.8.0",
+    "highlightjs-copy": "^1.0.5",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "markdown-it": "^13.0.2",
