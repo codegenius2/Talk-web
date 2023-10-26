@@ -23,7 +23,7 @@ export const userColor: Theme = {
     text: 'text-violet-100',
     normalIcon: 'fill-violet-100',
     warningIcon: 'text-yellow-500',
-    attachIcon: 'fill-violet-100 -left-2 -top-1.5 rotate-45',
+    attachIcon: 'fill-violet-100 -left-2 -bottom-1 rotate-45',
     code: {},
 
     playBg: 'bg-blue-grey',
@@ -41,7 +41,7 @@ export const assistantColor: Theme = {
     text: 'text-neutral-800',
     normalIcon: 'fill-neutral-800',
     warningIcon: 'text-yellow-500',
-    attachIcon: '-right-2 -top-2 fill-neutral-800 -rotate-45',
+    attachIcon: '-right-2 -bottom-2 fill-neutral-800 -rotate-45',
     code: {},
 
     playBg: 'bg-white',

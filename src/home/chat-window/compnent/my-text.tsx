@@ -99,6 +99,6 @@ type Props = {
 
 const MDText = memo(function MDText({text}: Props) {
     const h = md.render(text)
-    return <div className="leading-snug  prose" dangerouslySetInnerHTML={{__html: h}}/>
+    return <div className="leading-snug prose" dangerouslySetInnerHTML={{__html: h}}/>
 })
 
