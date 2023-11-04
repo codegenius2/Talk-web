@@ -60,7 +60,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         )}>
 
         <div className={cx("leading-snug",
-            "prose-pre:p-0 prose-pre:pt-3"
+            "prose-pre:p-0 prose-pre:pt-3 prose-li:marker:text-neutral-600"
         )}>
             {messageSnap.role === 'assistant' ?
                 <MDText text={messageSnap.text}/>
