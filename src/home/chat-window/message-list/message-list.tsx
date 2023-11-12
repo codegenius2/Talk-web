@@ -5,7 +5,7 @@ import ErrorBoundary from "../compnent/error-boundary.tsx"
 import {maxLoadedVoice} from "../../../config.ts"
 import {cx} from "../../../util/util.tsx"
 import {useSnapshot} from "valtio/react"
-import {addToPlayList, clearPlayList} from "../../../state/control-state.ts"
+import {addToPlayList, clearPlayList, controlState} from "../../../state/control-state.ts"
 import {HiOutlineChevronDown} from "react-icons/hi2"
 import {Row} from "./row.tsx"
 import {subscribeKey} from "valtio/utils";
@@ -21,6 +21,7 @@ type MLProps = {
 
 export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     // console.info("MessageList rendered", new Date().toLocaleString())
+    const {sendingMessageSignal} = useSnapshot(controlState)
     const [messages, setMessages] = useState<Message[]>([])
     const containerRef = useRef<HTMLDivElement>(null)
     const scrollEndRef = useRef<HTMLDivElement>(null)
@@ -61,10 +62,15 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
 
     const scrollToBottom = throttle((behavior?: 'instant' | 'smooth') => {
         if (!layoutState.isPAPinning && !layoutState.isPAFloating && scrollEndRef.current) {
-            // don't scroll message list because it pushed promptory outside screen.
+            // don't scroll message list if UI of Preview is showing, in case UI of Preview is pushed outside screen.
             scrollEndRef.current.scrollIntoView({behavior: behavior ?? "instant"})
         }
     }, 200)
+
+    useEffect(() => {
+        scrollToBottom()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sendingMessageSignal]);
 
     useEffect(() => {
         return subscribe(chatProxy.messages, () => {

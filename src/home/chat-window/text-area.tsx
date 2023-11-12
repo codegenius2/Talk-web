@@ -29,6 +29,23 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         event.stopPropagation()
     }, [])
 
+    const autoGrowHeight = useCallback((e: React.BaseSyntheticEvent) => {
+        e.currentTarget.style.height = "auto"
+        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
+        if (textAreaRef.current) {
+            if (textAreaRef.current.scrollHeight > textAreaRef.current.clientHeight) {
+                setInputAreaIsLarge(true)
+            }
+        }
+    }, [])
+
+    const resetHeight = useCallback(() => {
+        if (textAreaRef.current) {
+            textAreaRef.current.focus()
+            textAreaRef.current.style.height = `0px`
+        }
+    }, [])
+
     const sendAndClearText = useCallback(() => {
         if (sendButtonRef.current) {
             sendButtonRef.current.blur()
@@ -38,7 +55,8 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             controlState.sendingMessageSignal++
             chatProxy.inputText = ""
         }
-        textAreaRef.current?.focus()
+        // reset window size of <textarea> after clearing text
+        resetHeight()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -114,15 +132,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
     }, [inputAreaIsLarge])
 
-    const autoGrowHeight = useCallback((e: React.BaseSyntheticEvent) => {
-        e.currentTarget.style.height = "auto"
-        e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
-        if (textAreaRef.current) {
-            if (textAreaRef.current.scrollHeight > textAreaRef.current.clientHeight) {
-                setInputAreaIsLarge(true)
-            }
-        }
-    }, [])
 
     return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
             <button
