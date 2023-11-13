@@ -52,7 +52,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             if (v.scrollElement) {
                 layoutState.isMessageListOverflow = v.scrollElement.scrollHeight > v.scrollElement.clientHeight
                 const {scrollTop, scrollHeight, clientHeight} = v.scrollElement
-                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 200
+                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 50
             }
         },
         getScrollElement: () => containerRef.current,
@@ -68,7 +68,8 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
     }, 200)
 
     useEffect(() => {
-        scrollToBottom()
+        const to = setTimeout(() => scrollToBottom(), 20)
+        return () => clearTimeout(to)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sendingMessageSignal]);
 
