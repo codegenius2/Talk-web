@@ -28,7 +28,6 @@ export type Message = {
     errorMessage?: string
     createdAt: number
     lastUpdatedAt: number
-
 }
 
 export const newThinking = (id: string, ticketId: string, role: Role): Message => ({
@@ -61,6 +60,27 @@ export const newSending = (): Message => ({
     createdAt: Date.now(),
     lastUpdatedAt: Date.now(),
 })
+
+export const newSent = (text: string): Message => ({
+    id: randomHash16Char(),
+    ticketId: randomHash16Char(),
+    role: "user",
+    status: "sent",
+    text: text,
+    createdAt: Date.now(),
+    lastUpdatedAt: Date.now(),
+})
+
+export const newReceived = (text: string): Message => ({
+    id: randomHash16Char(),
+    ticketId: randomHash16Char(),
+    role: "assistant",
+    status: "received",
+    text: text,
+    createdAt: Date.now(),
+    lastUpdatedAt: Date.now(),
+})
+
 
 export const onThinking = (message: Message): void => {
     switch (message.status) {

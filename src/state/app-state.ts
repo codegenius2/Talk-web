@@ -1,9 +1,9 @@
 import {proxy, snapshot, subscribe} from 'valtio'
-import {talkDB, appStateKey, deleteBlobs} from "./db.ts"
+import {appStateKey, deleteBlobs, talkDB} from "./db.ts"
 import {Message, onMarkDeleted} from "../data-structure/message.tsx"
 import {ClientOption, defaultOption} from "../data-structure/client-option.tsx"
 import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts"
-import {generateHash} from "../util/util.tsx"
+import {generateHash, randomHash16Char} from "../util/util.tsx"
 import {migrateAppState} from "./migration.ts"
 import * as packageJson from '../../package.json'
 import _ from "lodash";
@@ -31,7 +31,9 @@ export type Wallpaper = {
 }
 export type UserPreference = {
     butterflyOnAttachedMessage: boolean
-    wallpaper: Wallpaper
+    wallpaper: Wallpaper,
+    // stop creating demo chat or not
+    dismissDemo: boolean,
 }
 
 export interface AppState {
@@ -68,7 +70,8 @@ export const appState = proxy<AppState>({
         butterflyOnAttachedMessage: true,
         wallpaper: {
             index: 0,
-        }
+        },
+        dismissDemo: false,
     }
 })
 
@@ -87,7 +90,8 @@ export const defaultAppState = (): AppState => ({
         butterflyOnAttachedMessage: true,
         wallpaper: {
             index: 0,
-        }
+        },
+        dismissDemo: false,
     }
 })
 
@@ -192,19 +196,6 @@ export const currentChatProxy = (): Chat | undefined => {
     return undefined
 }
 
-export const currentChatSnap = (): Chat | undefined => {
-    if (appState.currentChatId === "") {
-        return undefined
-    }
-    for (let i = appState.chats.length - 1; i >= 0; i--) {
-        const chat = appState.chats[i]
-        if (chat.id === appState.currentChatId) {
-            return snapshot(chat) as Chat
-        }
-    }
-    return undefined
-}
-
 const removeChatByIndex = (index: number) => {
     appState.chats.splice(index, 1)
 }
@@ -288,4 +279,18 @@ export const deleteChat = (id: string) => {
             }
         }
     }
+}
+
+export const createChat = (name: string, messages: Message[]) => {
+    const optionClone = _.cloneDeep(appState.option)
+    const newChat = proxy<Chat>({
+        id: randomHash16Char(),
+        name: name,
+        promptId: "",
+        messages: messages,
+        option: optionClone,
+        inputText: ""
+    })
+    appState.chats.push(newChat)
+    appState.currentChatId = newChat.id
 }

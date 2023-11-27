@@ -5,12 +5,13 @@ import {appState, findChatProxy, findMessage, findMessage2} from "../../state/ap
 import {ServerAbility} from "./server-ability.ts"
 import {newError, newThinking, onAudio, onEOF, onError, onThinking, onTyping} from "../../data-structure/message.tsx"
 import {
+    EventKeepAlive,
     EventMessageAudio,
     EventMessageError,
     EventMessageTextEOF,
     EventMessageTextTyping,
     EventMessageThinking,
-    EventSystemAbility, EventKeepAlive,
+    EventSystemAbility,
     SSEMsgAudio,
     SSEMsgError,
     SSEMsgMeta,
@@ -20,6 +21,7 @@ import {base64ToBlob, generateAudioId, randomHash32Char} from "../../util/util.t
 import {audioDb} from "../../state/db.ts"
 import {audioPlayerMimeType, SSEEndpoint} from "../../config.ts"
 import {adjustOption} from "../../data-structure/client-option.tsx"
+import {createDemoChatIfNecessary} from "../../data/chat.ts";
 
 
 export const SSE = () => {
@@ -53,6 +55,7 @@ export const SSE = () => {
                 }
                 // eslint-disable-next-line valtio/state-snapshot-rule
                 appState.ability = sa
+                createDemoChatIfNecessary()
             })
 
             eventSource.addEventListener(EventMessageThinking, (event: MessageEvent<string>) => {

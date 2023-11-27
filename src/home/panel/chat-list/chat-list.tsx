@@ -1,11 +1,9 @@
 import React, {memo, useCallback, useEffect, useRef, useState} from "react"
 import {useSnapshot} from "valtio/react"
-import {proxy, subscribe} from "valtio"
-import _ from "lodash"
+import {subscribe} from "valtio"
 import {PiPlusLight} from "react-icons/pi"
 import {CiSearch} from "react-icons/ci"
-import {appState, Chat} from "../../../state/app-state.ts"
-import {randomHash16Char} from "../../../util/util.tsx"
+import {appState, Chat, createChat} from "../../../state/app-state.ts"
 import {DndProvider} from "react-dnd"
 import {HTML5Backend} from "react-dnd-html5-backend"
 import {DraggableChat} from "./draggable-chat.tsx"
@@ -45,17 +43,9 @@ const ChatList_ = () => {
 
     const newChat = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.stopPropagation()
-        const optionClone = _.cloneDeep(appState.option)
-        const chat = proxy<Chat>({
-            id: randomHash16Char(),
-            name: "New Chat",
-            promptId: "",
-            messages: [],
-            option: optionClone,
-            inputText: ""
-        })
-        appState.chats.push(chat)
-        appState.currentChatId = chat.id
+        createChat("New Chat", [])
+        // at this point, we suppose the user has see the demo chat
+        appState.pref.dismissDemo = true
     }, [])
 
     // delete other chats should not trigger auto scrolling

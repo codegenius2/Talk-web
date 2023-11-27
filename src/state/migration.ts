@@ -48,6 +48,14 @@ const steps: Step[] = [
             app.option.llm.maxAttached = defaultOption().llm.maxAttached
             return null
         }
+    },
+    {
+        fromVersion: "1.2.7",
+        toVersion: "1.2.8",
+        action: (app: AppState): Error | null => {
+            app.pref.dismissDemo=false
+            return null
+        }
     }
 ]
 

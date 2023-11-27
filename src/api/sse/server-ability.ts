@@ -1,5 +1,6 @@
 // ServerAbility guide clients in adjusting all parameters.
 export type ServerAbility = {
+    demo: boolean
     llm: ServerLLM
     tts: ServerTTS
     stt: ServerSTT
@@ -59,6 +60,7 @@ export type TaggedItem = {
 
 export const defaultServerAbility = (): ServerAbility => {
     return {
+        demo: false,
         llm: {
             available: false,
             chatGPT: {
