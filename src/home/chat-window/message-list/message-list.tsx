@@ -52,7 +52,7 @@ export const MessageList: React.FC<MLProps> = ({chatProxy}) => {
             if (v.scrollElement) {
                 layoutState.isMessageListOverflow = v.scrollElement.scrollHeight > v.scrollElement.clientHeight
                 const {scrollTop, scrollHeight, clientHeight} = v.scrollElement
-                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 50
+                layoutState.isMessageListAtBottom = scrollTop + clientHeight >= scrollHeight - 200
             }
         },
         getScrollElement: () => containerRef.current,
