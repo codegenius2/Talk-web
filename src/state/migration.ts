@@ -50,10 +50,10 @@ const steps: Step[] = [
         }
     },
     {
-        fromVersion: "1.2.7",
+        fromVersion: "1.1.0",
         toVersion: "1.2.8",
         action: (app: AppState): Error | null => {
-            app.pref.dismissDemo=false
+            app.pref.dismissDemo = false
             return null
         }
     }
@@ -68,7 +68,7 @@ export const migrateAppState = (app: AppState): Error | null => {
     }
 
     for (const step of steps) {
-        if (app.version === step.fromVersion) {
+        if (app.version >= step.fromVersion && app.version < step.toVersion) {
             console.info(`migrating from ${step.fromVersion} to ${step.toVersion}`)
             const error = step.action(app)
             if (error) {
