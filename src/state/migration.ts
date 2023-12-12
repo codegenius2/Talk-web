@@ -1,6 +1,8 @@
 import {AppState} from "./app-state.ts"
 import * as packageJson from '../../package.json'
 import {defaultOption} from "../data-structure/client-option.tsx"
+import {defaultShortcuts} from "./shortcuts.ts";
+import semver from "semver/preload";
 
 const currentVersion = packageJson.version
 
@@ -56,6 +58,15 @@ const steps: Step[] = [
             app.pref.dismissDemo = false
             return null
         }
+    },
+    {
+        fromVersion: "1.2.8",
+        toVersion: "1.3.0",
+        action: (app: AppState): Error | null => {
+            app.pref.showRecorder = true
+            app.pref.shortcuts = defaultShortcuts()
+            return null
+        }
     }
 ]
 
@@ -68,7 +79,7 @@ export const migrateAppState = (app: AppState): Error | null => {
     }
 
     for (const step of steps) {
-        if (app.version >= step.fromVersion && app.version < step.toVersion) {
+        if (semver.gte(app.version, step.fromVersion) && semver.lt(app.version, step.toVersion)) {
             console.info(`migrating from ${step.fromVersion} to ${step.toVersion}`)
             const error = step.action(app)
             if (error) {

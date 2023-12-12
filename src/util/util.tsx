@@ -84,7 +84,6 @@ export const formatAudioDuration = (duration?: number): string => {
     }
 }
 
-
 export const generateAudioId = (action: "recording" | "synthesis"): string => {
     return action + "-" + formatNow() + "-" + randomHash16Char()
 }
@@ -115,6 +114,10 @@ export const cx = (...classes: (boolean | string | undefined)[]): string => {
     return classes.filter(c => typeof c === "string").join(" ")
 }
 
+// join keys
+export const kx = (...keys: string[]): string => {
+    return keys.filter(c => c !== "").join("+")
+}
 
 export function getRandomElement<T>(...arr: T[]): T {
     const randomIndex = Math.floor(Math.random() * arr.length)

@@ -81,7 +81,11 @@ export const adjustOption = (c: ClientOption, s: ServerAbility): void => {
     c.stt.google.recognizer = pickOne(c.stt.google.recognizer, s.stt.google.recognizers, rec => rec.id)
 }
 
-export const toRestfulAPIOption = (c: ClientOption): api.TalkOption => {
+type Adjust = {
+    model?: string
+}
+
+export const toRestfulAPIOption = (c: ClientOption, adjust?: Adjust): api.TalkOption => {
     const opt: api.TalkOption = {
         toSpeech: false, // maybe support this in the future
         toText: false,
@@ -95,7 +99,7 @@ export const toRestfulAPIOption = (c: ClientOption): api.TalkOption => {
         opt.llmOption = {
             chatGPT: {
                 ...chatGPT,
-                model: chatGPT.model ?? ""
+                model: adjust?.model ?? (chatGPT.model ?? "")
             }
         }
         opt.completion = true

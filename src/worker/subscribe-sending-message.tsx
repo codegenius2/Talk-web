@@ -42,15 +42,23 @@ export const SubscribeSendingMessage: React.FC = () => {
 
         const option = snapshot(chatProxy.option)
 
-        let messages = attachedMessages(chatProxy.messages, option.llm.maxAttached)
+        let messages =
+            sm.option?.ignoreAttachedMessage ? [] : attachedMessages(chatProxy.messages, option.llm.maxAttached)
+        const attachedCount = messages.length
         const prompt = findPrompt(chatProxy.promptId);
         if (prompt) {
             const pms = prompt.messages.filter(it => it.content.trim() !== "")
             messages = [...pms, ...messages]
         }
 
-        const nonProxyMessage = newSending()
-        const talkOption = toRestfulAPIOption(option)
+        const talkOption = toRestfulAPIOption(option, {model: sm.option?.model})
+
+        const nonProxyMessage = newSending({
+            promptCount: prompt?.messages?.length ?? 0,
+            attachedMessageCount: attachedCount,
+            talkOption: talkOption
+        })
+
         let postPromise
         if (sm.audioBlob) {
             nonProxyMessage.audio = {id: ""}

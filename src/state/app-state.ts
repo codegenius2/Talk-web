@@ -7,6 +7,7 @@ import {generateHash, randomHash16Char} from "../util/util.tsx"
 import {migrateAppState} from "./migration.ts"
 import * as packageJson from '../../package.json'
 import _ from "lodash";
+import {defaultShortcuts, Shortcuts} from "./shortcuts.ts";
 
 const currentVersion = packageJson.version
 
@@ -25,15 +26,19 @@ export type Chat = {
 }
 
 export type PanelSelection = 'chats' | 'global' | 'current'
+
 export type Wallpaper = {
     index: number,
     previewIndex?: number
 }
+
 export type UserPreference = {
     butterflyOnAttachedMessage: boolean
     wallpaper: Wallpaper,
     // stop creating demo chat or not
     dismissDemo: boolean,
+    showRecorder: boolean,
+    shortcuts: Shortcuts,
 }
 
 export interface AppState {
@@ -72,6 +77,8 @@ export const appState = proxy<AppState>({
             index: 0,
         },
         dismissDemo: false,
+        showRecorder: true,
+        shortcuts: defaultShortcuts()
     }
 })
 
@@ -92,6 +99,8 @@ export const defaultAppState = (): AppState => ({
             index: 0,
         },
         dismissDemo: false,
+        showRecorder: true,
+        shortcuts: defaultShortcuts()
     }
 })
 

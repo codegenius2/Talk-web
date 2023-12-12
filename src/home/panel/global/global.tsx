@@ -4,6 +4,7 @@ import {TTS} from "../shared/tts/tts.tsx"
 import {STT} from "../shared/stt/stt.tsx"
 import {OtherSetting} from "./other-setting.tsx"
 import {appState} from "../../../state/app-state.ts";
+import {ShortcutsSetting} from "./shortcuts-setting.tsx";
 
 const Global_: React.FC = () => {
     // console.info("Global rendered", new Date().toLocaleString())
@@ -17,6 +18,9 @@ const Global_: React.FC = () => {
             </div>
             <div className="z-20 w-full">
                 <STT sttOptionProxy={appState.option.stt}/>
+            </div>
+            <div className="z-10 w-full">
+                <ShortcutsSetting/>
             </div>
             <div className="z-10 w-full">
                 <OtherSetting/>

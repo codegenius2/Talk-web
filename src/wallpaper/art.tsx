@@ -2,6 +2,7 @@
 import balloonImage from "../assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b.png"
 import walkImage from "../assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png"
 import simultaneousImage from "../assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg"
+import composition3 from "../assets/bg/wikiart-public-domain/Composition VIII 1923.jpg"
 
 export type Art = {
     author: string
@@ -25,11 +26,13 @@ export const wikiarts: Art[] = [
         noiseClassname: "opacity-80 brightness-125"
     },
     {
-        imageUrl: "https://uploads8.wikiart.org/images/wassily-kandinsky/green-emptyness-1930.jpg",
-        pageUrl: "https://www.wikiart.org/en/wassily-kandinsky/green-emptyness-1930",
-        name: "Green emptyness",
+        imageUrl: composition3,
+        pageUrl: "https://www.wikiart.org/en/wassily-kandinsky/composition-viii-1923",
+        name: "Composition VIII",
         author: "Wassily Kandinsky",
-        date: "1930",
+        date: "1923; Germany",
+        imageClassName: "bg-cover bg-center blur-md brightness-75",
+        noiseClassname: "opacity-80 brightness-100"
     },
     {
         imageUrl: "https://uploads8.wikiart.org/images/wassily-kandinsky/not_detected_189367.jpg",
@@ -38,15 +41,6 @@ export const wikiarts: Art[] = [
         author: "Wassily Kandinsky",
         date: "1928",
         imageClassName: "bg-contain blur-lg brightness-75",
-        noiseClassname: "opacity-80 brightness-100"
-    },
-    {
-        imageUrl: "https://uploads1.wikiart.org/images/wassily-kandinsky/composition-viii-1923.jpg",
-        pageUrl: "https://www.wikiart.org/en/wassily-kandinsky/composition-viii-1923",
-        name: "Composition VIII",
-        author: "Wassily Kandinsky",
-        date: "1923; Germany",
-        imageClassName: "bg-cover bg-center blur-md brightness-75",
         noiseClassname: "opacity-80 brightness-100"
     },
     {

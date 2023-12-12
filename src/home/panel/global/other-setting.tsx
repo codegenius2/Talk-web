@@ -8,12 +8,17 @@ import {SelectBoxOrNotAvailable} from "../shared/select-box-or-not-available.tsx
 import {allArts} from "../../../wallpaper/art.tsx"
 import {PiButterflyThin} from "react-icons/pi";
 import {clearChats} from "../../../state/dangerous.ts";
+import {Separator} from "../shared/widget/separator.tsx";
 
 export const OtherSetting: React.FC = () => {
-    const {butterflyOnAttachedMessage, wallpaper} = useSnapshot(appState.pref)
+    const {butterflyOnAttachedMessage, showRecorder, wallpaper} = useSnapshot(appState.pref)
 
     const showButterfly = useCallback((enabled: boolean) => {
         appState.pref.butterflyOnAttachedMessage = enabled
+    }, [])
+
+    const setShowRecorder = useCallback((enabled: boolean) => {
+        appState.pref.showRecorder = enabled
     }, [])
 
     const setWallpaperIndex = useCallback((value?: number) => {
@@ -23,17 +28,18 @@ export const OtherSetting: React.FC = () => {
     const setWallpaperPreviewIndex = useCallback((value?: number) => {
         appState.pref.wallpaper.previewIndex = value
     }, [])
+
     return <div
         className="relative flex h-full select-none flex-col w-full before:bg-white before:bg-opacity-40
          pt-1 pb-3 px-3 gap-1 before:backdrop-hack before:backdrop-blur before:rounded-xl">
+
         <div className="flex justify-between items-center w-full px-3 ">
             <p className="prose text-lg text-neutral-600">Other</p>
         </div>
         <div
             className="flex flex-col justify-start items-center gap-2 py-2 border-2 border-neutral-500 border-dashed
             rounded-lg px-3 w-full">
-            <div className="flex justify-between items-center w-full ">
-
+            <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-1">
                     <PiButterflyThin className="w-5 h-5 select-none -rotate-45 fill-neutral-600 stroke-2"/>
                     <p className="prose text text-neutral-600">
@@ -42,6 +48,16 @@ export const OtherSetting: React.FC = () => {
                 </div>
                 <MySwitch enabled={butterflyOnAttachedMessage} setEnabled={showButterfly}/>
             </div>
+            <Separator/>
+            <div className="flex justify-between items-center w-full ">
+                <div className="flex items-center gap-1">
+                    <p className="prose text text-neutral-600">
+                        Show Recorder
+                    </p>
+                </div>
+                <MySwitch enabled={showRecorder} setEnabled={setShowRecorder}/>
+            </div>
+            <Separator/>
             <div className="w-full">
                 <SelectBoxOrNotAvailable
                     title={"Wallpaper"}
@@ -68,4 +84,3 @@ export const OtherSetting: React.FC = () => {
         </div>
     </div>
 }
-

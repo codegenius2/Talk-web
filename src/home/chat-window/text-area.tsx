@@ -1,14 +1,17 @@
 import React, {KeyboardEventHandler, useCallback, useEffect, useRef, useState} from "react"
 import {useSnapshot} from "valtio/react"
-import {Chat} from "../../state/app-state.ts"
-import {controlState} from "../../state/control-state.ts"
+import {appState, Chat} from "../../state/app-state.ts"
+import {controlState, SendMessageOption} from "../../state/control-state.ts"
 import {cx} from "../../util/util.tsx"
 import {searchLinuxTerminalHistoryPotision} from "../../data-structure/message.tsx";
 import {CloseIcon} from "./compnent/widget/icon.tsx";
+import {matchKeyComobo} from "../../state/shortcuts.ts";
 
 type Props = {
     chatProxy: Chat
 }
+
+const bestModel = "gpt-4-1106-preview"
 
 const largeTextAreaMinHeight = "min-h-96"
 const smallTextAreaMinHeight = "min-h-24"
@@ -27,8 +30,10 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
     const [isHoveringOnAttachedCircle, setIsHoveringOnAttachedCircle] = useState(false)
     const [linuxTerminalHistoryIndex, setLinuxTerminalHistoryIndex] = useState(-1)
 
-    const stopPropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        event.stopPropagation()
+    const stopSpacePropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key === ' ') {
+            event.stopPropagation()
+        }
     }, [])
 
     const autoGrowHeight = useCallback((e: React.BaseSyntheticEvent) => {
@@ -43,12 +48,14 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
     }, [])
 
-    const sendAndClearText = useCallback(() => {
+    // eslint-disable-next-line valtio/state-snapshot-rule
+    const sendAndClearText = useCallback((option?: SendMessageOption) => {
         if (sendButtonRef.current) {
             sendButtonRef.current.blur()
         }
         if (chatProxy.inputText) {
-            controlState.sendingMessages.push({chatId: chatProxy.id, text: chatProxy.inputText})
+            // eslint-disable-next-line valtio/state-snapshot-rule
+            controlState.sendingMessages.push({chatId: chatProxy.id, text: chatProxy.inputText, option: option})
             controlState.sendingMessageSignal++
             chatProxy.inputText = ""
         }
@@ -56,6 +63,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         resetHeight()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
         event.stopPropagation()
@@ -90,11 +98,30 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             setLinuxTerminalHistoryIndex(-1)
         }
 
-        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-            sendAndClearText()
-        } else if (event.key === 'Escape') {
+        if (event.key === 'Escape') {
             if (textAreaRef.current) {
                 textAreaRef.current!.blur()
+            }
+        } else {
+            const sc = appState.pref.shortcuts
+            if (matchKeyComobo(sc.newLine, event)) {
+                chatProxy.inputText += "\n"
+                event.preventDefault()
+            } else if (matchKeyComobo(sc.send, event)) {
+                sendAndClearText()
+                event.preventDefault()
+            } else if (matchKeyComobo(sc.sendWithBestModel, event)) {
+                sendAndClearText({model: bestModel})
+                event.preventDefault()
+            } else if (matchKeyComobo(sc.sendZeroAttachedMessage, event)) {
+                sendAndClearText({ignoreAttachedMessage: true})
+                event.preventDefault()
+            } else if (matchKeyComobo(sc.sendWithBestModelAndZeroAttachedMessage, event)) {
+                sendAndClearText({
+                    ignoreAttachedMessage: true,
+                    model: bestModel
+                })
+                event.preventDefault()
             }
         }
 
@@ -169,7 +196,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                             "placeholder:text-neutral-500 placeholder:select-none max-h-96 transition-all duration-150",
                             inputAreaIsLarge ? largeTextAreaMinHeight : smallTextAreaMinHeight
                         )}
-                        onKeyUp={stopPropagation}
                         value={inputText}
                         onInput={autoGrowHeight}
                         onChange={(e) => {
@@ -177,13 +203,14 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                             chatProxy.inputText = e.target.value
                         }}
                         onKeyDown={handleKeyDown}
+                        onKeyUp={stopSpacePropagation}
                         onCompositionStart={handleCompositionStart}
                         onCompositionEnd={handleCompositionEnd}
                         placeholder="Message"/>
                 <button
                     ref={sendButtonRef}
                     className="-ml-8 mb-1 self-end capitalize text-neutral-600 "
-                    onClick={sendAndClearText}
+                    onClick={() => sendAndClearText()}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2"
                          stroke="currentColor" className="w-6 h-6">

@@ -3,6 +3,7 @@
 import {randomHash16Char} from "../util/util.tsx"
 import {Role} from "../shared-types.ts"
 import {messageTimeoutSeconds} from "../config.ts"
+import {TalkOption} from "../api/restful/model.ts";
 
 export type MessageStatus =
     'sending'
@@ -18,6 +19,12 @@ export type MessageAudio = {
     durationMs?: number
 }
 
+export type Context = {
+    promptCount: number
+    attachedMessageCount: number
+    talkOption: TalkOption
+}
+
 export type Message = {
     id: string
     ticketId: string
@@ -28,6 +35,7 @@ export type Message = {
     errorMessage?: string
     createdAt: number
     lastUpdatedAt: number
+    context?: Context
 }
 
 export const newThinking = (id: string, ticketId: string, role: Role): Message => ({
@@ -51,7 +59,7 @@ export const newError = (id: string, ticketId: string, role: Role, errorMessage:
     lastUpdatedAt: Date.now(),
 })
 
-export const newSending = (): Message => ({
+export const newSending = (ctx: Context): Message => ({
     id: randomHash16Char(),
     ticketId: randomHash16Char(),
     role: 'user',
@@ -59,6 +67,7 @@ export const newSending = (): Message => ({
     text: "",
     createdAt: Date.now(),
     lastUpdatedAt: Date.now(),
+    context: ctx
 })
 
 export const newSent = (text: string): Message => ({

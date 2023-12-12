@@ -19,6 +19,7 @@ export const ChatWindow: React.FC = () => {
     const buttonRef = useRef<HTMLDivElement>(null)
 
     const {isPAFloating, isPAPinning} = useSnapshot(layoutState)
+    const {showRecorder} = useSnapshot(appState.pref)
 
     useEffect(() => {
         const callback = () => {
@@ -69,9 +70,13 @@ export const ChatWindow: React.FC = () => {
                                 className="bottom-0 mt-auto flex w-full flex-col items-center gap-2 rounded-xl px-2
                                 md:px-4 lg:px-6">
                                 <TextArea chatProxy={chatProxy} key={chatProxy.id}/>
-                                <div className="flex w-full items-center justify-center">
-                                    <Recorder chatId={chatProxy.id}/>
-                                </div>
+                                {
+                                    showRecorder ?
+                                        <div className="flex w-full items-center justify-center">
+                                            <Recorder chatId={chatProxy.id}/>
+                                        </div>
+                                        : <div className="h-2"></div>
+                                }
                             </div>
                         </>
                     </div>

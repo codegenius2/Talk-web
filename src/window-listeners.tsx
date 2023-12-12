@@ -1,7 +1,12 @@
 import React, {useCallback, useEffect} from "react"
 import {controlState} from "./state/control-state.ts"
+import {useSnapshot} from "valtio/react";
+import {appState} from "./state/app-state.ts";
 
 export const WindowListeners: React.FC = () => {
+
+    const {showRecorder} = useSnapshot(appState.pref)
+
     const setMouseDown = useCallback((isMouseLeftDown: boolean) => {
         controlState.isMouseLeftDown = isMouseLeftDown
     }, [])
@@ -65,8 +70,10 @@ export const WindowListeners: React.FC = () => {
                 setMouseDown(false)
             }
 
-            window.addEventListener("keydown", handleKeyDown)
-            window.addEventListener("keyup", handleKeyUp)
+            if (showRecorder) {
+                window.addEventListener("keydown", handleKeyDown)
+                window.addEventListener("keyup", handleKeyUp)
+            }
             window.addEventListener("mousedown", handleMouseDown)
             window.addEventListener("mouseup", handleMouseUp)
             window.addEventListener("blur", handleBrowserBlur)
@@ -79,7 +86,7 @@ export const WindowListeners: React.FC = () => {
                 window.removeEventListener("blur", handleBrowserBlur)
             }
         },
-        [setMouseDown, recorder]
+        [setMouseDown, recorder, showRecorder]
     )
     return null
 }

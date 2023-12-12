@@ -20,6 +20,12 @@ export type SendingMessage = {
     // if message
     audioBlob?: Blob
     durationMs?: number
+    option?:SendMessageOption
+}
+
+export type SendMessageOption = {
+    ignoreAttachedMessage?: boolean
+    model?: string
 }
 
 export type AudioDurationUpdate = {
