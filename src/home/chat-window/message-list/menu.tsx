@@ -64,7 +64,8 @@ export const AudioMenu: React.FC<AudioMenuProps> = ({deleteAction, audioId}) => 
                             const url = URL.createObjectURL(blob)
                             setUrl(url)
                         } else {
-                            console.error("audio blob is empty, audioId:", audioId)
+                            // audio is expected to be empty after restoring from an uploaded json file
+                            //  console.error("audio blob is empty, audioId:", audioId)
                         }
                     }
                 ).then(() => true)

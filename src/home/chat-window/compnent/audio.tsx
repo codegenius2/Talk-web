@@ -51,7 +51,8 @@ export const Audio: React.FC<AudioProps> = ({
                         const url = URL.createObjectURL(blob)
                         setUrl(url)
                     } else {
-                        console.error("audio blob is empty, audioId:", audioSnap.id)
+                        // audio is expected to be empty after restoring from an uploaded json file
+                        // console.error("audio blob is empty, audioId:", audioSnap.id)
                     }
                 }).then(() => true)
             }
