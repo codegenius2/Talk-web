@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {CountDownButton, ResetButton} from "../shared/widget/button.tsx"
 import {appState} from "../../../state/app-state.ts"
 import {BsTrash3} from "react-icons/bs"
@@ -9,9 +9,15 @@ import {allArts} from "../../../wallpaper/art.tsx"
 import {PiButterflyThin} from "react-icons/pi";
 import {clearChats} from "../../../state/dangerous.ts";
 import {Separator} from "../shared/widget/separator.tsx";
+import {TfiDownload, TfiUpload} from "react-icons/tfi";
+import {talkDB} from "../../../state/db.ts";
+import {useNavigate} from "react-router-dom";
+import {formatNow} from "../../../util/util.tsx";
 
 export const OtherSetting: React.FC = () => {
     const {butterflyOnAttachedMessage, showRecorder, wallpaper} = useSnapshot(appState.pref)
+    const fileInputRef = useRef(null);
+    const navigate = useNavigate()
 
     const showButterfly = useCallback((enabled: boolean) => {
         appState.pref.butterflyOnAttachedMessage = enabled
@@ -28,6 +34,54 @@ export const OtherSetting: React.FC = () => {
     const setWallpaperPreviewIndex = useCallback((value?: number) => {
         appState.pref.wallpaper.previewIndex = value
     }, [])
+
+    const download = useCallback(() => {
+        const db: Record<string, unknown> = {}
+        talkDB.iterate((v, k) => {
+            db[k] = v
+            console.log(v)
+            console.log(k)
+        }).then(() => {
+            const json = JSON.stringify(db, null, 2)
+            console.debug("characters of json:", json.length)
+            console.debug("json:", json)
+            const blob = new Blob([json], {type: 'application/json'});
+            const href = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = href;
+            link.download = `talk-backup-${formatNow()}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+    }, [])
+
+    const restore = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const json = e.target?.result as string;
+                    const jsonObject = JSON.parse(json);
+                    console.debug("json:", jsonObject);
+
+                    const keys = Object.keys(jsonObject)
+
+                    for (const key of keys) {
+                        await talkDB.setItem(key, jsonObject[key])
+                    }
+
+                    navigate(0)
+                } catch (error) {
+                    // Handle JSON parsing error
+                    console.error('Error parsing JSON file: ', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
 
     return <div
         className="relative flex h-full select-none flex-col w-full before:bg-white before:bg-opacity-40
@@ -70,6 +124,29 @@ export const OtherSetting: React.FC = () => {
                     defaultValue={wallpaper.index}
                     setValue={setWallpaperIndex}
                     hoverOnValue={setWallpaperPreviewIndex}
+                />
+            </div>
+            <Separator/>
+            <div className="flex flex-wrap pt-2 pb-2 w-full gap-2">
+                <CountDownButton text={"Backup"}
+                                 countDownMs={0}
+                                 color="blue"
+                                 action={download}
+                                 icon={<TfiDownload className="scale-y-90 stroke-[0.3px]"/>}
+                />
+                <input ref={fileInputRef} type="file" accept=".json"
+                       onChange={restore}
+                       className="hidden">
+                </input>
+                <CountDownButton text={"Restore[beta]"}
+                                 countDownMs={0}
+                                 color="blue"
+                                 action={() => {
+                                     if (fileInputRef.current) {
+                                         (fileInputRef.current as HTMLInputElement).click()
+                                     }
+                                 }}
+                                 icon={<TfiUpload className="scale-y-[0.8] stroke-[0.3px]"/>}
                 />
             </div>
             <div className="flex flex-wrap pt-10 pb-2 w-full gap-2">

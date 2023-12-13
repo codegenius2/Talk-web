@@ -26,9 +26,7 @@ export const defaultPromptState = (): PromptState => ({
     prompts: presetPrompts()
 })
 
-talkDB.getItem<PromptState>(promptStateKey).then((ps: PromptState | null) => {
-    console.debug("restoring promptState from db:", ps)
-
+const apply = (ps: PromptState | null) => {
     if (ps !== null) {
         const dft = defaultPromptState()
         Object.keys(promptState).forEach((key) => {
@@ -38,6 +36,11 @@ talkDB.getItem<PromptState>(promptStateKey).then((ps: PromptState | null) => {
             promptState[key as keyof PromptState] = ps[key] ?? dft[key]
         })
     }
+}
+
+talkDB.getItem<PromptState>(promptStateKey).then((ps) => {
+    console.debug("restoring promptState from db:", ps)
+    apply(ps)
     console.debug("restored")
 })
 

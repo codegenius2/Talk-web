@@ -104,9 +104,8 @@ export const defaultAppState = (): AppState => ({
     }
 })
 
-talkDB.getItem<AppState>(appStateKey).then((as: AppState | null) => {
-    console.debug("restoring from db:", as)
-
+const apply = (as: AppState | null) => {
+    hydrationState.hydrated = false
     if (as !== null) {
         const dft = defaultAppState()
         Object.keys(appState).forEach((key) => {
@@ -120,10 +119,16 @@ talkDB.getItem<AppState>(appStateKey).then((as: AppState | null) => {
             appState[key as keyof AppState] = as[key] ?? dft[key]
         })
     }
-    console.debug("restored")
     hydrationState.hydrated = true
-})
+}
 
+talkDB.getItem<AppState>(appStateKey).then(
+    (as) => {
+        console.debug("restoring from db:", as)
+        apply(as)
+        console.debug("restored")
+    }
+)
 
 subscribe(appState, () => {
     persistState.changedAt = Date.now()
