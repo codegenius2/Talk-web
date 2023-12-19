@@ -66,7 +66,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
 
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
-        event.stopPropagation()
         // never interrupt composing
         if (isComposing) {
             setLinuxTerminalHistoryIndex(-1)
@@ -105,8 +104,18 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         } else {
             const sc = appState.pref.shortcuts
             if (matchKeyComobo(sc.newLine, event)) {
-                chatProxy.inputText += "\n"
-                event.preventDefault()
+                if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey) {
+                    // try our best to use native 'new-line', in order to preserve edit stack(ctrl/cmd + z)
+                } else {
+                    event.preventDefault()
+                    const target = event.currentTarget
+                    const caretPosition = target.selectionStart;
+                    target.value =
+                        target.value.slice(0, caretPosition) +
+                        "\n" +
+                        target.value.slice(caretPosition);
+                    setTimeout(() => target.selectionStart = target.selectionEnd = caretPosition + 1)
+                }
             } else if (matchKeyComobo(sc.send, event)) {
                 sendAndClearText()
                 event.preventDefault()
