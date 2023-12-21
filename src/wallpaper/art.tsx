@@ -3,6 +3,7 @@ import balloonImage from "../assets/bg/no-copyright/959e3384818869.5d6bfdf2b5e1b
 import walkImage from "../assets/bg/no-copyright/84974784818869.5d6bfdf4e8260.png"
 import simultaneousImage from "../assets/bg/wikiart-public-domain/simultaneous-counter-composition-1930.jpg"
 import composition3 from "../assets/bg/wikiart-public-domain/Composition VIII 1923.jpg"
+import december21night from "../assets/bg/clement/December 21 Night.jpg"
 
 export type Art = {
     author: string
@@ -347,6 +348,14 @@ export const wikiarts: Art[] = [
         author: "Alma Woodsey Thomas",
         date: "1976",
         imageClassName: "bg-cover bg-center blur-md brightness-75",
+    },
+    {
+        imageUrl: december21night,
+        pageUrl: "https://github.com/proxfly/painting/blob/main/December%2021%20Night%20.jpg",
+        name: "December 21",
+        author: "Clement",
+        date: "2023",
+        imageClassName: "bg-cover blur-sm brightness-75",
     },
 ]
 
