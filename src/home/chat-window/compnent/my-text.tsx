@@ -51,18 +51,23 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
     const {showMarkdown} = useSnapshot(appState.pref)
-    const [text, setText] = useState("")
+    const [text, setText] = useState(messageSnap.text)
     const [hovering, setHovering] = useState(false)
 
     // stop updating text when mouse hovering
     useEffect(() => {
         if (!hovering) {
-            setText(messageSnap.text)
             controlState.isTextPending = false
         } else {
             controlState.isTextPending = messageSnap.status === "typing"
         }
-    }, [messageSnap, hovering]);
+    }, [messageSnap.status, hovering]);
+
+    useEffect(() => {
+        if (!controlState.isTextPending) {
+            setText(messageSnap.text)
+        }
+    }, [messageSnap]);
 
     useEffect(() => {
         // apply plugins only if message is fully received to improve performance
