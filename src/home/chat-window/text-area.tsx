@@ -20,6 +20,7 @@ const smallTextAreaMinHeightRem = "6rem"
 const TextArea: React.FC<Props> = ({chatProxy}) => {
     // console.info("TextArea rendered", new Date().toLocaleString())
     const {inputText, option} = useSnapshot(chatProxy, {sync: true})
+    const {showMarkdown} = useSnapshot(appState.pref)
 
     const [inputAreaIsLarge, setInputAreaIsLarge] = useState(false)
     const arrowButtonRef = useRef<HTMLButtonElement>(null)
@@ -167,24 +168,30 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
 
     return (<div className="flex flex-col items-center w-full mt-auto bottom-0 max-w-4xl">
             <div className="relative flex items-center justify-center w-full">
-                {option.llm.maxAttached !== 0 &&
-                    <p className="absolute left-2 flex bg-white bg-opacity-20 text-sm rounded-full w-5 h-5 items-center
-                text-violet-100 cursor-pointer justify-center select-none"
+                <div className="absolute left-2 flex items-center gap-1.5">
+                    <p className={cx("flex text-sm rounded-full w-5 h-5 items-center cursor-pointer",
+                        "justify-center select-none",
+                        option.llm.maxAttached > 0 ? "bg-blue-600/[0.8] text-neutral-100" : "text-violet-100 bg-white bg-opacity-20"
+                    )}
                        onClick={() => {
-                           chatProxy.option.llm.maxAttached = 0
-                           setIsHoveringOnAttachedCircle(false)
+                           if (chatProxy.option.llm.maxAttached > 0) {
+                               chatProxy.option.llm.maxAttached = 0
+                           } else {
+                               chatProxy.option.llm.maxAttached = 4
+                           }
                        }
                        }
-                       onMouseEnter={() => setIsHoveringOnAttachedCircle(true)}
-                       onMouseLeave={() => setIsHoveringOnAttachedCircle(false)}
                     >
-                        {isHoveringOnAttachedCircle ?
-                            <CloseIcon className="h-4 w-4"/>
-                            :
-                            option.llm.maxAttached === Number.MAX_SAFE_INTEGER ? '∞' : option.llm.maxAttached
-                        }
+                        {option.llm.maxAttached === Number.MAX_SAFE_INTEGER ? '∞' : option.llm.maxAttached}
                     </p>
-                }
+                    <p className={cx("flex text-[11px] rounded-full w-5 h-5 items-center",
+                        " cursor-pointer justify-center select-none",
+                        showMarkdown ? "bg-blue-600/[0.8] text-neutral-100" : "text-violet-100 bg-white bg-opacity-20"
+                    )}
+                       onClick={() => appState.pref.showMarkdown = !appState.pref.showMarkdown}
+                    >MD </p>
+
+                </div>
                 <button
                     ref={arrowButtonRef}
                     className="rounded-full flex items-center justify-center w-10 -mb-1 "

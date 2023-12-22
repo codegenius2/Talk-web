@@ -34,8 +34,8 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
 
     useEffect(() => {
         const choices = _.map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
-            name: model,
-            value: model,
+            name: model.displayName,
+            value: model.name,
             tags: []
         }))
         setModelChoices(choices)

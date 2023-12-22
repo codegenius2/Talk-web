@@ -27,6 +27,8 @@ import './widget/highlightjs-plugins/copy-button-plugin.css'
 import {LanguageLabelPlugin} from "./widget/highlightjs-plugins/language-label-plugin.tsx";
 import {CopyButtonPlugin} from "./widget/highlightjs-plugins/copy-button-plugin.tsx";
 import {throttle} from "lodash";
+import {useSnapshot} from "valtio/react";
+import {appState} from "../../../state/app-state.ts";
 
 hljs.configure({
     ignoreUnescapedHTML: true,
@@ -47,6 +49,8 @@ interface TextProps {
 export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
+    const {showMarkdown} = useSnapshot(appState.pref)
+
     useEffect(() => {
         // apply plugins only if message is fully received to improve performance
         if (messageSnap.status === 'received') {
@@ -62,7 +66,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         <div className={cx("leading-snug",
             "prose-pre:p-0 prose-pre:pt-3 prose-li:marker:text-neutral-600"
         )}>
-            {messageSnap.role === 'assistant' ?
+            {messageSnap.role === 'assistant' && showMarkdown ?
                 <MDText text={messageSnap.text}/>
                 :
                 <p className="leading-snug whitespace-pre-wrap break-words">{messageSnap.text}</p>

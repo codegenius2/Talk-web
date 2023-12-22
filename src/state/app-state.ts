@@ -38,6 +38,7 @@ export type UserPreference = {
     // stop creating demo chat or not
     dismissDemo: boolean,
     showRecorder: boolean,
+    showMarkdown: boolean,
     shortcuts: Shortcuts,
 }
 
@@ -78,6 +79,7 @@ export const appState = proxy<AppState>({
         },
         dismissDemo: false,
         showRecorder: true,
+        showMarkdown: true,
         shortcuts: defaultShortcuts()
     }
 })
@@ -100,6 +102,7 @@ export const defaultAppState = (): AppState => ({
         },
         dismissDemo: false,
         showRecorder: true,
+        showMarkdown: true,
         shortcuts: defaultShortcuts()
     }
 })

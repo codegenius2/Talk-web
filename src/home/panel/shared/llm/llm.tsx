@@ -3,6 +3,7 @@ import React, {useCallback, useEffect} from 'react'
 import ChatGpt from "./chat-gpt.tsx"
 import {LLMOption} from "../../../../data-structure/client-option.tsx"
 import {useSnapshot} from "valtio/react"
+import Gemini from "./gemini.tsx";
 
 type Props = {
     llmOptionProxy: LLMOption
@@ -12,21 +13,19 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
     const llmSnap = useSnapshot(llmOptionProxy)
 
     const disableAll = useCallback(() => {
-        const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.claude]
+        const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.gemini]
         switchable.forEach(it => it.enabled = false)
     }, [llmSnap])
 
-    // const claudeOptionSnap= useSnapshot(llmOptionProxy.claude)
     // Only one can be enabled simultaneously
     useEffect(() => {
-        const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.claude]
+        const switchable = [llmOptionProxy.chatGPT, llmOptionProxy.gemini]
         const available = switchable.filter(it => it.available)
         const enabled = available.filter(it => it.enabled)
         if (enabled.length > 1) {
             enabled.slice(1).forEach(e => e.enabled = false)
         }
     })
-
 
     return (
         <div className="relative flex h-full select-none flex-col w-full before:bg-white before:bg-opacity-40
@@ -42,6 +41,16 @@ export const LLM: React.FC<Props> = ({llmOptionProxy}) => {
                                  disableAll()
                              }
                              llmOptionProxy.chatGPT.enabled = enabled
+                         }}
+                />}
+            {llmSnap.gemini.available &&
+                <Gemini geminiOptionProxy={llmOptionProxy.gemini}
+                         llmOptionProxy={llmOptionProxy}
+                         setEnabled={(enabled: boolean) => {
+                             if (enabled) {
+                                 disableAll()
+                             }
+                             llmOptionProxy.gemini.enabled = enabled
                          }}
                 />}
         </div>

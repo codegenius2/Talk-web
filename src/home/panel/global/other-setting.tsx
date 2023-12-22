@@ -15,7 +15,7 @@ import {useNavigate} from "react-router-dom";
 import {formatNow} from "../../../util/util.tsx";
 
 export const OtherSetting: React.FC = () => {
-    const {butterflyOnAttachedMessage, showRecorder, wallpaper} = useSnapshot(appState.pref)
+    const {butterflyOnAttachedMessage, showRecorder, showMarkdown, wallpaper} = useSnapshot(appState.pref)
     const fileInputRef = useRef(null);
     const navigate = useNavigate()
 
@@ -25,6 +25,10 @@ export const OtherSetting: React.FC = () => {
 
     const setShowRecorder = useCallback((enabled: boolean) => {
         appState.pref.showRecorder = enabled
+    }, [])
+
+    const setShowMarkdown = useCallback((enabled: boolean) => {
+        appState.pref.showMarkdown = enabled
     }, [])
 
     const setWallpaperIndex = useCallback((value?: number) => {
@@ -110,6 +114,15 @@ export const OtherSetting: React.FC = () => {
                     </p>
                 </div>
                 <MySwitch enabled={showRecorder} setEnabled={setShowRecorder}/>
+            </div>
+            <Separator/>
+            <div className="flex justify-between items-center w-full ">
+                <div className="flex items-center gap-1">
+                    <p className="prose text text-neutral-600">
+                        Message in Markdown
+                    </p>
+                </div>
+                <MySwitch enabled={showMarkdown} setEnabled={setShowMarkdown}/>
             </div>
             <Separator/>
             <div className="w-full">

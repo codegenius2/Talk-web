@@ -44,11 +44,22 @@ export type ServerGoogleSTT = {
 export type ServerLLM = {
     available: boolean
     chatGPT: ServerChatGPT
+    gemini: ServerGemini
 }
 
 export type ServerChatGPT = {
     available: boolean
-    models?: string[]
+    models?: Model[]
+}
+
+export type ServerGemini = {
+    available: boolean
+    models?: Model[]
+}
+
+export type Model = {
+    name: string
+    displayName: string
 }
 
 // other
@@ -64,6 +75,9 @@ export const defaultServerAbility = (): ServerAbility => {
         llm: {
             available: false,
             chatGPT: {
+                available: false,
+            },
+            gemini: {
                 available: false,
             }
         },

@@ -24,6 +24,7 @@ export type TalkOption = {
 
 export type LLMOption = {
     chatGPT?: ChatGPTOption
+    gemini?: GeminiOption
 }
 
 export type ChatGPTOption = {
@@ -33,6 +34,15 @@ export type ChatGPTOption = {
     topP: number
     presencePenalty: number
     frequencyPenalty: number
+}
+
+export type GeminiOption = {
+    model: string
+    // stopSequences: string[]
+    maxOutputTokens: number
+    temperature: number
+    topP: number
+    topK: number
 }
 
 export type STTOption = {

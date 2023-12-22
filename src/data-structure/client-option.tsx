@@ -6,6 +6,7 @@ import {elevenlabsAPIReference} from "./provider-api-refrence/elevenlabs-tts.ts"
 import {Switchable} from "../shared-types.ts"
 import {llmAPIReference} from "./provider-api-refrence/llm.ts"
 import {googleSTTAPIReference} from "./provider-api-refrence/google-stt.ts"
+import {geminiAPIReference} from "./provider-api-refrence/gemini.ts";
 
 /**
  * Data structures embodying the parameters intended for the settings page display.
@@ -29,9 +30,14 @@ export const defaultOption = (): ClientOption => ({
             presencePenalty: chatGPTAPIReference.presencePenalty.default,
             frequencyPenalty: chatGPTAPIReference.frequencyPenalty.default,
         },
-        claude: {
+        gemini: {
             available: false,
             enabled: true,
+            // stopSequences: [],
+            maxOutputTokens: geminiAPIReference.maxOutputTokens.default,
+            temperature: geminiAPIReference.temperature.default,
+            topP: geminiAPIReference.topP.default,
+            topK: geminiAPIReference.topK.default,
         },
         maxAttached: llmAPIReference.maxAttached.default,
     },
@@ -69,7 +75,9 @@ export const defaultOption = (): ClientOption => ({
 // server tells client what models, languages and other parameters it supports
 export const adjustOption = (c: ClientOption, s: ServerAbility): void => {
     c.llm.chatGPT.available = s.llm.chatGPT.available
-    c.llm.chatGPT.model = pickOne(c.llm.chatGPT.model, s.llm.chatGPT.models, m => m)
+    c.llm.chatGPT.model = pickOne(c.llm.chatGPT.model, s.llm.chatGPT.models, m => m.name)
+    c.llm.gemini.available = s.llm.gemini.available
+    c.llm.gemini.model = pickOne(c.llm.gemini.model, s.llm.gemini.models, m => m.name)
 
     c.tts.google.available = s.tts.google.available
     c.tts.elevenlabs.available = s.tts.elevenlabs.available
@@ -95,11 +103,21 @@ export const toRestfulAPIOption = (c: ClientOption, adjust?: Adjust): api.TalkOp
 
     // LLM
     const chatGPT = c.llm.chatGPT
+    const gemini = c.llm.gemini
     if (chatGPT.available && chatGPT.enabled) {
         opt.llmOption = {
             chatGPT: {
                 ...chatGPT,
                 model: adjust?.model ?? (chatGPT.model ?? "")
+            }
+        }
+        opt.completion = true
+    } else if (gemini.available && gemini.enabled) {
+        opt.llmOption = {
+            gemini: {
+                ...gemini,
+                topK: parseInt(gemini.topK.toString()),
+                model: gemini.model ?? ""
             }
         }
         opt.completion = true
@@ -152,7 +170,7 @@ export const toRestfulAPIOption = (c: ClientOption, adjust?: Adjust): api.TalkOp
 
 export type LLMOption = {
     chatGPT: ChatGPTOption
-    claude: ClaudeOption
+    gemini: GeminiOption
     maxAttached: number
 }
 
@@ -165,7 +183,14 @@ export type ChatGPTOption = Switchable & {
     frequencyPenalty: number
 }
 
-export type ClaudeOption = Switchable
+export type GeminiOption = Switchable & {
+    model?: string // mustn't be empty if enabled === true
+    // stopSequences: string[]
+    maxOutputTokens: number
+    temperature: number
+    topP: number
+    topK: number
+}
 
 export type STTOption = {
     whisper: WhisperOption

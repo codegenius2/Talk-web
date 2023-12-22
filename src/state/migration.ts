@@ -26,7 +26,7 @@ const steps: Step[] = [
         action: (_app: AppState): Error | null => {
             _app.option.stt.google = defaultOption().tts.google
             for (const chat of _app.chats) {
-                chat.option.stt.google = defaultOption().tts.google
+                chat.option.tts.google = defaultOption().tts.google
             }
             return null
         }
@@ -65,6 +65,18 @@ const steps: Step[] = [
         action: (app: AppState): Error | null => {
             app.pref.showRecorder = true
             app.pref.shortcuts = defaultShortcuts()
+            return null
+        }
+    },
+    {
+        fromVersion: "1.3.0",
+        toVersion: "2.0.0",
+        action: (app: AppState): Error | null => {
+            app.pref.showMarkdown = true
+            app.option.llm.gemini = defaultOption().llm.gemini
+            for (const chat of app.chats) {
+                chat.option.llm.gemini = defaultOption().llm.gemini
+            }
             return null
         }
     }
