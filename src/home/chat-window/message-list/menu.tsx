@@ -35,7 +35,7 @@ type TextMenuProps = {
     deleteAction: () => void
 }
 
-export const TextMenu: React.FC<TextMenuProps> = ({deleteAction}) => {
+export const GeneralMenu: React.FC<TextMenuProps> = ({deleteAction}) => {
     return <DropDownMenu list={[
         {
             name: "Delete",

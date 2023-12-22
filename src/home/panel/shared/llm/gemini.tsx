@@ -32,7 +32,7 @@ const Gemini: React.FC<Props> = ({geminiOptionProxy, llmOptionProxy, setEnabled}
     useEffect(() => {
         const choices = _.map(appState.ability.llm.gemini.models, (model): Choice<string> => ({
             name: model.displayName,
-            value: model.displayName,
+            value: model.name,
             tags: []
         }))
         setModelChoices(choices)
