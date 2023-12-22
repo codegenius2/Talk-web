@@ -5,6 +5,7 @@ import {controlState, SendMessageOption} from "../../state/control-state.ts"
 import {cx} from "../../util/util.tsx"
 import {searchLinuxTerminalHistoryPotision} from "../../data-structure/message.tsx";
 import {matchKeyComobo} from "../../state/shortcuts.ts";
+import IosSpinner from "../../assets/svg/ios-spinner.svg?react"
 
 type Props = {
     chatProxy: Chat
@@ -65,15 +66,17 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
 
 
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = useCallback((event) => {
+
+        if (event.key === ' ' || event.key === 'Escape') {
+            event.stopPropagation()
+        }
+
         // never interrupt composing
         if (isComposing) {
             setLinuxTerminalHistoryIndex(-1)
             return
         }
 
-        if (event.key === ' ') {
-            event.stopPropagation()
-        }
         // search history or reset history
         if (event.key === 'ArrowUp' || (event.key === "p" && event.ctrlKey)) {
             const [res, newIndex] = searchLinuxTerminalHistoryPotision(chatProxy.messages,
@@ -100,7 +103,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
 
         if (event.key === 'Escape') {
-            event.stopPropagation()
             if (textAreaRef.current) {
                 textAreaRef.current!.blur()
             }
@@ -192,7 +194,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                     )}
                        onClick={() => appState.pref.showMarkdown = !appState.pref.showMarkdown}
                     >MD </p>
-
+                    <TextPendingIcon/>
                 </div>
                 <button
                     ref={arrowButtonRef}
@@ -240,5 +242,20 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         </div>
     )
 }
+
+const TextPendingIcon = () => {
+
+    const {isTextPending} = useSnapshot(controlState)
+
+    return (
+        <div className={cx("flex rounded-full w-5 h-5 items-center",
+            "select-none transform duration-200 ",
+            isTextPending ? "opacity-100" : "opacity-0")}>
+            <IosSpinner className={"stroke-white"}/>
+        </div>
+
+    )
+}
+
 
 export default TextArea

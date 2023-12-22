@@ -20,7 +20,7 @@ export type SendingMessage = {
     // if message
     audioBlob?: Blob
     durationMs?: number
-    option?:SendMessageOption
+    option?: SendMessageOption
 }
 
 export type SendMessageOption = {
@@ -37,6 +37,7 @@ export type AudioDurationUpdate = {
 type ControlState = {
     isMouseLeftDown: boolean
     isMouseDragging: boolean
+    isTextPending: boolean,
     player: Player
     recordingMimeType?: RecordingMimeType
     recorder: EnhancedRecorder<RecordingCtx>
@@ -49,6 +50,7 @@ type ControlState = {
 export const controlState = proxy<ControlState>({
     isMouseLeftDown: false,
     isMouseDragging: false,
+    isTextPending: false,
     player: {
         autoPlay: true,
         isPlaying: false,

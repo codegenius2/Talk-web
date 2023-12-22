@@ -38,6 +38,7 @@ export const ElevenlabsLogoPureText = () => (
         IIElevenLabs
     </div>
 )
+
 export const ElevenlabsLogo = () => (
     <div className="flex items-center gap-1">
         <HiPause className="h-[1.375rem] w-[1.375rem] p-0.5 rounded-md fill-neutral-600  bg-neutral-100/[0.9]"/>

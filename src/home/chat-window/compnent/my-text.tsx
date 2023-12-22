@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react'
+import React, {memo, useEffect, useState} from 'react'
 import {cx, formatAgo} from "../../../util/util.tsx"
 import {Message} from "../../../data-structure/message.tsx"
 import {MySpin} from "./widget/icon.tsx"
@@ -29,6 +29,7 @@ import {CopyButtonPlugin} from "./widget/highlightjs-plugins/copy-button-plugin.
 import {throttle} from "lodash";
 import {useSnapshot} from "valtio/react";
 import {appState} from "../../../state/app-state.ts";
+import {controlState} from "../../../state/control-state.ts";
 
 hljs.configure({
     ignoreUnescapedHTML: true,
@@ -50,6 +51,18 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
     const {showMarkdown} = useSnapshot(appState.pref)
+    const [text, setText] = useState("")
+    const [hovering, setHovering] = useState(false)
+
+    // stop updating text when mouse hovering
+    useEffect(() => {
+        if (!hovering) {
+            setText(messageSnap.text)
+            controlState.isTextPending = false
+        } else {
+            controlState.isTextPending = messageSnap.status === "typing"
+        }
+    }, [messageSnap, hovering]);
 
     useEffect(() => {
         // apply plugins only if message is fully received to improve performance
@@ -61,15 +74,18 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     return <div
         className={cx("flex flex-col rounded-2xl px-3 pt-1.5 pb-0.5",
             theme.text, theme.bg
-        )}>
+        )}
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
+    >
 
         <div className={cx("leading-snug",
             "prose-pre:p-0 prose-pre:pt-3 prose-li:marker:text-neutral-600"
         )}>
             {messageSnap.role === 'assistant' && showMarkdown ?
-                <MDText text={messageSnap.text}/>
+                <MDText text={text}/>
                 :
-                <p className="leading-snug whitespace-pre-wrap break-words">{messageSnap.text}</p>
+                <p className="leading-snug whitespace-pre-wrap break-words">{text}</p>
             }
         </div>
         <div className="flex justify-end gap-1 pointer-events-none">
