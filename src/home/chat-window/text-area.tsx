@@ -4,7 +4,6 @@ import {appState, Chat} from "../../state/app-state.ts"
 import {controlState, SendMessageOption} from "../../state/control-state.ts"
 import {cx} from "../../util/util.tsx"
 import {searchLinuxTerminalHistoryPotision} from "../../data-structure/message.tsx";
-import {CloseIcon} from "./compnent/widget/icon.tsx";
 import {matchKeyComobo} from "../../state/shortcuts.ts";
 
 type Props = {
@@ -28,7 +27,6 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     // if user is typing in a composing way
     const [isComposing, setIsComposing] = useState(false)
-    const [isHoveringOnAttachedCircle, setIsHoveringOnAttachedCircle] = useState(false)
     const [linuxTerminalHistoryIndex, setLinuxTerminalHistoryIndex] = useState(-1)
 
     const stopSpacePropagation = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -73,6 +71,9 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             return
         }
 
+        if (event.key === ' ') {
+            event.stopPropagation()
+        }
         // search history or reset history
         if (event.key === 'ArrowUp' || (event.key === "p" && event.ctrlKey)) {
             const [res, newIndex] = searchLinuxTerminalHistoryPotision(chatProxy.messages,
@@ -99,6 +100,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
         }
 
         if (event.key === 'Escape') {
+            event.stopPropagation()
             if (textAreaRef.current) {
                 textAreaRef.current!.blur()
             }
