@@ -84,7 +84,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         onMouseLeave={() => setHovering(false)}
     >
 
-        <div className={cx("leading-snug",
+        <div className={cx("leading-snug break-all",
             "prose-pre:p-0 prose-pre:pt-3 prose-li:marker:text-neutral-600"
         )}>
             {messageSnap.role === 'assistant' && showMarkdown ?
