@@ -5,10 +5,10 @@ import {useSnapshot} from "valtio/react"
 import {GoogleOption,} from "../../../../data-structure/client-option.tsx"
 import {appState} from "../../../../state/app-state.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {Choice, emptyStringChoice} from "../../../../data-structure/provider-api-refrence/types.ts"
 import {googleSTTAPIReference} from "../../../../data-structure/provider-api-refrence/google-stt.ts"
 import { GoogleLogo } from '../widget/logo.tsx'
+import {map} from "lodash";
 
 type Props = {
     googleOptionProxy: GoogleOption
@@ -34,10 +34,10 @@ const GoogleStt: React.FC<Props> = ({googleOptionProxy, setEnabled}) => {
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
-        const choices = _.map(googleAbilitySnap.recognizers, r => ({
+        const choices = map(googleAbilitySnap.recognizers, r => ({
             name: r.id,
             value: r.name,
-            tags: _.map(r.tags, t => t)
+            tags: map(r.tags, t => t)
         }))
         setRecognizerChoices(choices)
     }, [googleAbilitySnap])

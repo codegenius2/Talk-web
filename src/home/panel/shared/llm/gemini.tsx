@@ -10,9 +10,9 @@ import {geminiAPIReference, maxOutputTokens} from '../../../../data-structure/pr
 import {appState} from "../../../../state/app-state.ts"
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts"
 import {GeminiLogo} from "../widget/logo.tsx"
+import {map} from "lodash";
 
 type Props = {
     geminiOptionProxy: GeminiOption
@@ -30,7 +30,7 @@ const Gemini: React.FC<Props> = ({geminiOptionProxy, llmOptionProxy, setEnabled}
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
 
     useEffect(() => {
-        const choices = _.map(appState.ability.llm.gemini.models, (model): Choice<string> => ({
+        const choices = map(appState.ability.llm.gemini.models, (model): Choice<string> => ({
             name: model.displayName,
             value: model.name,
             tags: []

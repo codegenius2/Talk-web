@@ -6,8 +6,8 @@ import {defaultServerAbility, ServerAbility} from "../api/sse/server-ability.ts"
 import {generateHash, randomHash16Char} from "../util/util.tsx"
 import {migrateAppState} from "./migration.ts"
 import * as packageJson from '../../package.json'
-import _ from "lodash";
 import {defaultShortcuts, Shortcuts} from "./shortcuts.ts";
+import {cloneDeep, compact} from "lodash";
 
 const currentVersion = packageJson.version
 
@@ -248,7 +248,7 @@ export const markMessageAsDeleted = (chatId: string, messageId: string): void =>
 }
 
 export const clearMessages = (chat: Chat): void => {
-    const audioIds = _.compact(chat.messages.map(m => m.audio?.id))
+    const audioIds = compact(chat.messages.map(m => m.audio?.id))
     deleteBlobs(audioIds).finally(() => {
         chat.messages.splice(0, chat.messages.length)
     })
@@ -299,7 +299,7 @@ export const deleteChat = (id: string) => {
 }
 
 export const createChat = (name: string, messages: Message[]) => {
-    const optionClone = _.cloneDeep(appState.option)
+    const optionClone = cloneDeep(appState.option)
     const newChat = proxy<Chat>({
         id: randomHash16Char(),
         name: name,

@@ -9,8 +9,8 @@ import {GoogleTTSGender} from "../../../../api/restful/model.ts"
 import {appState} from "../../../../state/app-state.ts"
 import {googleTTSAPIReference} from "../../../../data-structure/provider-api-refrence/google-tts.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {GoogleLogo} from "../widget/logo.tsx"
+import {filter, first, map, some} from "lodash";
 
 type Props = {
     googleTTSOptionProxy: GoogleTTSOption
@@ -35,20 +35,20 @@ const GoogleTTS: React.FC<Props> = ({googleTTSOptionProxy, setEnabled}) => {
         // eslint-disable-next-line valtio/state-snapshot-rule
         const lang = googleTTSSnap.languageCode
         if (lang) {
-            const filtered = _.filter(appState.ability.tts.google.voices,
+            const filtered = filter(appState.ability.tts.google.voices,
                 voice =>
-                    _.some(voice.tags,
+                    some(voice.tags,
                         tag => tag.startsWith(lang) || lang.startsWith(tag)
                     )
             )
                 .map((v): Choice<string> => ({
                     name: v.name,
                     value: v.id,
-                    tags: _.map(v.tags, tag => tag)
+                    tags: map(v.tags, tag => tag)
                 }))
             setVoicesChoice(filtered)
-            if (!_.some(filtered, v => v.value === googleTTSOptionProxy.voiceId)) {
-                googleTTSOptionProxy.voiceId = _.first(filtered)?.value
+            if (!some(filtered, v => v.value === googleTTSOptionProxy.voiceId)) {
+                googleTTSOptionProxy.voiceId = first(filtered)?.value
             }
         } else {
             setVoicesChoice([])

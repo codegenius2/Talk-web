@@ -5,8 +5,8 @@ import {useSnapshot} from "valtio/react"
 import {WhisperOption,} from "../../../../data-structure/client-option.tsx"
 import {appState} from "../../../../state/app-state.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {WhisperGPTLogo} from "../widget/logo.tsx"
+import {map} from "lodash";
 
 type Props = {
     whisperOptionProxy: WhisperOption
@@ -34,7 +34,7 @@ const Whisper: React.FC<Props> = ({whisperOptionProxy, setEnabled}) => {
                     <>
                         <SelectBoxOrNotAvailable
                             title={"Model"}
-                            choices={_.map(whisperAbilitySnap.models, m => ({
+                            choices={map(whisperAbilitySnap.models, m => ({
                                 name: m,
                                 value: m,
                                 tags: []

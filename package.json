@@ -1,7 +1,7 @@
 {
   "name": "talk-vite",
   "private": true,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,8 +16,8 @@
     "@types/highlight.js": "^10.1.0",
     "@types/markdown-it": "^13.0.2",
     "@types/markdown-it-emoji": "^2.0.2",
-    "axios": "^1.5.0",
-    "crypto-js": "^4.1.1",
+    "axios": "1.6.0",
+    "crypto-js": "4.2.0",
     "date-fns": "^2.30.0",
     "downshift": "^8.1.0",
     "framer-motion": "^10.16.1",
@@ -74,11 +74,12 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-valtio": "^0.6.2",
-    "postcss": "^8.4.27",
+    "postcss": "8.4.31",
     "postcss-import": "^15.1.0",
+    "rollup-plugin-visualizer": "^5.12.0",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.5",
+    "vite": "5.0.5",
     "vite-plugin-svgr": "^4.0.0"
   }
 }

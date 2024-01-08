@@ -68,6 +68,11 @@ export const WindowListeners: React.FC = () => {
 
             const handleBrowserBlur = () => {
                 setMouseDown(false)
+                controlState.isWindowsBlurred = true
+            }
+
+            const handleBrowserFocus = () => {
+                controlState.isWindowsBlurred = false
             }
 
             if (showRecorder) {
@@ -77,6 +82,7 @@ export const WindowListeners: React.FC = () => {
             window.addEventListener("mousedown", handleMouseDown)
             window.addEventListener("mouseup", handleMouseUp)
             window.addEventListener("blur", handleBrowserBlur)
+            window.addEventListener("focus", handleBrowserFocus)
 
             return () => {
                 window.removeEventListener("keydown", handleKeyDown)
@@ -84,6 +90,7 @@ export const WindowListeners: React.FC = () => {
                 window.removeEventListener("mousedown", handleMouseDown)
                 window.removeEventListener("mouseup", handleMouseUp)
                 window.removeEventListener("blur", handleBrowserBlur)
+                window.removeEventListener("focus", handleBrowserFocus)
             }
         },
         [setMouseDown, recorder, showRecorder]

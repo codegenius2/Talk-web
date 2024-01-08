@@ -5,7 +5,7 @@ import {clonePrompt, deletePrompt, Prompt, promptCountState, syncPromptIdCounts}
 import {Chat} from "../../../state/app-state.ts";
 import {useSnapshot} from "valtio/react";
 import {MdOutlineContentCopy} from "react-icons/md";
-import _ from "lodash";
+import {capitalize} from "lodash";
 
 type Props = {
     chatProxy: Chat
@@ -58,7 +58,7 @@ export const PromptItem: React.FC<Props> = ({chatProxy, prompt}) => {
                 <div>
                     <div className="truncate text-sm text-neutral-600 ...">
                         {messages.length > 0 &&
-                            <div>{_.capitalize(messages[0].role)}: {messages[0].content}</div>
+                            <div>{capitalize(messages[0].role)}: {messages[0].content}</div>
                         }
                     </div>
                 </div>

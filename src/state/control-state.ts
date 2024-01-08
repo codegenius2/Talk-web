@@ -37,6 +37,7 @@ export type AudioDurationUpdate = {
 type ControlState = {
     isMouseLeftDown: boolean
     isMouseDragging: boolean
+    isWindowsBlurred: boolean,
     isTextPending: boolean,
     player: Player
     recordingMimeType?: RecordingMimeType
@@ -50,6 +51,7 @@ type ControlState = {
 export const controlState = proxy<ControlState>({
     isMouseLeftDown: false,
     isMouseDragging: false,
+    isWindowsBlurred: false,
     isTextPending: false,
     player: {
         autoPlay: true,

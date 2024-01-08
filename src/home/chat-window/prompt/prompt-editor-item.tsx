@@ -3,9 +3,9 @@ import {cx} from "../../../util/util.tsx";
 import {userColor, assistantColor} from "../compnent/theme.ts";
 import {LLMMessage, Role} from "../../../shared-types.ts";
 import {useSnapshot} from "valtio/react";
-import _ from "lodash";
 import {AiOutlinePlus} from "react-icons/ai";
 import {Prompt} from "../../../state/promt-state.ts";
+import {capitalize} from "lodash";
 
 type Props = {
     promptProxy: Prompt
@@ -131,7 +131,7 @@ const Dot: React.FC<RoleDotProps> = ({messageProxy, targetRole}) => {
         {hovering &&
             <div className=" bg-neutral-200/[0.8] rounded-full px-2 fixed -top-6 left-1/2 -translate-x-1/2
             transform text-sm text-neutral-800">
-                {_.capitalize(targetRole)}
+                {capitalize(targetRole)}
             </div>
         }
     </div>

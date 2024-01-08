@@ -13,9 +13,9 @@ import {
 import {appState} from "../../../../state/app-state.ts"
 import {Choice} from "../../../../data-structure/provider-api-refrence/types.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {llmAPIReference} from "../../../../data-structure/provider-api-refrence/llm.ts"
 import {ChatGPTLogo} from "../widget/logo.tsx"
+import {map} from "lodash";
 
 type Props = {
     chatGPTOptionProxy: ChatGPTOption
@@ -33,7 +33,7 @@ const ChatGpt: React.FC<Props> = ({chatGPTOptionProxy, llmOptionProxy, setEnable
     const [modelChoices, setModelChoices] = useState<Choice<string>[]>([])
 
     useEffect(() => {
-        const choices = _.map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
+        const choices = map(appState.ability.llm.chatGPT.models, (model): Choice<string> => ({
             name: model.displayName,
             value: model.name,
             tags: []

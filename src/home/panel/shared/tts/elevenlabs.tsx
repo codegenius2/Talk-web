@@ -8,8 +8,8 @@ import {ElevenlabsTTSOption,} from "../../../../data-structure/client-option.tsx
 import {appState} from "../../../../state/app-state.ts"
 import {elevenlabsAPIReference} from "../../../../data-structure/provider-api-refrence/elevenlabs-tts.ts"
 import {SelectBoxOrNotAvailable} from "../select-box-or-not-available.tsx"
-import _ from "lodash"
 import {ElevenlabsLogo} from "../widget/logo.tsx"
+import {map, uniq} from "lodash";
 
 type Props = {
     elevenlabsTTSOptionProxy: ElevenlabsTTSOption
@@ -24,11 +24,11 @@ const ElevenlabsTTS: React.FC<Props> = ({elevenlabsTTSOptionProxy, setEnabled}) 
 
     useEffect(() => {
         // eslint-disable-next-line valtio/state-snapshot-rule
-        const voices = _.map(elevenlabsAbilitySnap.voices,
+        const voices = map(elevenlabsAbilitySnap.voices,
             v => ({
                 name: v.name,
                 value: v.id,
-                tags: _.uniq(v.tags).map(tag => tag)
+                tags: uniq(v.tags).map(tag => tag)
             }))
         setVoicesChoice(voices)
     }, [elevenlabsAbilitySnap])

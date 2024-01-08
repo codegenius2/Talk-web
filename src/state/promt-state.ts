@@ -5,7 +5,7 @@ import {randomHash16Char} from "../util/util.tsx";
 import {LLMMessage} from "../shared-types.ts";
 import {appState, hydrationState} from "./app-state.ts";
 import {subscribeKey} from "valtio/utils";
-import _ from "lodash";
+import {groupBy} from "lodash";
 
 export type Prompt = {
     id: string,
@@ -103,7 +103,7 @@ export const syncPromptIdCounts = () => {
     for (const key in promptCountState.counts) {
         delete promptCountState.counts[key]
     }
-    const group = _.groupBy(appState.chats, c => c.promptId)
+    const group = groupBy(appState.chats, c => c.promptId)
     for (const key in group) {
         promptCountState.counts[key] = group[key].length
     }

@@ -51,6 +51,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     // console.info("MyText rendered, messageSnap.id:", messageSnap.id, new Date().toLocaleString())
     // console.info("messageSnap.text", messageSnap.text)
     const {showMarkdown} = useSnapshot(appState.pref)
+    const {isWindowsBlurred} = useSnapshot(controlState)
     const [text, setText] = useState(messageSnap.text)
     const [hovering, setHovering] = useState(false)
 
@@ -62,6 +63,12 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
             controlState.isTextPending = messageSnap.status === "typing"
         }
     }, [messageSnap.status, hovering]);
+
+    useEffect(() => {
+        if (isWindowsBlurred) {
+            setHovering(false)
+        }
+    }, [isWindowsBlurred]);
 
     useEffect(() => {
         if (!controlState.isTextPending) {
@@ -84,7 +91,7 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
         onMouseLeave={() => setHovering(false)}
     >
 
-        <div className={cx("leading-snug break-all",
+        <div className={cx("leading-snug",
             "prose-pre:p-0 prose-pre:pt-3 prose-li:marker:text-neutral-600"
         )}>
             {messageSnap.role === 'assistant' && showMarkdown ?
