@@ -26,7 +26,7 @@ import mifoot from "markdown-it-footnote"
 import './widget/highlightjs-plugins/copy-button-plugin.css'
 import {LanguageLabelPlugin} from "./widget/highlightjs-plugins/language-label-plugin.tsx";
 import {CopyButtonPlugin} from "./widget/highlightjs-plugins/copy-button-plugin.tsx";
-import {throttle} from "lodash";
+import {debounce, throttle} from "lodash";
 import {useSnapshot} from "valtio/react";
 import {appState} from "../../../state/app-state.ts";
 import {controlState} from "../../../state/control-state.ts";
@@ -37,10 +37,11 @@ hljs.configure({
 hljs.addPlugin(new LanguageLabelPlugin());
 hljs.addPlugin(new CopyButtonPlugin());
 
-// to improve performance
-const ha: () => void = throttle(() => {
-    hljs.highlightAll()
-}, 500)
+const ha = throttle(debounce(() => hljs.highlightAll(), 1000, {
+    'trailing': true
+}), 1000);
+
+const haNow = () => hljs.highlightAll()
 
 interface TextProps {
     messageSnap: Message
@@ -73,13 +74,14 @@ export const MyText: React.FC<TextProps> = ({messageSnap, theme}) => {
     useEffect(() => {
         if (!controlState.isTextPending) {
             setText(messageSnap.text)
+            ha()
         }
     }, [messageSnap]);
 
     useEffect(() => {
-        // apply plugins only if message is fully received to improve performance
+        // apply highlight plugin immediately after message is fully received
         if (messageSnap.status === 'received') {
-            ha()
+            haNow()
         }
     }, [messageSnap.status]);
 
