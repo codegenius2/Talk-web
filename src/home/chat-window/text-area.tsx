@@ -4,14 +4,13 @@ import {appState, Chat} from "../../state/app-state.ts"
 import {controlState, SendMessageOption} from "../../state/control-state.ts"
 import {cx} from "../../util/util.tsx"
 import {searchLinuxTerminalHistoryPotision} from "../../data-structure/message.tsx";
-import {matchKeyComobo} from "../../state/shortcuts.ts";
+import {bestModel, matchKeyCombo} from "../../state/shortcuts.ts";
 import IosSpinner from "../../assets/svg/ios-spinner.svg?react"
 
 type Props = {
     chatProxy: Chat
 }
 
-const bestModel = "gpt-4-1106-preview"
 
 const largeTextAreaMinHeight = "min-h-96"
 const smallTextAreaMinHeight = "min-h-24"
@@ -108,7 +107,7 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
             }
         } else {
             const sc = appState.pref.shortcuts
-            if (matchKeyComobo(sc.newLine, event)) {
+            if (matchKeyCombo(sc.newLine, event)) {
                 if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey && !event.altKey) {
                     // try our best to use native 'new-line', in order to preserve edit stack(ctrl/cmd + z)
                 } else {
@@ -121,16 +120,16 @@ const TextArea: React.FC<Props> = ({chatProxy}) => {
                         target.value.slice(caretPosition);
                     setTimeout(() => target.selectionStart = target.selectionEnd = caretPosition + 1)
                 }
-            } else if (matchKeyComobo(sc.send, event)) {
+            } else if (matchKeyCombo(sc.send, event)) {
                 sendAndClearText()
                 event.preventDefault()
-            } else if (matchKeyComobo(sc.sendWithBestModel, event)) {
+            } else if (matchKeyCombo(sc.sendWithBestModel, event)) {
                 sendAndClearText({model: bestModel})
                 event.preventDefault()
-            } else if (matchKeyComobo(sc.sendZeroAttachedMessage, event)) {
+            } else if (matchKeyCombo(sc.sendZeroAttachedMessage, event)) {
                 sendAndClearText({ignoreAttachedMessage: true})
                 event.preventDefault()
-            } else if (matchKeyComobo(sc.sendWithBestModelAndZeroAttachedMessage, event)) {
+            } else if (matchKeyCombo(sc.sendWithBestModelAndZeroAttachedMessage, event)) {
                 sendAndClearText({
                     ignoreAttachedMessage: true,
                     model: bestModel

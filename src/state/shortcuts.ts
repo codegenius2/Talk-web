@@ -32,19 +32,21 @@ export const defaultShortcuts = (): Shortcuts => ({
         mKeys: ["Control"]
     },
     sendWithBestModel: {
-        name: "Send with gpt-4-1106-preview model",
+        name: `Send with ${bestModel} model`,
         key: "Enter",
         mKeys: ["Meta"]
     },
     sendWithBestModelAndZeroAttachedMessage: {
-        name: "Send with gpt-4-1106-preview model and 0 attached message",
+        name: `Send with ${bestModel} model and 0 attached message`,
         key: "Enter",
         mKeys: ["Meta", "Control"]
     }
 })
 
+export const bestModel = "gpt-4-turbo-preview"
+
 const mods: ModifierKey[] = ["Meta", "Control", "Alt", "Shift"]
-export const matchKeyComobo = (keyCombo: KeyCombo, e: React.KeyboardEvent<HTMLTextAreaElement>): boolean => {
+export const matchKeyCombo = (keyCombo: KeyCombo, e: React.KeyboardEvent<HTMLTextAreaElement>): boolean => {
     if (e.key !== keyCombo.key) {
         return false
     }
