@@ -1,7 +1,7 @@
 import {AppState} from "./app-state.ts"
 import * as packageJson from '../../package.json'
 import {defaultOption} from "../data-structure/client-option.tsx"
-import {defaultShortcuts} from "./shortcuts.ts";
+import {defaultShortcuts, KeyCombo, Shortcuts} from "./shortcuts.ts";
 import semver from "semver/preload";
 
 const currentVersion = packageJson.version
@@ -77,6 +77,23 @@ const steps: Step[] = [
             for (const chat of app.chats) {
                 chat.option.llm.gemini = defaultOption().llm.gemini
             }
+            return null
+        }
+    },
+    {
+        fromVersion: "2.0.0",
+        toVersion: "2.0.3",
+        action: (app: AppState): Error | null => {
+            const dft = defaultShortcuts()
+            Object.keys(app.pref.shortcuts).forEach((field) => {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                const shortcut = dft[field] as KeyCombo|undefined
+                if (!shortcut){
+                    return Error(`${field} was not found in defaultShortcuts`)
+                }
+                app.pref.shortcuts[field as keyof Shortcuts].name = shortcut.name
+            })
             return null
         }
     }

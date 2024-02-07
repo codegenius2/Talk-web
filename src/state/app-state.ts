@@ -115,6 +115,7 @@ const apply = (as: AppState | null) => {
             console.debug("restoring from db, key:", key)
             const error = migrateAppState(as)
             if (error) {
+                console.error(error)
                 throw error
             }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

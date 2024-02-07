@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import {visualizer} from 'rollup-plugin-visualizer';
 
-const VISUALIZER = true; // change to see the current bundle.
+const VISUALIZER = false; // change to see the current bundle.
 
 const bigPackages = [
     'prompt.ts',
